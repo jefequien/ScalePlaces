@@ -28,14 +28,15 @@ def apply_mask(image, mask):
     return masked_image
 
 
-image_path = "/Users/hujh/Documents/UROP_Torralba/ADE_20K/images/ADE_train_00000037.jpg"
-mask_path = "/Users/hujh/Documents/UROP_Torralba/ADE_20K/annotations/ADE_train_00000037.png"
-category = 1
-image = misc.imread(image_path)
-mask = misc.imread(mask_path)
+if __name__=="__main__":
+    image_path = "/Users/hujh/Documents/UROP_Torralba/ADE_20K/images/ADE_train_00000037.jpg"
+    mask_path = "/Users/hujh/Documents/UROP_Torralba/ADE_20K/annotations/ADE_train_00000037.png"
+    category = 1
+    image = misc.imread(image_path)
+    mask = misc.imread(mask_path)
 
-category_mask = (mask == category)
-masked_image = apply_mask(image, category_mask)
+    category_mask = (mask == category)
+    masked_image = apply_mask(image, category_mask)
 
-plt.imshow(masked_image)
-plt.show()
+    plt.imshow(masked_image)
+    plt.show()
