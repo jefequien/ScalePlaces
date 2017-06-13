@@ -9,16 +9,6 @@ import utils
 
 threshold = 0.9999
 
-# temp_image = "/Users/hujh/Documents/UROP_Torralba/ADE_20K/images/ADE_train_00000037.jpg"
-# temp_mask = "/Users/hujh/Documents/UROP_Torralba/ADE_20K/annotations/ADE_train_00000037.png"
-
-def applyMask(image, mask):
-    masked = np.copy(image)
-    contours, hierarchy = cv2.findContours(mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-    cv2.drawContours(masked, contours, -1, (0, 0, 0), 3)
-    return masked
-
-
 def maskImage(image_name, category):
     image_path = "../data_large/" + image_name
     mask_path = "../pspnet_prediction/category_mask/" + image_name.replace("jpg","png")
@@ -26,9 +16,7 @@ def maskImage(image_name, category):
     image = misc.imread(image_path)
     mask = misc.imread(mask_path)
     category_mask = (mask == category)
-    masked_image = applyMask(image, category_mask)
-
-    # category_mask = cv2.cvtColor(category_mask.astype('uint8')*255, cv2.COLOR_GRAY2RGB)
+    masked_image = utils.apply_mask(image, category_mask)
 
     question_image = np.hstack((image, masked_image))
     return question_image
