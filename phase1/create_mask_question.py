@@ -43,5 +43,5 @@ with open("sorted/{}.txt".format(name), 'r') as f:
 
         if prob > threshold:
             question_image = maskImage(image_name, cat)
-            question_name = image_name.replace('/', '#')
+            question_name = image_name.replace('/', '_')
             misc.imsave("{}/{}".format(question_images_dir, question_name), question_image)

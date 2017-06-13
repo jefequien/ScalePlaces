@@ -19,7 +19,5 @@ for filename in os.listdir(folder_path):
 
 html = "<html><head></head>{}</html>".format(body)
 
-print html
-
 with open("{}.html".format(folder_name), 'w') as f:
     f.write(html)
