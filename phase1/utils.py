@@ -5,7 +5,7 @@ import numpy as np
 import random
 
 RED = [255,0,0]
-GREEN = [0,128,0]
+GREEN = [0,192,0]
 BLUE = [0,0,255]
 
 COLORS = [RED,GREEN,BLUE]

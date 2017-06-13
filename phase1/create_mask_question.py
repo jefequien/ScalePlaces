@@ -37,12 +37,14 @@ def processCategory(cat):
             prob = float(split[1])
             print counter, image_name, prob
 
-            if prob > threshold:
-                question_image = maskImage(image_name, cat)
-                question_name = image_name.replace('/', '_')
-                misc.imsave("{}/{}".format(question_images_dir, question_name), question_image)
-                counter += 1
 
+            question_name = image_name.replace('/', '-')
+            file_path = "{}/{}".format(question_images_dir, question_name)
+            if prob > threshold and not os.path.exists(file_path):
+                question_image = maskImage(image_name, cat)
+                misc.imsave(file_path, question_image)
+            
+            counter += 1
             if counter == 1000:
                 break
 
