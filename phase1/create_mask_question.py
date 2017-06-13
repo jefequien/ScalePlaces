@@ -13,9 +13,11 @@ threshold = 0.9999
 # temp_mask = "/Users/hujh/Documents/UROP_Torralba/ADE_20K/annotations/ADE_train_00000037.png"
 
 
-def maskImage(image_path, category):
-    image_path = "../data_large/" + image_path
-    mask_path = "../pspnet_prediction/category_mask/" + image_path
+def maskImage(image_name, category):
+    image_path = "../data_large/" + image_name
+    mask_path = "../pspnet_prediction/category_mask/" + image_name
+    print image_path
+    print mask_path
 
     image = misc.imread(image_path)
     mask = misc.imread(mask_path)
@@ -37,11 +39,12 @@ if not os.path.isdir(question_images_dir):
 with open("sorted/{}.txt".format(name), 'r') as f:
     for line in f:
         split = line.split()
-        image_path = split[0]
+        image_name = split[0]
         prob = float(split[1])
-        print image_path, prob
+        print image_name, prob
 
         if prob > threshold:
-            question_image = maskImage(image_path, cat)
-            question_name = image_path.replace('/', '#')
+            question_image = maskImage(image_name, cat)
+            question_name = image_name.replace('/', '#')
             misc.imsave("{}/{}".format(question_images_dir, question_name), question_image)
+            break
