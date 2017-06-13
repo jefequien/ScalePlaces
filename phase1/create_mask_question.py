@@ -15,7 +15,7 @@ threshold = 0.9999
 
 def maskImage(image_name, category):
     image_path = "../data_large/" + image_name
-    mask_path = "../pspnet_prediction/category_mask/" + image_name
+    mask_path = "../pspnet_prediction/category_mask/" + image_name.replace("jpg","png")
 
     image = misc.imread(image_path)
     mask = misc.imread(mask_path)
