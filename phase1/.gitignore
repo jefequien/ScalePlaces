@@ -1,3 +1,5 @@
+*.html
+
 sorted_maxprobs.h5
 sorted/*
 question_images/*
