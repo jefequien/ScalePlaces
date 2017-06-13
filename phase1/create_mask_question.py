@@ -16,8 +16,6 @@ threshold = 0.9999
 def maskImage(image_name, category):
     image_path = "../data_large/" + image_name
     mask_path = "../pspnet_prediction/category_mask/" + image_name
-    print image_path
-    print mask_path
 
     image = misc.imread(image_path)
     mask = misc.imread(mask_path)
@@ -47,4 +45,3 @@ with open("sorted/{}.txt".format(name), 'r') as f:
             question_image = maskImage(image_name, cat)
             question_name = image_name.replace('/', '#')
             misc.imsave("{}/{}".format(question_images_dir, question_name), question_image)
-            break
