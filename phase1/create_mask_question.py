@@ -22,7 +22,7 @@ def maskImage(image_name, category):
     category_mask = (mask == category)
     category_mask = cv2.cvtColor(category_mask.astype('uint8')*255, cv2.COLOR_GRAY2RGB)
 
-    question_image = np.vstack((image, category_mask))
+    question_image = np.hstack((image, category_mask))
     return question_image
 
 
@@ -35,13 +35,15 @@ if not os.path.isdir(question_images_dir):
     os.makedirs(question_images_dir)
 
 with open("sorted/{}.txt".format(name), 'r') as f:
+    counter = 0
     for line in f:
         split = line.split()
         image_name = split[0]
         prob = float(split[1])
-        print image_name, prob
+        print counter, image_name, prob
 
         if prob > threshold:
             question_image = maskImage(image_name, cat)
             question_name = image_name.replace('/', '_')
             misc.imsave("{}/{}".format(question_images_dir, question_name), question_image)
+            counter += 1

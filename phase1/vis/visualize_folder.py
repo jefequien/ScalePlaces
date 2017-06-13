@@ -10,7 +10,7 @@ body = "<body>"
 for filename in os.listdir(folder_path):
     if ".jpg" in filename or ".png" in filename:
         image_path = os.path.join(folder_path, filename)
-        image_tag = "<img src=\"{}\" height=\"256px\">".format(image_path)
+        image_tag = "<img src=\"{}\" width=\"256px\">".format(image_path)
         body += "<br><br> {} <br> {}".format(image_path, image_tag)
         num += 1
         if num == max_num:
