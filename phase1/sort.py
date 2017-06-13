@@ -37,7 +37,7 @@ n,cat = prob_matrix.shape
 for c in xrange(1,cat):
     sorted_indicies = sorted_indicies_matrix[:,c][::-1]
 
-    with open("{}{}.txt".format(c+1,categories[c+1]), 'w') as f:
+    with open("sorted/{}{}.txt".format(c+1,categories[c+1]), 'w') as f:
         for i in sorted_indicies:
             prob = prob_matrix[i,c]
             image_path = image_paths[i]
