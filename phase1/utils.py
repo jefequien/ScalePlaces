@@ -4,6 +4,12 @@ import cv2
 import numpy as np
 import random
 
+RED = [255,0,0]
+GREEN = [0,128,0]
+BLUE = [0,0,255]
+
+COLORS = [RED,GREEN,BLUE]
+
 def get_categories():
     categories = {}
     with open("objectInfo150.txt", 'r') as f:
@@ -14,14 +20,10 @@ def get_categories():
                 categories[int(cat)] = split[4].replace(',','')
         return categories
 
-
-
 def apply_mask(image, mask):
     masked_image = np.copy(image)
 
-    color = [255,0,0]
-    random.shuffle(color)
-    masked_image[mask] = np.maximum(masked_image[mask], color)
+    masked_image[mask] = np.maximum(masked_image[mask], random.choice(COLORS))
 
     contours, hierarchy = cv2.findContours(mask.astype(np.uint8), cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
     cv2.drawContours(masked_image, contours, -1, (0, 0, 0), 2)
