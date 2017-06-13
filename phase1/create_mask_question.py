@@ -9,12 +9,13 @@ import utils
 
 threshold = 0.9999
 
-temp_image = "/Users/hujh/Documents/UROP_Torralba/ADE_20K/images/ADE_train_00000037.jpg"
-temp_mask = "/Users/hujh/Documents/UROP_Torralba/ADE_20K/annotations/ADE_train_00000037.png"
+# temp_image = "/Users/hujh/Documents/UROP_Torralba/ADE_20K/images/ADE_train_00000037.jpg"
+# temp_mask = "/Users/hujh/Documents/UROP_Torralba/ADE_20K/annotations/ADE_train_00000037.png"
+
 
 def maskImage(image_path, category):
-    image_path = temp_image
-    mask_path = temp_mask
+    image_path = "../data_large/" + image_path
+    mask_path = "../pspnet_prediction/category_mask/" + image_path
 
     image = misc.imread(image_path)
     mask = misc.imread(mask_path)
