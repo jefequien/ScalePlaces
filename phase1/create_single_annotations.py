@@ -42,7 +42,7 @@ def processCategory(cat):
 
                 if p >= prob and prob > p - 0.1:
                     file_name = image_name.replace('/', '-')
-                    file_path = "{}/{}".format(percentile_dir, question_name)
+                    file_path = "{}/{}".format(percentile_dir, file_name)
 
                     if not os.path.exists(file_path):
                         masked_image = maskImage(image_name, cat)
