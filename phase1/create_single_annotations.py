@@ -30,6 +30,10 @@ def processCategory(cat):
     with open("sorted/{}.txt".format(name), 'r') as f:
         percentiles = [1.,.9,.8,.7,.6,.5,.4,.3,.2,.1]
         for p in percentiles:
+            percentile_dir = "{}/{}".format(output_dir, int(p*100))
+            if not os.path.isdir(output_dir):
+                os.makedirs(output_dir)
+
             counter = 0
             for line in f:
                 split = line.split()
@@ -37,11 +41,12 @@ def processCategory(cat):
                 prob = float(split[1])
 
                 if p >= prob and prob > p - 0.1:
-                    masked_image = maskImage(image_name, cat)
-
                     file_name = image_name.replace('/', '-')
-                    file_path = "{}/{}/{}".format(output_dir, int(p*100), question_name)
-                    misc.imsave(file_path, masked_image)
+                    file_path = "{}/{}".format(percentile_dir, question_name)
+
+                    if not os.path.exists(file_path):
+                        masked_image = maskImage(image_name, cat)
+                        misc.imsave(file_path, masked_image)
                     
                     print c, p, image_name, prob
 
