@@ -10,7 +10,7 @@ def generateHTML(folder_path):
         p = str(p)
         percentile_dir = os.path.join(folder_path, p)
         num = 0
-        body += "<br><br><b>{}</b><br><br>".format(p)
+        body += "<br><br><br><br><b>{}</b><br><br>".format(p)
         for filename in os.listdir(percentile_dir):
             if ".jpg" in filename or ".png" in filename:
                 image_path = os.path.join(percentile_dir, filename)
