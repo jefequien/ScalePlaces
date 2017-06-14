@@ -12,7 +12,7 @@ def generateHTML(folder_path):
         body += "<br>{}<br>".format(p)
         for filename in os.listdir(percentile_dir):
             if ".jpg" in filename or ".png" in filename:
-                image_path = os.path.join(folder_path, filename)
+                image_path = os.path.join(percentile_dir, filename)
                 image_tag = "<img src=\"{}\" height=\"256px\">".format(image_path)
                 num += 1
                 if num == max_num:
