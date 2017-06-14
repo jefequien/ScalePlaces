@@ -4,12 +4,12 @@ import os
 def generateHTML(folder_path):
     folder_name = os.path.basename(os.path.normpath(folder_path))
 
-    max_num = 20
+    max_num = 15
     body = "<body>"
-    for p in os.listdir(folder_path):
+    for p in [100,90,80,70,60,50,40,30,20,10]:
         percentile_dir = os.path.join(folder_path, p)
         num = 0
-        body += "<br><b>{}</b><br>".format(p)
+        body += "<br><br><b>{}</b><br><br>".format(p)
         for filename in os.listdir(percentile_dir):
             if ".jpg" in filename or ".png" in filename:
                 image_path = os.path.join(percentile_dir, filename)
