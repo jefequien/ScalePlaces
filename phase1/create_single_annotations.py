@@ -31,8 +31,8 @@ def processCategory(cat):
         percentiles = [1.,.9,.8,.7,.6,.5,.4,.3,.2,.1]
         for p in percentiles:
             percentile_dir = "{}/{}".format(output_dir, int(p*100))
-            if not os.path.isdir(output_dir):
-                os.makedirs(output_dir)
+            if not os.path.isdir(percentile_dir):
+                os.makedirs(percentile_dir)
 
             counter = 0
             for line in f:
@@ -56,8 +56,8 @@ def processCategory(cat):
                 if prob < p - 0.1:
                     break
 
-cat = int(sys.argv[1])
-processCategory(cat)
+# cat = int(sys.argv[1])
+# processCategory(cat)
 
-# for i in xrange(1,151):
-#     processCategory(i)
+for i in xrange(1,151):
+    processCategory(i)
