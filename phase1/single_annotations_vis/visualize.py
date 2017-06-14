@@ -7,6 +7,7 @@ def generateHTML(folder_path):
     max_num = 15
     body = "<body>"
     for p in [100,90,80,70,60,50,40,30,20,10]:
+        p = str(p)
         percentile_dir = os.path.join(folder_path, p)
         num = 0
         body += "<br><br><b>{}</b><br><br>".format(p)
