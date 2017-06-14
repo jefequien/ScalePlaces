@@ -30,7 +30,7 @@ folder_path = sys.argv[1]
 # generateHTML(folder_path)
 
 for im_folder in os.listdir(folder_path):
-    if os.isdir(im_folder):
-        im_folder_path = os.path.join(folder_path, im_folder)
+    im_folder_path = os.path.join(folder_path, im_folder)
+    if os.path.isdir(im_folder_path):
         generateHTML(im_folder_path)
 

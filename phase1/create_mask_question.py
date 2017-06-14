@@ -48,7 +48,8 @@ def processCategory(cat):
             if counter == 1000:
                 break
 
-# cat = int(sys.argv[1])
+cat = int(sys.argv[1])
+processCategory(cat)
 
-for i in xrange(1,150):
-    processCategory(i)
+# for i in xrange(1,151):
+#     processCategory(i)
