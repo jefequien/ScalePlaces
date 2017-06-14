@@ -1,5 +1,7 @@
 *.html
+*.swp
 
+single_annotations/*
 sorted_maxprobs.h5
 sorted/*
 question_images/*
