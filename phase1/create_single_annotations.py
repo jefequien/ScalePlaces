@@ -48,7 +48,7 @@ def processCategory(cat):
                         masked_image = maskImage(image_name, cat)
                         misc.imsave(file_path, masked_image)
                     
-                    print c, p, image_name, prob
+                    print cat, p, image_name, prob
 
                     counter += 1
                     if counter == 100:
