@@ -5,10 +5,9 @@ import uuid
 import utils
 
 def getImageTag(path):
-    start_path = "/data/vision/oliva/scenedataset/scaleplaces/ScalePlaces/phase1/tmp"
-    dst = "tmp/{}.jpg".format(uuid.uuid4().hex)
-    os.symlink(path, dst)
-    return "<img src=\"{}\" height=\"256px\">".format(dst)
+    tmp_file = "images/{}.jpg".format(uuid.uuid4().hex)
+    os.symlink(path, "tmp/{}".format(tmp_file))
+    return "<img src=\"{}\" height=\"256px\">".format(tmp_file)
 
 def makeImageSection(project, im):
     html = "{} {}<br><br>".format(project, im)
