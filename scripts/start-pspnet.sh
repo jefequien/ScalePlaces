@@ -64,3 +64,7 @@ export PYTHONPATH=$PYTHONPATH:/data/vision/torralba/segmentation/places/PSPNet/p
 source /data/vision/torralba/aditya_datasets/intel/mkl/bin/mklvars.sh intel64
 export LD_LIBRARY_PATH=/data/vision/oliva/scenedataset/lib/cudnn-7.0/lib64:$LD_LIBRARY_PATH
 export LD_LIBRARY_PATH=/data/vision/torralba/segmentation/places/PSPNet/build/lib:$LD_LIBRARY_PATH
+
+export LD_LIBRARY_PATH=/data/vision/oliva/scenedataset/lib/cuda-8.0/lib64:$LD_LIBRARY_PATH
+
+
