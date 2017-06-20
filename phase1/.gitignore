@@ -2,5 +2,6 @@
 *.swp
 *.h5
 
+sorted/*
 single_annotations/*
 question_images/*
