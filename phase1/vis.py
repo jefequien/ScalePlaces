@@ -1,10 +1,14 @@
 import argparse
 import os
+import random
 
 import utils
 
 def getImageTag(path):
-    return "<img src=\"{}\" height=\"256px\">".format(path)
+    start_path = "/data/vision/oliva/scenedataset/scaleplaces/ScalePlaces/phase1/tmp"
+    dst = "tmp/{}.jpg".format(uuid.uuid4().hex)
+    os.symlink(path, dst)
+    return "<img src=\"{}\" height=\"256px\">".format(dst)
 
 def makeImageSection(project, im):
     html = "{} {}<br><br>".format(project, im)
