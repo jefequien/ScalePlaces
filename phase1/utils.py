@@ -1,3 +1,4 @@
+import json
 from scipy import misc
 import matplotlib.pyplot as plt
 import cv2

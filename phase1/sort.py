@@ -52,7 +52,7 @@ n,cat = maxprobs.shape
 for c in xrange(0,cat):
     sorted_indicies = sorted_indicies_matrix[:,c][::-1]
 
-    with open("sorted/{}/{}{}.txt".format(project, c+1, categories[c+1]), 'w') as f:
+    with open("{}/{}{}.txt".format(project, c+1, categories[c+1]), 'w') as f:
         for i in sorted_indicies:
             prob = maxprobs[i,c]
             im = im_list[i]

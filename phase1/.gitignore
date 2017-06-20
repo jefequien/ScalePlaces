@@ -3,5 +3,6 @@
 *.h5
 
 sorted/*
+tmp/*
 single_annotations/*
 question_images/*
