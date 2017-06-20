@@ -6,7 +6,10 @@ import utils
 
 def getImageTag(path):
     tmp_file = "images/{}.jpg".format(uuid.uuid4().hex)
-    os.symlink(path, "tmp/{}".format(tmp_file))
+    tmp_path = os.path.join("tmp", tmp_file)
+    if not os.path.exists(os.path.dirname(tmp_path)):
+        os.makedirs(os.path.dirname(tmp_path))
+    os.symlink(path, tmp_path)
     return "<img src=\"{}\" height=\"256px\">".format(tmp_file)
 
 def makeImageSection(project, im):
