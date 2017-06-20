@@ -94,7 +94,8 @@ for i in range(0, len(list_im)):
         image = np.stack((image,image,image), axis=2)
     
     # resize image
-    h_ori, w_ori = image.shape
+    h_ori = image.shape[0]
+    w_ori = image.shape[1]
     if h_ori<128 or w_ori<128:
         with open(fn_log, 'a+') as f_log:
             f_log.write('[%s] Dropped [%s]: image too small\n' %(localtime, fn_im))
@@ -103,8 +104,8 @@ for i in range(0, len(list_im)):
         image = scipy.misc.imresize(image, (int(1./w_ori*h_ori*base_size), base_size))
     else:
         image = scipy.misc.imresize(image, (base_size, int(1./h_ori*w_ori*base_size)))
-    h,w = image.shape
-
+    h = image.shape[0]
+    w = image.shape[1]
     # substract mean
     image = image.astype('float32') - data_mean
     
