@@ -7,6 +7,7 @@ import numpy as np
 
 import utils
 import time
+import random
 
 class Visualizer:
     def __init__(self, output_dir="tmp/"):
@@ -46,7 +47,7 @@ class Visualizer:
         html = "{} {}<br><br>".format(project, im)
 
         config = utils.get_data_config(project)
-        
+
         image = os.path.join(config["images"], im)
         try:
             category_mask = os.path.join(config["category_mask"], im.replace('.jpg','.png'))
@@ -88,7 +89,7 @@ class Visualizer:
         html = "<html><head></head>{}</html>".format(body)
 
         if not fname:
-            fname = "{}.html".format(project)
+            fname = "{}_{}.html".format(project, time.time())
 
         output_path = os.path.join(self.output_dir,fname)
         with open(output_path, 'w') as f:
@@ -118,6 +119,7 @@ if __name__ == "__main__":
         im_list_file = config["im_list"]
         if im_list_file:
             im_list = [line.rstrip() for line in open(im_list_file, 'r')]
+            random.shuffle(list_im)
 
     vis = Visualizer()
     if output_dir:
