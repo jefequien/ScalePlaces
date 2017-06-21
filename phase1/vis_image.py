@@ -38,7 +38,7 @@ class ImageVisualizer:
         paths["category_mask"] = cm_color_path
         paths["prob_mask"] = pm_path
         paths["ground_truth"] = gt_color_path
-        paths["diff"] = None
+        paths["diff"] = diff_color_path
         return paths
 
     def get_category_mask(self, im):
@@ -69,7 +69,7 @@ class ImageVisualizer:
         if cm is None or gt is None:
             return None
         mask = gt - cm
-        mask.astype(bool)
+        mask = np.invert(mask.astype(bool))
         diff = np.copy(gt)
         diff[mask] = 0
         return diff
