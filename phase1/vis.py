@@ -89,7 +89,7 @@ class Visualizer:
         html = "<html><head></head>{}</html>".format(body)
 
         if not fname:
-            fname = "{}_{}.html".format(project, time.time())
+            fname = "{}_{}.html".format(project, int(time.time()))
 
         output_path = os.path.join(self.output_dir,fname)
         with open(output_path, 'w') as f:
@@ -119,7 +119,7 @@ if __name__ == "__main__":
         im_list_file = config["im_list"]
         if im_list_file:
             im_list = [line.rstrip() for line in open(im_list_file, 'r')]
-            random.shuffle(list_im)
+            random.shuffle(im_list)
 
     vis = Visualizer()
     if output_dir:
