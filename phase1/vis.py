@@ -15,7 +15,7 @@ class Visualizer:
         if not os.path.exists(self.images_dir):
             os.makedirs(self.images_dir)
 
-        self.max = 1000
+        self.max = 100
 
     def symlink(self, path):
         fn = "{}.jpg".format(uuid.uuid4().hex)
@@ -72,7 +72,7 @@ class Visualizer:
         for im in im_list:
             print im
             sections += self.makeImageSection(project, im)
-            
+
             cnt += 1
             if cnt == self.max:
                 break
