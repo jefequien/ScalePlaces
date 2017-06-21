@@ -43,7 +43,7 @@ class Visualizer:
         return path
 
     def makeImageSection(self, project, im):
-        html = "{}{}<br><br>".format(project, im)
+        html = "{} {}<br><br>".format(project, im)
 
         config = utils.get_data_config(project)
         image = os.path.join(config["images"], im)
@@ -74,6 +74,7 @@ class Visualizer:
             sections += self.makeImageSection(project, im)
 
             cnt += 1
+            print cnt
             if cnt == self.max:
                 break
 
