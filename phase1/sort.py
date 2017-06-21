@@ -9,9 +9,13 @@ def build_maxprobs(im_list, maxprob_root):
     for im in im_list:
         print im
         im = im.replace('.jpg', '.h5')
-        with h5py.File(os.path.join(maxprob_root, im), 'r') as f:
-            output = f['maxprob'][:]
-            maxprobs.append(output)
+        try:
+            with h5py.File(os.path.join(maxprob_root, im), 'r') as f:
+                output = f['maxprob'][:]
+                maxprobs.append(output)
+        except:
+            print "No h5 file"
+            maxprobs.append(np.zeros(150))
     maxprobs = np.vstack(maxprobs)
     print maxprobs.shape
 

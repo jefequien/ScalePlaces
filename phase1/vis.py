@@ -78,7 +78,7 @@ class Visualizer:
         sections = ""
         cnt = 0
         for im in im_list:
-            print im
+            print cnt, im
             sections += self.makeImageSection(project, im)
 
             cnt += 1
@@ -113,7 +113,7 @@ if __name__ == "__main__":
     if im:
         im_list = [im]
     elif im_list_file:
-        im_list = [line.rstrip() for line in open(im_list_file, 'r')]
+        im_list = [line.split()[0] for line in open(im_list_file, 'r')]
     else:
         config = utils.get_data_config(project)
         im_list_file = config["im_list"]
