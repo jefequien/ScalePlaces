@@ -8,18 +8,18 @@ import utils
 from vis_image import ImageVisualizer
 
 class Visualizer:
-    def __init__(self, project, output_dir):
+    def __init__(self, project, output_dir, MAX=1000):
         self.project = project
         self.image_visualizer = ImageVisualizer(project)
         self.images_dir = self.image_visualizer.images_dir
 
         self.output_dir = output_dir
-        self.max_images = 100
+        self.MAX = MAX
 
     def makeHTML(self, im_list, fname=None):
         img_sections = ""
         cnt = 0
-        for im in im_list[:self.max_images]:
+        for im in im_list[:self.MAX]:
             img_section = "<br><br>{} {}<br><br>".format(self.project, im)
 
             im = im.split()[0]
@@ -78,9 +78,8 @@ if __name__ == "__main__":
         config = utils.get_data_config(project)
         im_list = [line for line in open(config["im_list"], 'r')]
         random.shuffle(im_list)
-    im_list = im_list[:n]
 
-    vis = Visualizer(project, output_dir)
+    vis = Visualizer(project, output_dir, MAX=n)
 
     output_path = vis.makeHTML(im_list)
     print "http://places.csail.mit.edu/scaleplaces/ScalePlaces/phase1/{}".format(output_path)
