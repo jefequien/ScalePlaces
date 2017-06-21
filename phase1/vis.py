@@ -70,8 +70,9 @@ class Visualizer:
         sections = ""
         cnt = 0
         for im in im_list:
+            print im
             sections += self.makeImageSection(project, im)
-
+            
             cnt += 1
             if cnt == self.max:
                 break
