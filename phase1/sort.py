@@ -5,30 +5,36 @@ import os
 import utils
 
 def build_maxprobs(im_list, maxprob_root):
-    maxprobs = np.empty((0,150), float)
+    maxprobs = []
     for im in im_list:
+        print im
+        im = im.replace('.jpg', '.h5')
         with h5py.File(os.path.join(maxprob_root, im), 'r') as f:
-            data = ['maxprob'][()]
-            np.append(maxprobs, data, axis=0)
+            output = f['maxprob'][:]
+            maxprobs.append(output)
+    maxprobs = np.vstack(maxprobs)
+    print maxprobs.shape
+
     with h5py.File("maxprobs.h5", 'w') as f:
         f.create_dataset('maxprobs', data=maxprobs)
     return maxprobs
 
 def open_maxprobs():
     with h5py.File('maxprobs.h5', 'r') as f:
-        output = f['maxprobs']
-        return output[()]
+        output = f['maxprobs'][:]
+        print output.shape
+        return output
 
 def sort_maxprobs(maxprobs):
     sorted_maxprobs = np.argsort(maxprobs, axis=0)
     with h5py.File("sorted_maxprobs.h5", 'w') as f:
         f.create_dataset('sorted_maxprobs', data=maxprobs)
-        return output[()]
+    return sorted_maxprobs
 
 def open_sorted_maxprobs():
     with h5py.File('sorted_maxprobs.h5', 'r') as f:
         output = f['sorted_maxprobs']
-        return output[()]
+        return output[:]
 
 
 project = "ade20k"
@@ -38,7 +44,7 @@ im_list_path = config["im_list"]
 im_list = [line.rstrip() for line in open(im_list_path, 'r')]
 
 pspnet_pred_root = config["pspnet_prediction"]
-maxprob_root = os.path.join(pspnet_pred_root, "maxprob")
+maxprob_root = os.path.join(pspnet_pred_root, "max_prob")
 maxprobs = build_maxprobs(im_list, maxprob_root)
 # maxprobs = open_maxprobs()
 
@@ -50,9 +56,9 @@ print "Done loading."
 categories = utils.get_categories()
 n,cat = maxprobs.shape
 for c in xrange(0,cat):
-    sorted_indicies = sorted_indicies_matrix[:,c][::-1]
+    sorted_indicies = sorted_maxprobs[:,c][::-1]
 
-    with open("{}/{}{}.txt".format(project, c+1, categories[c+1]), 'w') as f:
+    with open("sorted/{}/{}{}.txt".format(project, c+1, categories[c+1]), 'w') as f:
         for i in sorted_indicies:
             prob = maxprobs[i,c]
             im = im_list[i]
