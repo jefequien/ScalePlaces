@@ -3,6 +3,7 @@ from scipy import misc
 import matplotlib.pyplot as plt
 import cv2
 import numpy as np
+import colorsys
 import random
 
 RED = [255,0,0]
@@ -26,6 +27,11 @@ def get_categories():
             if cat.isdigit():
                 categories[int(cat)] = split[4].replace(',','')
         return categories
+
+def to_color(category):
+    v = (category-1)*(137.5/360)
+    return colorsys.hsv_to_rgb(v,1,1)
+
 
 def apply_mask(image, mask):
     masked_image = np.copy(image)
