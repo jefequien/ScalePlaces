@@ -46,20 +46,27 @@ class Visualizer:
         html = "{} {}<br><br>".format(project, im)
 
         config = utils.get_data_config(project)
+        
         image = os.path.join(config["images"], im)
-        category_mask = os.path.join(config["category_mask"], im.replace('.jpg','.png'))
-
+        try:
+            category_mask = os.path.join(config["category_mask"], im.replace('.jpg','.png'))
+        except:
+            category_mask = None
         try:
             prob_mask = os.path.join(config["prob_mask"], im)
         except:
             prob_mask = None
-
         try:
             color_mask = self.createColorMask(category_mask)
         except:
             color_mask = None
+        try:
+            ground_truth_path = os.path.join(config["ground_truth"], im.replace('.jpg','.png'))
+            ground_truth = self.createColorMask(ground_truth_path)
+        except:
+            ground_truth = None
 
-        paths = [image,category_mask,prob_mask,color_mask]
+        paths = [image,category_mask,prob_mask,color_mask, ground_truth]
         for path in paths:
             html += self.getImageTag(path)
 
@@ -74,7 +81,6 @@ class Visualizer:
             sections += self.makeImageSection(project, im)
 
             cnt += 1
-            print cnt
             if cnt == self.max:
                 break
 
