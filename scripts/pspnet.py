@@ -26,10 +26,7 @@ class PSPNet:
     def process(self, image):
         pass
     def get_network_architecture(self):
-        layernames = self.net.blob_names
-        print layernames
-        for layername in layernames:
-            print self.net.blobs(layername).shape
-
+        for k,v in self.net.blobs.items():
+            print v.data.shape, k
 pspnet = PSPNet()
 pspnet.get_network_architecture()
