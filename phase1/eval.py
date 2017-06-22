@@ -1,6 +1,7 @@
 import os
-
+import numpy as np
 from scipy import misc
+
 import utils
 
 
@@ -11,7 +12,7 @@ root_cm = os.path.join(config["pspnet_prediction"], "category_mask")
 root_pm = os.path.join(config["pspnet_prediction"], "prob_mask")
 root_gt = config["ground_truth"]
 
-im_list = [line for line in open(config["im_list"], 'r')]
+im_list = [line.rstrip() for line in open(config["im_list"], 'r')]
 
 def evaluate_image(im):
     cm = misc.imread(os.path.join(root_cm, im.replace(".jpg",".png")))
@@ -21,11 +22,11 @@ def evaluate_image(im):
     for c in xrange(1,151):
         cm_mask = cm == c
         gt_mask = gt == c
-        intersection = np.ma.mask_and(cm_mask, gt_mask)
-        union = np.ma.mask_or(cm_mask, gt_mask)
+        intersection = np.logical_and(cm_mask, gt_mask)
+        union = np.logical_or(cm_mask, gt_mask)
 
         if np.sum(union) != 0:
-            iou = np.sum(intersection)/np.sum(union)
+            iou = 1.0*np.sum(intersection)/np.sum(union)
             gt_area = np.sum(gt_mask)
             results[c] = (iou, gt_area)
     return results
@@ -33,6 +34,7 @@ def evaluate_image(im):
 def evaluate_categories():
     accuracies = {}
     for im in im_list:
+        print im
         results = evaluate_image(im)
         for c in results:
             acc, area = results[c]
@@ -42,11 +44,15 @@ def evaluate_categories():
                 accuracies[c].append(acc)
 
 
-    output = "0 CATEGORY AVG_ACC NUM\n"
+    print "0 CATEGORY AVG_ACC NUM"
+    output = ""
     categories = utils.get_categories()
     for c in xrange(1,151):
-        accs = accuracies[c]
-        output += "{} {} {} {}\n".format(c, categories[c], sum(accs)/len(accs), len(accs))
+        if c in accuracies:
+            accs = accuracies[c]
+            line = "{} {} {} {}".format(c, categories[c], sum(accs)/len(accs), len(accs))
+            print line
+            output += line + "\n"
     with open("baseline.txt", 'w') as f:
         f.write(output)
 
