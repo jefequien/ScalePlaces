@@ -1,4 +1,5 @@
 import os
+import argparse
 import numpy as np
 from scipy import misc
 import h5py
@@ -37,21 +38,22 @@ def evaluate_images(im_list):
                 accuracies[i,c-1] = np.nan
     return accuracies
 
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
-    parser.add_argument("-p", required=True, help="Project name")
-    args = parser.parse_args()
+parser = argparse.ArgumentParser()
+parser.add_argument("-p", required=True, help="Project name")
+args = parser.parse_args()
 
-    project = args.p
-    config = utils.get_data_config(project)
-    root_images = config["images"]
-    root_cm = os.path.join(config["pspnet_prediction"], "category_mask")
-    root_pm = os.path.join(config["pspnet_prediction"], "prob_mask")
-    root_gt = config["ground_truth"]
+project = args.p
+config = utils.get_data_config(project)
+root_images = config["images"]
+root_cm = os.path.join(config["pspnet_prediction"], "category_mask")
+root_pm = os.path.join(config["pspnet_prediction"], "prob_mask")
+root_gt = config["ground_truth"]
 
-    im_list = [line.rstrip() for line in open(config["im_list"], 'r')]
-    accuracies = evaluate_images(im_list)
+im_list = [line.rstrip() for line in open(config["im_list"], 'r')]
+im_list = im_list[:100]
+accuracies = evaluate_images(im_list)
+print accuracies.shape
 
-    fname = "{}_acc.h5".format(project)
-    with h5py.File(fname, 'w') as f:
-        f.create_dataset('accuracies', data=accuracies)
+fname = "{}_acc_test.h5".format(project)
+with h5py.File(fname, 'w') as f:
+    f.create_dataset('accuracies', data=accuracies)

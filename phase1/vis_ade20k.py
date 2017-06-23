@@ -10,7 +10,7 @@ config = utils.get_data_config(project)
 
 vis = Visualizer(project, output_dir, MAX=100)
 for i in xrange(10):
-    im_list = [line for line in open(config["im_list"], 'r')]
+    im_list = [line.rstrip() for line in open(config["im_list"], 'r')]
     random.shuffle(im_list)
     vis.makeHTML(im_list,fname="{}_{}.html".format(project, i))
 
