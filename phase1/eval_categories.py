@@ -6,7 +6,7 @@ import h5py
 import utils
 
 def open_data(fname, dataset_name):
-    with h5py.File('fname', 'r') as f:
+    with h5py.File(fname, 'r') as f:
         output = f[dataset_name]
         return output[:]
 

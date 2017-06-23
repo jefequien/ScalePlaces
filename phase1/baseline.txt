@@ -1,81 +1,150 @@
-1 wall 0.81782883406 99
-3 sky 0.497371213583 2
-4 floor 0.769136760484 93
-5 tree 0.474672078265 2
-6 ceiling 0.769058516608 59
-8 bed 0.0 3
-9 windowpane 0.65293966141 47
-10 grass 0.0 1
-11 cabinet 0.723848431442 64
-13 person 0.372370214886 5
-14 earth 0.891460090027 1
-15 door 0.500393334204 56
-16 table 0.194165493611 11
-18 plant 0.447925031577 19
-19 curtain 0.745938742217 39
-20 chair 0.312477633878 14
-22 water 0.731403567822 1
-23 painting 0.509874214831 22
-24 sofa 0.0 1
-25 shelf 0.243148472106 28
-28 mirror 0.750258885045 59
-29 rug 0.559310646659 11
-32 seat 0.0 1
-33 fence 0.0 1
-35 rock 0.0 1
-36 wardrobe 0.489988468861 2
-37 lamp 0.142140055344 8
-38 bathtub 0.704933439544 64
-39 railing 0.0 4
-42 box 0.172404890156 23
-43 column 0.485796551074 3
-44 signboard 0.268495742668 2
-45 chest 0.768642997363 2
-46 counter 0.0 2
-48 sink 0.659291115993 82
-54 stairs 0.289394726213 3
-58 pillow 0.0 1
-59 screen 0.730700511876 28
-60 stairway 0.0 1
-64 blind 0.865428174329 7
-65 coffee 0.0 1
-66 toilet 0.764453406669 52
-67 flower 0.414269320035 18
-68 book 0.0 4
-69 hill 0.923859914336 1
-70 bench 0.0 2
-71 countertop 0.506483787135 51
-72 stove 0.0 1
-82 towel 0.582427450479 67
-83 light 0.370005384788 22
-86 chandelier 0.283225311868 3
-88 streetlight 0.0 1
-90 television 0.82537174255 2
-93 apparel 0.0 1
-96 bannister 0.0 2
-97 escalator 0.0 1
-99 bottle 0.119860045264 30
-101 poster 0.0 1
-105 fountain 0.683135646125 1
-109 plaything 0.0 1
-111 stool 0.341303138784 3
-113 basket 0.363646217988 17
-116 bag 0.305512751244 6
-120 ball 0.490114959361 1
-122 step 0.165618792671 10
-123 tank 0.0 1
-126 pot 0.330412429058 14
-133 sculpture 0.0 3
-135 sconce 0.367442286437 36
-136 vase 0.191701889074 29
-138 tray 0.00291375291375 8
-139 ashcan 0.233279939618 13
-140 fan 0.0 2
-143 plate 0.0050577053632 4
-144 monitor 0.0 1
-145 bulletin 0.0 1
-146 shower 0.086778405359 18
-147 radiator 0.511648820115 5
-148 glass 0.0582398903867 13
-149 clock 0.0 4
-150 flag 0.0 1
+1 wall 0.818
+2 building nan
+3 sky 0.497
+4 floor 0.769
+5 tree 0.475
+6 ceiling 0.769
+7 road nan
+8 bed 0.000
+9 windowpane 0.653
+10 grass 0.000
+11 cabinet 0.724
+12 sidewalk nan
+13 person 0.372
+14 earth 0.891
+15 door 0.500
+16 table 0.194
+17 mountain nan
+18 plant 0.448
+19 curtain 0.746
+20 chair 0.312
+21 car nan
+22 water 0.731
+23 painting 0.510
+24 sofa 0.000
+25 shelf 0.243
+26 house nan
+27 sea nan
+28 mirror 0.750
+29 rug 0.559
+30 field nan
+31 armchair nan
+32 seat 0.000
+33 fence 0.000
+34 desk nan
+35 rock 0.000
+36 wardrobe 0.490
+37 lamp 0.142
+38 bathtub 0.705
+39 railing 0.000
+40 cushion nan
+41 base nan
+42 box 0.172
+43 column 0.486
+44 signboard 0.268
+45 chest 0.769
+46 counter 0.000
+47 sand nan
+48 sink 0.659
+49 skyscraper nan
+50 fireplace nan
+51 refrigerator nan
+52 grandstand nan
+53 path nan
+54 stairs 0.289
+55 runway nan
+56 case nan
+57 pool nan
+58 pillow 0.000
+59 screen 0.731
+60 stairway 0.000
+61 river nan
+62 bridge nan
+63 bookcase nan
+64 blind 0.865
+65 coffee 0.000
+66 toilet 0.764
+67 flower 0.414
+68 book 0.000
+69 hill 0.924
+70 bench 0.000
+71 countertop 0.506
+72 stove 0.000
+73 palm nan
+74 kitchen nan
+75 computer nan
+76 swivel nan
+77 boat nan
+78 bar nan
+79 arcade nan
+80 hovel nan
+81 bus nan
+82 towel 0.582
+83 light 0.370
+84 truck nan
+85 tower nan
+86 chandelier 0.283
+87 awning nan
+88 streetlight 0.000
+89 booth nan
+90 television 0.825
+91 airplane nan
+92 dirt nan
+93 apparel 0.000
+94 pole nan
+95 land nan
+96 bannister 0.000
+97 escalator 0.000
+98 ottoman nan
+99 bottle 0.120
+100 buffet nan
+101 poster 0.000
+102 stage nan
+103 van nan
+104 ship nan
+105 fountain 0.683
+106 conveyer nan
+107 canopy nan
+108 washer nan
+109 plaything 0.000
+110 swimming nan
+111 stool 0.341
+112 barrel nan
+113 basket 0.364
+114 waterfall nan
+115 tent nan
+116 bag 0.306
+117 minibike nan
+118 cradle nan
+119 oven nan
+120 ball 0.490
+121 food nan
+122 step 0.166
+123 tank 0.000
+124 trade nan
+125 microwave nan
+126 pot 0.330
+127 animal nan
+128 bicycle nan
+129 lake nan
+130 dishwasher nan
+131 screen nan
+132 blanket nan
+133 sculpture 0.000
+134 hood nan
+135 sconce 0.367
+136 vase 0.192
+137 traffic nan
+138 tray 0.003
+139 ashcan 0.233
+140 fan 0.000
+141 pier nan
+142 crt nan
+143 plate 0.005
+144 monitor 0.000
+145 bulletin 0.000
+146 shower 0.087
+147 radiator 0.512
+148 glass 0.058
+149 clock 0.000
+150 flag 0.000
