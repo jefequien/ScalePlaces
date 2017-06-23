@@ -6,11 +6,24 @@ import h5py
 
 import utils
 
+def squish(image):
+    base_size = 512
+    h_ori = image.shape[0]
+    w_ori = image.shape[1]
+    if h_ori<128 or w_ori<128:
+        raise Exception
+
+    if w_ori>h_ori:
+        image = scipy.misc.imresize(image, (int(1./w_ori*h_ori*base_size), base_size), interp='nearest')
+    else:
+        image = scipy.misc.imresize(image, (base_size, int(1./h_ori*w_ori*base_size)), interp='nearest')
+    return image
+
 def evaluate_image(im):
     # cm = misc.imread(os.path.join(root_cm, im.replace(".jpg",".png")))
     gt = misc.imread(os.path.join(root_gt, im.replace(".jpg",".png")))
-    squish = misc.imresize(gt, 60.0/473, interp='nearest')
-    cm = misc.imresize(squish, gt.shape, interp='nearest')
+    squished = squish(gt)
+    cm = misc.imresize(squished, gt.shape, interp='nearest')
 
     accuracy = {}
     for c in xrange(1,151):
