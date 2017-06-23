@@ -30,7 +30,11 @@ def evaluate_images(im_list):
         im = im_list[i]
         print im
 
-        accuracy = evaluate_image(im)
+        try:
+            accuracy = evaluate_image(im)
+        except:
+            accuracy = {}
+            
         for c in xrange(1,151):
             if c in accuracy:
                 accuracies[i,c-1] = accuracy[c]
