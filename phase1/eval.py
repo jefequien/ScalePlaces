@@ -20,12 +20,12 @@ def evaluate_image(im):
         if np.sum(union) != 0:
             iou = 1.0*np.sum(intersection)/np.sum(union)
             gt_area = np.sum(gt_mask)
-            accuracy[c] = (iou, gt_area)
+            accuracy[c] = iou
     return accuracy
 
 def evaluate_images(im_list):
     n = len(im_list)
-    accuracies = np.zeros(n, 150))
+    accuracies = np.zeros((n, 150))
     for i in xrange(n):
         im = im_list[i]
         print im
@@ -50,10 +50,9 @@ root_pm = os.path.join(config["pspnet_prediction"], "prob_mask")
 root_gt = config["ground_truth"]
 
 im_list = [line.rstrip() for line in open(config["im_list"], 'r')]
-im_list = im_list[:100]
 accuracies = evaluate_images(im_list)
 print accuracies.shape
 
-fname = "{}_acc_test.h5".format(project)
+fname = "{}_acc.h5".format(project)
 with h5py.File(fname, 'w') as f:
     f.create_dataset('accuracies', data=accuracies)
