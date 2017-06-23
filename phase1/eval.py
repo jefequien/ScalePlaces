@@ -1,24 +1,15 @@
 import os
 import numpy as np
 from scipy import misc
+import h5py
 
 import utils
-
-
-project = "ade20k"
-config = utils.get_data_config(project)
-root_images = config["images"]
-root_cm = os.path.join(config["pspnet_prediction"], "category_mask")
-root_pm = os.path.join(config["pspnet_prediction"], "prob_mask")
-root_gt = config["ground_truth"]
-
-im_list = [line.rstrip() for line in open(config["im_list"], 'r')]
 
 def evaluate_image(im):
     cm = misc.imread(os.path.join(root_cm, im.replace(".jpg",".png")))
     gt = misc.imread(os.path.join(root_gt, im.replace(".jpg",".png")))
 
-    results = {}
+    accuracy = {}
     for c in xrange(1,151):
         cm_mask = cm == c
         gt_mask = gt == c
@@ -28,33 +19,39 @@ def evaluate_image(im):
         if np.sum(union) != 0:
             iou = 1.0*np.sum(intersection)/np.sum(union)
             gt_area = np.sum(gt_mask)
-            results[c] = (iou, gt_area)
-    return results
+            accuracy[c] = (iou, gt_area)
+    return accuracy
 
-def evaluate_categories():
-    accuracies = {}
-    for im in im_list:
+def evaluate_images(im_list):
+    n = len(im_list)
+    accuracies = np.zeros(n, 150))
+    for i in xrange(n):
+        im = im_list[i]
         print im
-        results = evaluate_image(im)
-        for c in results:
-            acc, area = results[c]
-            if c not in accuracies:
-                accuracies[c] = [acc]
+
+        accuracy = evaluate_image(im)
+        for c in xrange(1,151):
+            if c in accuracy:
+                accuracies[i,c-1] = accuracy[c]
             else:
-                accuracies[c].append(acc)
+                accuracies[i,c-1] = np.nan
+    return accuracies
 
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-p", required=True, help="Project name")
+    args = parser.parse_args()
 
-    print "0 CATEGORY AVG_ACC NUM"
-    output = ""
-    categories = utils.get_categories()
-    for c in xrange(1,151):
-        if c in accuracies:
-            accs = accuracies[c]
-            line = "{} {} {} {}".format(c, categories[c], sum(accs)/len(accs), len(accs))
-            print line
-            output += line + "\n"
-    with open("baseline.txt", 'w') as f:
-        f.write(output)
+    project = args.p
+    config = utils.get_data_config(project)
+    root_images = config["images"]
+    root_cm = os.path.join(config["pspnet_prediction"], "category_mask")
+    root_pm = os.path.join(config["pspnet_prediction"], "prob_mask")
+    root_gt = config["ground_truth"]
 
-evaluate_categories()
+    im_list = [line.rstrip() for line in open(config["im_list"], 'r')]
+    accuracies = evaluate_images(im_list)
 
+    fname = "{}_acc.h5".format(project)
+    with h5py.File(fname, 'w') as f:
+        f.create_dataset('accuracies', data=accuracies)
