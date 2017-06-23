@@ -9,8 +9,8 @@ import utils
 def evaluate_image(im):
     # cm = misc.imread(os.path.join(root_cm, im.replace(".jpg",".png")))
     gt = misc.imread(os.path.join(root_gt, im.replace(".jpg",".png")))
-    squish = misc.resize(gt, 60.0/473, interp='nearest')
-    cm = misc.resize(gt, gt.shape, interp='nearest')
+    squish = misc.imresize(gt, 60.0/473, interp='nearest')
+    cm = misc.imresize(squish, gt.shape, interp='nearest')
 
     accuracy = {}
     for c in xrange(1,151):
@@ -36,6 +36,7 @@ def evaluate_images(im_list):
             accuracy = evaluate_image(im)
         except:
             accuracy = {}
+            print "Skipping", im
 
         for c in xrange(1,151):
             if c in accuracy:
@@ -56,7 +57,7 @@ root_pm = os.path.join(config["pspnet_prediction"], "prob_mask")
 root_gt = config["ground_truth"]
 
 im_list = [line.rstrip() for line in open(config["im_list"], 'r')]
-im_list = im_list[:100]
+#im_list = im_list[:100]
 accuracies = evaluate_images(im_list)
 print accuracies.shape
 

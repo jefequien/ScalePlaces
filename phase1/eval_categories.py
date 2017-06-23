@@ -22,7 +22,7 @@ averages = np.nanmean(data, axis=0)
 categories = utils.get_categories()
 for i in xrange(len(averages)):
     avg = averages[i]
-    avg = "%.3f" % avg
+    #avg = "%.3f" % avg
     c = i+1
     output = "{} {} {}".format(c, categories[c], avg)
     print output
