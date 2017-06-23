@@ -7,8 +7,10 @@ import h5py
 import utils
 
 def evaluate_image(im):
-    cm = misc.imread(os.path.join(root_cm, im.replace(".jpg",".png")))
+    # cm = misc.imread(os.path.join(root_cm, im.replace(".jpg",".png")))
     gt = misc.imread(os.path.join(root_gt, im.replace(".jpg",".png")))
+    squish = misc.resize(gt, 60.0/473, interp='nearest')
+    cm = misc.resize(gt, gt.shape, interp='nearest')
 
     accuracy = {}
     for c in xrange(1,151):
@@ -34,7 +36,7 @@ def evaluate_images(im_list):
             accuracy = evaluate_image(im)
         except:
             accuracy = {}
-            
+
         for c in xrange(1,151):
             if c in accuracy:
                 accuracies[i,c-1] = accuracy[c]
@@ -54,9 +56,10 @@ root_pm = os.path.join(config["pspnet_prediction"], "prob_mask")
 root_gt = config["ground_truth"]
 
 im_list = [line.rstrip() for line in open(config["im_list"], 'r')]
+im_list = im_list[:100]
 accuracies = evaluate_images(im_list)
 print accuracies.shape
 
-fname = "{}_acc.h5".format(project)
+fname = "{}_acc_squish.h5".format(project)
 with h5py.File(fname, 'w') as f:
     f.create_dataset('accuracies', data=accuracies)
