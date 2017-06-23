@@ -14,9 +14,9 @@ def squish(image):
         raise Exception
 
     if w_ori>h_ori:
-        image = scipy.misc.imresize(image, (int(1./w_ori*h_ori*base_size), base_size), interp='nearest')
+        image = misc.imresize(image, (int(1./w_ori*h_ori*base_size), base_size), interp='nearest')
     else:
-        image = scipy.misc.imresize(image, (base_size, int(1./h_ori*w_ori*base_size)), interp='nearest')
+        image = misc.imresize(image, (base_size, int(1./h_ori*w_ori*base_size)), interp='nearest')
     return image
 
 def evaluate_image(im):
