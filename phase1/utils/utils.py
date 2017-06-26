@@ -1,3 +1,4 @@
+import os
 import json
 from scipy import misc
 import matplotlib.pyplot as plt
@@ -12,15 +13,17 @@ BLUE = [0,0,255]
 
 COLORS = [RED,GREEN,BLUE]
 
+PATH = os.path.dirname(__file__)
+
 def get_data_config(project):
-    with open("../../../LabelMe/data_config.json", 'r') as f:
+    with open(os.path.join(PATH, "../../../LabelMe/data_config.json"), 'r') as f:
         data_config = json.load(f)
         config = data_config[project]
         return config
 
 def get_categories():
     categories = {}
-    with open("objectInfo150.txt", 'r') as f:
+    with open(os.path.join(PATH, "objectInfo150.txt"), 'r') as f:
         for line in f.readlines():
             split = line.split()
             cat = split[0]
