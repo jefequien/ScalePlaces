@@ -2,7 +2,9 @@
 *.swp
 *.h5
 
-sorted/*
-tmp/*
-single_annotations/*
+eval/sorted/*
+vis/tmp/*
+vis/single_annotations/*
+vis/single_annotations_vis/*
+
 old/*

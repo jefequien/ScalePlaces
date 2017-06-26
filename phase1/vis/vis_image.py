@@ -5,7 +5,7 @@ import uuid
 from scipy import misc
 import numpy as np
 
-import utils
+import utils_vis as utils
 
 class ImageVisualizer:
 

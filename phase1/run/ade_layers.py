@@ -6,9 +6,7 @@ from PIL import Image
 
 import random
 
-import sys
-sys.path.append(os.path.abspath('../utils'))
-import utils
+import utils_run as utils
 
 class AdeSegDataLayer(caffe.Layer):
     """

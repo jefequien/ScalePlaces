@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import cv2
 
-import utils
+import utils_vis as utils
 
 threshold = 0.9
 

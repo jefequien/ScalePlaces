@@ -4,7 +4,7 @@ import random
 import uuid
 import time
 
-import utils
+import utils_vis as utils
 from vis_image import ImageVisualizer
 
 class Visualizer:

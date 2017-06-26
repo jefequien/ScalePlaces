@@ -1,7 +1,7 @@
 import os
 import random
 
-import utils
+import utils_vis as utils
 from vis import Visualizer
 
 output_dir = "vis_ade20k"

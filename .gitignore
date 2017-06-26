@@ -2,7 +2,3 @@
 
 *.pyc
 *.log
-pspnet_prediction
-data_large
-pspnet_prediction/*
-data_large/*
