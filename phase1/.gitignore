@@ -6,5 +6,6 @@ eval/sorted/*
 vis/tmp/*
 vis/single_annotations/*
 vis/single_annotations_vis/*
+vis/vis_ade20k/*
 
-old/*
+trash/*
