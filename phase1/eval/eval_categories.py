@@ -3,9 +3,7 @@ import argparse
 import numpy as np
 import h5py
 
-import sys
-sys.path.append(os.path.abspath('../utils'))
-import utils
+import utils_eval as utils
 
 def open_data(fname, dataset_name):
     with h5py.File(fname, 'r') as f:

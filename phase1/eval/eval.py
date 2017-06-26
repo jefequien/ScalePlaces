@@ -4,9 +4,7 @@ import numpy as np
 from scipy import misc
 import h5py
 
-import sys
-sys.path.append(os.path.abspath('../utils'))
-import utils
+import utils_eval as utils
 
 def squish(image):
     base_size = 512
