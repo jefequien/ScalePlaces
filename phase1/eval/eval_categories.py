@@ -18,7 +18,9 @@ args = parser.parse_args()
 fname = args.f
 data = open_data(fname, "accuracies")
 averages = np.nanmean(data, axis=0)
-counts = np.count_nonzero(~np.isnan(data), axis=0)
+
+nonzero = ~np.isnan(data)
+counts = np.sum(nonzero,axis=0)
 
 categories = utils.get_categories()
 for i in xrange(len(averages)):
