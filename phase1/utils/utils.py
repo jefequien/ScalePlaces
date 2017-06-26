@@ -13,7 +13,7 @@ BLUE = [0,0,255]
 COLORS = [RED,GREEN,BLUE]
 
 def get_data_config(project):
-    with open("../../LabelMe/data_config.json", 'r') as f:
+    with open("../../../LabelMe/data_config.json", 'r') as f:
         data_config = json.load(f)
         config = data_config[project]
         return config

@@ -4,6 +4,8 @@ import numpy as np
 from scipy import misc
 import h5py
 
+import sys
+sys.path.append(os.path.abspath('../utils'))
 import utils
 
 def squish(image):

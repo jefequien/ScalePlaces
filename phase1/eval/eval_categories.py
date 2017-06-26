@@ -3,6 +3,8 @@ import argparse
 import numpy as np
 import h5py
 
+import sys
+sys.path.append(os.path.abspath('../utils'))
 import utils
 
 def open_data(fname, dataset_name):
@@ -18,11 +20,14 @@ args = parser.parse_args()
 fname = args.f
 data = open_data(fname, "accuracies")
 averages = np.nanmean(data, axis=0)
+counts = np.count_nonzero(~np.isnan(data), axis=0)
 
 categories = utils.get_categories()
 for i in xrange(len(averages)):
     avg = averages[i]
+    count = counts[i]
     #avg = "%.3f" % avg
     c = i+1
-    output = "{} {} {}".format(c, categories[c], avg)
+
+    output = "{} {} {} {}".format(c, categories[c], avg, count)
     print output
