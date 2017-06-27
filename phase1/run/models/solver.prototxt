@@ -1,4 +1,4 @@
-net: "train.prototxt"
+net: "models/train.prototxt"
 test_iter: 10
 # make test net, but don't invoke it from the solver itself
 test_interval: 999999999
@@ -13,6 +13,6 @@ momentum: 0.99
 iter_size: 1
 max_iter: 300000
 weight_decay: 0.0005
-snapshot: 2000
-snapshot_prefix: "snapshot/train_challenge"
+#snapshot: 2000
+#snapshot_prefix: "snapshot/train_challenge"
 test_initialization: false

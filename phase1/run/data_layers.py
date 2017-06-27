@@ -55,7 +55,7 @@ class DataLayer(caffe.Layer):
         # randomization: seed and pick
         if self.random:
             random.seed(self.seed)
-            self.idx = random.randint(0, len(self.indices)-1)
+            self.idx = random.randint(0, len(self.im_list)-1)
 
 
     def reshape(self, bottom, top):
@@ -93,7 +93,7 @@ class DataLayer(caffe.Layer):
         - subtract mean
         - transpose to channel x height x width order
         """
-        img = Image.open(os.path.join(self.data_dir, im))
+        img = Image.open(os.path.join(self.data_dir, im.replace(".jpg",".png")))
         in_ = np.array(img, dtype=np.float32)
         if (in_.ndim == 2):
             in_ = np.repeat(in_[:,:,None], 3, axis = 2)
