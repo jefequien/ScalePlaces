@@ -4,8 +4,8 @@ import random
 import utils_vis as utils
 from vis import Visualizer
 
-output_dir = "vis_ade20k"
-project = "ade20k"
+output_dir = "vis_places"
+project = "places"
 config = utils.get_data_config(project)
 
 vis = Visualizer(project, output_dir, MAX=100)

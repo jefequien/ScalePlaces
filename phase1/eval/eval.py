@@ -6,24 +6,10 @@ import h5py
 
 import utils_eval as utils
 
-def squish(image):
-    base_size = 512
-    h_ori = image.shape[0]
-    w_ori = image.shape[1]
-    if h_ori<128 or w_ori<128:
-        raise Exception
-
-    if w_ori>h_ori:
-        image = misc.imresize(image, (int(1./w_ori*h_ori*base_size), base_size), interp='nearest')
-    else:
-        image = misc.imresize(image, (base_size, int(1./h_ori*w_ori*base_size)), interp='nearest')
-    return image
-
 def evaluate_image(im):
-    # cm = misc.imread(os.path.join(root_cm, im.replace(".jpg",".png")))
-    gt = misc.imread(os.path.join(root_gt, im.replace(".jpg",".png")))
-    squished = squish(gt)
-    cm = misc.imresize(squished, gt.shape, interp='nearest')
+    cm = utils.get(im, config, ftype="cm")
+    ap = utils.get(im, config, ftype="ap")
+    gt = utils.get(im, config, ftype="gt")
 
     accuracy = {}
     for c in xrange(1,151):
@@ -66,7 +52,7 @@ project = args.p
 config = utils.get_data_config(project)
 root_images = config["images"]
 root_cm = os.path.join(config["pspnet_prediction"], "category_mask")
-root_pm = os.path.join(config["pspnet_prediction"], "prob_mask")
+root_ap = os.path.join(config["pspnet_prediction"], "all_prob")
 root_gt = config["ground_truth"]
 
 im_list = [line.rstrip() for line in open(config["im_list"], 'r')]

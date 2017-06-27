@@ -45,6 +45,31 @@ def apply_mask(image, mask):
     cv2.drawContours(masked_image, contours, -1, (0, 0, 0), 2)
     return masked_image
 
+def get(im, config, ftype="im"):
+    if ftype == "im":
+        root = config["images"]
+        return misc.imread(os.path.join(root, im))
+    elif ftype == "gt":
+        root = config["ground_truth"]
+        return misc.imread(os.path.join(root, im.replace(".jpg",".png")))
+    elif ftype == "cm":
+        root = os.path.join(config["pspnet_prediction"], "category_mask")
+        return misc.imread(os.path.join(root, im.replace(".jpg",".png")))
+    elif ftype == "ap":
+        root = os.path.join(config["pspnet_prediction"], "all_prob")
+        fname = os.path.join(root, im.replace(".jpg", ".h5"))
+        with h5py.File(fname, 'r') as f:
+            output = f['allprob'][:]
+            return output
+    elif ftype == "pm":
+        root = os.path.join(config["pspnet_prediction"], "prob_mask")
+        fname = os.path.join(root, im.replace(".jpg", ".h5"))
+        with h5py.File(fname, 'r') as f:
+            output = f['probmask'][:]
+            return output
+    else:
+        print "File type not found."
+
 
 if __name__=="__main__":
     image_path = "/Users/hujh/Documents/UROP_Torralba/ADE_20K/images/ADE_train_00000037.jpg"
