@@ -3,7 +3,7 @@ import caffe
 import h5py
 import os
 import numpy as np
-from PIL import Image
+from scipy import misc
 
 import random
 
@@ -93,7 +93,8 @@ class DataLayer(caffe.Layer):
         fname = os.path.join(self.data_dir, im.replace(".jpg",".h5"))
         with h5py.File(fname, 'r') as f:
             output = f['allprob'][:]
-            in_ = np.array(output, dtype=np.float32)
+            image = misc.imresize(output, (128, 128))
+            in_ = np.array(image, dtype=np.float32)
             # in_ = in_.transpose((2,0,1))
             return in_
 
@@ -103,7 +104,8 @@ class DataLayer(caffe.Layer):
         Load label image as 1 x height x width integer array of label indices.
         The leading singleton dimension is required by the loss.
         """
-        img = Image.open(os.path.join(self.label_dir, im.replace(".jpg",".png")))
+        img = misc.imread(os.path.join(self.label_dir, im.replace(".jpg",".png")))
+        img = misc.imresize(img, (128, 128))
         label = np.array(img, dtype=np.uint8)
         label = label[np.newaxis, ...]
         return label
