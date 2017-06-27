@@ -1,6 +1,6 @@
 import os
 import random
-from scipy import misc
+import scipy
 
 import sys
 sys.path.append(os.path.abspath('../utils'))
@@ -19,7 +19,7 @@ class DataHandler:
 
     def next_image(self):
         im = self.im_list.pop(0)
-        image = misc.imread(os.path.join(self.root_images, im))
+        image = scipy.misc.imread(os.path.join(self.root_images, im))
         return image
 
     def save(self, im, ):

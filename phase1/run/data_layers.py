@@ -3,7 +3,7 @@ import caffe
 import h5py
 import os
 import numpy as np
-from scipy import misc
+from scipy import misc, ndimage
 
 import random
 
@@ -93,7 +93,9 @@ class DataLayer(caffe.Layer):
         fname = os.path.join(self.data_dir, im.replace(".jpg",".h5"))
         with h5py.File(fname, 'r') as f:
             output = f['allprob'][:]
-            image = misc.imresize(output, (128, 128))
+
+            n,h,w = output.shape
+            image = ndimage.zoom(output, (1., 60./h, 60./w), prefilter=False)
             in_ = np.array(image, dtype=np.float32)
             # in_ = in_.transpose((2,0,1))
             return in_
@@ -105,7 +107,7 @@ class DataLayer(caffe.Layer):
         The leading singleton dimension is required by the loss.
         """
         img = misc.imread(os.path.join(self.label_dir, im.replace(".jpg",".png")))
-        img = misc.imresize(img, (128, 128))
+        img = misc.imresize(img, (60, 60), interp='nearest')
         label = np.array(img, dtype=np.uint8)
         label = label[np.newaxis, ...]
         return label
