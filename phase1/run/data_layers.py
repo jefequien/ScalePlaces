@@ -1,5 +1,6 @@
 import caffe
 
+import h5py
 import os
 import numpy as np
 from PIL import Image
@@ -88,16 +89,13 @@ class DataLayer(caffe.Layer):
     def load_image(self, im):
         """
         Load input image and preprocess for Caffe:
-        - cast to float
-        - switch channels RGB -> BGR
-        - subtract mean
-        - transpose to channel x height x width order
         """
-        img = Image.open(os.path.join(self.data_dir, im.replace(".jpg",".png")))
-        in_ = np.array(img, dtype=np.float32)
-        
-        # in_ = in_.transpose((2,0,1))
-        return in_
+        fname = os.path.join(self.data_dir, im.replace(".jpg",".h5"))
+        with h5py.File(fname, 'r') as f:
+            output = f['allprob'][:]
+            in_ = np.array(output, dtype=np.float32)
+            # in_ = in_.transpose((2,0,1))
+            return in_
 
 
     def load_label(self, im):
