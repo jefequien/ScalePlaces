@@ -37,7 +37,7 @@ class DataLayer(caffe.Layer):
         self.im_list = [line.rstrip() for line in open(txt_imlist, 'r')]
         self.idx = 0
 
-        self.mean = np.array(params['mean'])
+        # self.mean = np.array(params['mean'])
         self.random = params.get('randomize', True)
         self.seed = params.get('seed', None)
 
@@ -95,11 +95,8 @@ class DataLayer(caffe.Layer):
         """
         img = Image.open(os.path.join(self.data_dir, im.replace(".jpg",".png")))
         in_ = np.array(img, dtype=np.float32)
-        if (in_.ndim == 2):
-            in_ = np.repeat(in_[:,:,None], 3, axis = 2)
-        in_ = in_[:,:,::-1]
-        in_ -= self.mean
-        in_ = in_.transpose((2,0,1))
+        
+        # in_ = in_.transpose((2,0,1))
         return in_
 
 
