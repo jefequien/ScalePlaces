@@ -26,6 +26,7 @@ layer {
     num_output: 50
     kernel_size: 5
     stride: 1
+    pad:1
   }
 }
 layer {
@@ -45,6 +46,7 @@ layer {
     num_output: 10
     kernel_size: 3
     stride: 1
+    pad:1
   }
 }
 layer {
@@ -64,6 +66,7 @@ layer {
     num_output: 1
     kernel_size: 3
     stride: 1
+    pad:1
   }
 }
 layer {
