@@ -6,13 +6,19 @@ import h5py
 
 import utils_eval as utils
 
-def evaluate_image(im):
-    cm = utils.get(im, config, ftype="cm")
-    ap = utils.get(im, config, ftype="ap")
-    gt = utils.get(im, config, ftype="gt")
+def evaluate_image(im, threshold=0):
+    cm = utils.get(im, CONFIG, ftype="cm")
+    ap = utils.get(im, CONFIG, ftype="ap")
+    gt = utils.get(im, CONFIG, ftype="gt")
 
     accuracy = {}
-    for c in xrange(1,151):
+    for i in xrange(150):
+        c = i+1
+        probs = ap[:,:,i]
+        prob_mask = prob[prob > threshold]
+        print prob_mask.dtype
+        print prob_mask.shape
+        
         cm_mask = cm == c
         gt_mask = gt == c
         intersection = np.logical_and(cm_mask, gt_mask)
@@ -49,14 +55,10 @@ parser.add_argument("-p", required=True, help="Project name")
 args = parser.parse_args()
 
 project = args.p
-config = utils.get_data_config(project)
-root_images = config["images"]
-root_cm = os.path.join(config["pspnet_prediction"], "category_mask")
-root_ap = os.path.join(config["pspnet_prediction"], "all_prob")
-root_gt = config["ground_truth"]
+CONFIG = utils.get_data_config(project)
 
 im_list = [line.rstrip() for line in open(config["im_list"], 'r')]
-#im_list = im_list[:100]
+im_list = im_list[:100]
 accuracies = evaluate_images(im_list)
 print accuracies.shape
 
