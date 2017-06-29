@@ -88,16 +88,10 @@ class DataLayer(caffe.Layer):
     def transform(self, data, label):
         # Resize
         base_size = 512
-        h_ori,w_ori,n = data.shape
-        if w_ori < h_ori:
-            shape = (int(1./w_ori*h_ori*base_size), base_size)
-            data = misc.imresize(data, shape)
-            label = misc.imresize(label, shape, interp='nearest')
-        else:
-            shape = (base_size, int(1./h_ori*w_ori*base_size))
-            data = misc.imresize(data, shape)
-            label = misc.imresize(label, shape, interp='nearest')
-        # Crop
+        data = utils.resize(data, base_size)
+        label = utils.resize(label, base_size, interp='nearest')
+
+        # Random crop
         crop_size = 473
         h,w,n = data.shape
         dx = random.randint(0,w-crop_size)
