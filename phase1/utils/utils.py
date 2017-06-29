@@ -1,5 +1,6 @@
 import os
 import json
+import h5py
 from scipy import misc
 import matplotlib.pyplot as plt
 import cv2
