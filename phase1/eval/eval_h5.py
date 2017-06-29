@@ -34,6 +34,7 @@ recall = open_data(fname, "recall")
 iou = open_data(fname, "iou")
 print precision.shape, recall.shape, iou.shape
 
+fname = os.path.basename(fname)
 precision_fname = "precision/{}".format(fname.replace(".h5", ".txt"))
 eval_data(precision, precision_fname)
 recall_fname = "recall/{}".format(fname.replace(".h5", ".txt"))
