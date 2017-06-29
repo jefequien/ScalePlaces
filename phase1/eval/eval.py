@@ -12,6 +12,8 @@ def evaluate_image(im, threshold):
         cm = utils.get(im, CONFIG, ftype="cm")
         ap = utils.get(im, CONFIG, ftype="ap")
         gt = utils.get(im, CONFIG, ftype="gt")
+    except KeyboardInterrupt:
+        raise
     except:
         return None
 
