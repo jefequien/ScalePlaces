@@ -13,7 +13,8 @@ class PSPNet:
         caffe.set_mode_gpu()
         caffe.set_device(DEVICE)
 
-        MODEL_INFERENCE = 'models/train_pspnet_modified.prototxt'
+        #MODEL_INFERENCE = 'models/train_pspnet_modified.prototxt'
+        MODEL_INFERENCE = 'models/pspnet50_ADE20K_473.prototxt'
         WEIGHTS = '/data/vision/torralba/segmentation/places/PSPNet/evaluation/model/pspnet50_ADE20K.caffemodel'
         self.net = caffe.Net(MODEL_INFERENCE, WEIGHTS, caffe.TEST)
 

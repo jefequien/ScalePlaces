@@ -88,8 +88,8 @@ class DataLayer(caffe.Layer):
     def transform(self, data, label):
         # Resize
         base_size = 512
-        n,h_ori,w_ori = data.shape
-        if w_ori > h_ori:
+        h_ori,w_ori,n = data.shape
+        if w_ori < h_ori:
             shape = (int(1./w_ori*h_ori*base_size), base_size)
             data = misc.imresize(data, shape)
             label = misc.imresize(label, shape, interp='nearest')
@@ -97,12 +97,11 @@ class DataLayer(caffe.Layer):
             shape = (base_size, int(1./h_ori*w_ori*base_size))
             data = misc.imresize(data, shape)
             label = misc.imresize(label, shape, interp='nearest')
-
         # Crop
         crop_size = 473
-        n,h,w = data.shape
-        dx = random.randint(0,w-cropsize)
-        dy = random.randint(0,h-cropsize)
+        h,w,n = data.shape
+        dx = random.randint(0,w-crop_size)
+        dy = random.randint(0,h-crop_size)
         data = data[dy:473+dy,dx:473+dx]
         label = label[dy:473+dy,dx:473+dx]
 
@@ -112,25 +111,23 @@ class DataLayer(caffe.Layer):
         for i in xrange(K):
             c = i+1
             new_label[i] = label == c
-
+       
+        data = data.transpose((2,0,1))
+        label = label[np.newaxis, ...]
         return data, label
 
     def load_image(self, im):
         """
         Load input image and preprocess for Caffe:
         - cast to float
-        - # switch channels RGB -> BGR
         - subtract mean
-        - transpose to channel x height x width order
         """
         img = misc.imread(os.path.join(self.image_dir, im))
         in_ = np.array(img, dtype=np.float32)
 
         if (in_.ndim == 2):
             in_ = np.repeat(in_[:,:,None], 3, axis = 2)
-        # in_ = in_[:,:,::-1]
         in_ -= self.mean
-        in_ = in_.transpose((2,0,1))
         return in_
 
     def load_label(self, im):
@@ -140,5 +137,4 @@ class DataLayer(caffe.Layer):
         """
         img = misc.imread(os.path.join(self.label_dir, im.replace(".jpg",".png")))
         label = np.array(img, dtype=np.uint8)
-        label = label[np.newaxis, ...]
         return label
