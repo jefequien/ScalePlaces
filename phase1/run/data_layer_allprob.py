@@ -28,8 +28,8 @@ class DataLayer(caffe.Layer):
         """
         project = "ade20k"
         config = utils.get_data_config(project)
-        self.data_dir = os.path.join(config["pspnet_prediction"], "all_prob")
         self.label_dir = config["ground_truth"]
+        self.all_prob_dir = os.path.join(config["pspnet_prediction"], "all_prob")
 
         # config
         params = eval(self.param_str)
@@ -85,12 +85,8 @@ class DataLayer(caffe.Layer):
     def backward(self, top, propagate_down, bottom):
         pass
 
-
-    def load_image(self, im):
-        """
-        Load input image and preprocess for Caffe:
-        """
-        fname = os.path.join(self.data_dir, im.replace(".jpg",".h5"))
+    def load_all_prob(self, im):
+        fname = os.path.join(self.all_prob_dir, im.replace(".jpg",".h5"))
         with h5py.File(fname, 'r') as f:
             output = f['allprob'][:]
 
