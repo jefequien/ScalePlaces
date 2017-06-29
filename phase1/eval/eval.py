@@ -7,7 +7,7 @@ import traceback
 
 import utils_eval as utils
 
-def evaluate_image(im, threshold=0.5):
+def evaluate_image(im, threshold):
     try:
         cm = utils.get(im, CONFIG, ftype="cm")
         ap = utils.get(im, CONFIG, ftype="ap")
@@ -25,7 +25,7 @@ def evaluate_image(im, threshold=0.5):
         cm_mask = cm == c
         gt_mask = gt == c
         
-        mask = prob_mask
+        mask = np.logical_and(prob_mask, cm_mask)
 
         intersection = np.logical_and(mask, gt_mask)
         union = np.logical_or(mask, gt_mask)
@@ -46,14 +46,13 @@ def evaluate_image(im, threshold=0.5):
             results[i,2] = np.nan
     return results
 
-def evaluate_images(im_list):
+def evaluate_images(im_list, threshold=0):
     n = len(im_list)
     all_results = np.zeros((n, 150, 3))
     for i in xrange(n):
         im = im_list[i]
         print im
-
-        results = evaluate_image(im, threshold=0.5)
+        results = evaluate_image(im, threshold)
         if results is not None:
             all_results[i] = results
         else:
@@ -70,11 +69,13 @@ CONFIG = utils.get_data_config(project)
 
 im_list = [line.rstrip() for line in open(CONFIG["im_list"], 'r')]
 #im_list = im_list[:100]
-results = evaluate_images(im_list)
-print results.shape
 
-fname = "{}_eval.h5".format(project)
-with h5py.File(fname, 'w') as f:
-    f.create_dataset('precision', data=results[:,:,0])
-    f.create_dataset('recall', data=results[:,:,1])
-    f.create_dataset('iou', data=results[:,:,2])
+for t in np.linspace(0,1,20):
+    results = evaluate_images(im_list, threshold=t)
+    print t, results.shape
+
+    fname = "thresholded/{}_threshold={}.h5".format(project, t)
+    with h5py.File(fname, 'w') as f:
+        f.create_dataset('precision', data=results[:,:,0])
+        f.create_dataset('recall', data=results[:,:,1])
+        f.create_dataset('iou', data=results[:,:,2])
