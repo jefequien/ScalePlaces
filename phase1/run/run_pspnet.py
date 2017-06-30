@@ -33,6 +33,6 @@ for im in im_list:
     cm = cm.astype('uint8')
     
     color = add_color(cm)
-    misc.imsave(color)
+    misc.imsave(cm_path, color)
 
 
