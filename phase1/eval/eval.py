@@ -7,17 +7,7 @@ import time
 
 import utils_eval as utils
 
-def evaluate_image(im, threshold):
-    t = time.time()
-    try:
-        cm = utils.get(im, CONFIG, ftype="cm")
-        ap = utils.get(im, CONFIG, ftype="ap")
-        gt = utils.get(im, CONFIG, ftype="gt")
-    except KeyboardInterrupt:
-        raise
-    except:
-        return None
-    print time.time()-t
+def evaluate_image(cm,ap,gt, threshold):
 
     # precision, recall, iou
     results = np.zeros((150,3))
@@ -57,14 +47,26 @@ def evaluate_images(im_list, thresholds=[0]):
     for i in xrange(8):
         im = im_list[i]
         print im
-        for t in xrange(ts):
-            threshold = thresholds[t]
-            results = evaluate_image(im, threshold)
-            if results is not None:
+
+        try:
+            t1 = time.time()
+            cm = utils.get(im, CONFIG, ftype="cm")
+            ap = utils.get(im, CONFIG, ftype="ap")
+            gt = utils.get(im, CONFIG, ftype="gt")
+            t2 = time.time()
+            print t2-t1
+
+            for t in xrange(ts):
+                threshold = thresholds[t]
+                results = evaluate_image(cm,ap,gt, threshold)
                 all_results[t,i] = results
-            else:
-                print "Skipping", im, t
-                all_results[t,i,:,:] = np.nan
+            t3 = time.time()
+            print t3-t2
+        except KeyboardInterrupt:
+            raise
+        except:
+            print "Skipping", im
+            all_results[:,i,:,:] = np.nan
     return all_results
 
 parser = argparse.ArgumentParser()
