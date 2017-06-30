@@ -55,7 +55,7 @@ class PSPNet:
         image = misc.imresize(image, ratio)
 
         h,w,n = image.shape
-        stride_rate = 0.6
+        stride_rate = 0.3
         stride = INPUT_SIZE * stride_rate
         hs = np.arange(0,h-(INPUT_SIZE-stride),stride, dtype=int)
         ws = np.arange(0,w-(INPUT_SIZE-stride),stride, dtype=int)
