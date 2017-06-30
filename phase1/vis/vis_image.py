@@ -25,20 +25,20 @@ class ImageVisualizer:
         im_path = os.path.join(self.root_images, im)
         cm, cm_path = self.get_category_mask(im)
         pm, pm_path = self.get_prob_mask(im)
-        # gt, gt_path = self.get_ground_truth(im)
+        gt, gt_path = self.get_ground_truth(im)
 
         cm_color, cm_color_path = self.add_color(cm)
-        # gt_color, gt_color_path = self.add_color(gt)
+        gt_color, gt_color_path = self.add_color(gt)
 
-        # diff = self.get_diff(cm, gt)
-        # diff_color, diff_color_path = self.add_color(diff)
+        diff = self.get_diff(cm, gt)
+        diff_color, diff_color_path = self.add_color(diff)
 
         paths = {}
         paths["image"] = im_path
         paths["category_mask"] = cm_color_path
         paths["prob_mask"] = pm_path
-        # paths["ground_truth"] = gt_color_path
-        # paths["diff"] = diff_color_path
+        paths["ground_truth"] = gt_color_path
+        paths["diff"] = diff_color_path
         return paths
 
     def get_category_mask(self, im):

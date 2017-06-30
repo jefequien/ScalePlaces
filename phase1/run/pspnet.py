@@ -50,15 +50,19 @@ class PSPNet:
         # Resize consistent size
         h_ori,w_ori,n = image.shape
         short_side = min(h_ori, w_ori)
-        ratio = 1.*INPUT_SIZE/short_side
+        long_side = max(h_ori, w_ori)
+        ratio = 1.*512/long_side
         image = misc.imresize(image, ratio)
 
         h,w,n = image.shape
-        stride_rate = 0.5
+        stride_rate = 0.6
         stride = INPUT_SIZE * stride_rate
         hs = np.arange(0,h-(INPUT_SIZE-stride),stride, dtype=int)
         ws = np.arange(0,w-(INPUT_SIZE-stride),stride, dtype=int)
         locs = list(itertools.product(hs,ws))
+        print image.shape
+        print hs
+        print ws
 
         probs = np.zeros((NUM_CLASS, h, w), dtype=np.float32)
         cnts = np.zeros((1,h,w))
