@@ -29,6 +29,7 @@ class Visualizer:
             img_section += self.getImageTag(paths["category_mask"])
             img_section += self.getImageTag(paths["ground_truth"])
             img_section += self.getImageTag(paths["diff"])
+            img_section += self.getImageTag(paths["thresholds"])
 
             img_sections += img_section
 

@@ -51,30 +51,47 @@ def apply_mask(image, mask):
     cv2.drawContours(masked_image, contours, -1, (0, 0, 0), 2)
     return masked_image
 
-def get(im, config, ftype="im"):
+def get_file(im, config, ftype="im"):
+    file_path = get_path(im, config, ftype=ftype)
     if ftype == "im":
-        root = config["images"]
-        return misc.imread(os.path.join(root, im))
+        return misc.imread(file_path)
     elif ftype == "gt":
-        root = config["ground_truth"]
-        return misc.imread(os.path.join(root, im.replace(".jpg",".png")))
+        return misc.imread(file_path)
     elif ftype == "cm":
-        root = os.path.join(config["pspnet_prediction"], "category_mask")
-        return misc.imread(os.path.join(root, im.replace(".jpg",".png")))
+        return misc.imread(file_path)
     elif ftype == "ap":
-        root = os.path.join(config["pspnet_prediction"], "all_prob")
-        fname = os.path.join(root, im.replace(".jpg", ".h5"))
-        with h5py.File(fname, 'r') as f:
+        with h5py.File(file_path, 'r') as f:
             output = f['allprob'][:]
             return output
     elif ftype == "pm":
-        root = os.path.join(config["pspnet_prediction"], "prob_mask")
-        fname = os.path.join(root, im.replace(".jpg", ".h5"))
-        with h5py.File(fname, 'r') as f:
+        with h5py.File(file_path, 'r') as f:
             output = f['probmask'][:]
             return output
     else:
         print "File type not found."
+        raise Exception
+
+def get_file_path(im, config, ftype="im"):
+    if ftype == "im":
+        root = config["images"]
+        return os.path.join(root, im)
+    elif ftype == "gt":
+        root = config["ground_truth"]
+        return os.path.join(root, im.replace(".jpg",".png"))
+    elif ftype == "cm":
+        root = os.path.join(config["pspnet_prediction"], "category_mask")
+        return os.path.join(root, im.replace(".jpg",".png"))
+    elif ftype == "ap":
+        root = os.path.join(config["pspnet_prediction"], "all_prob")
+        fname = os.path.join(root, im.replace(".jpg", ".h5"))
+        return fname
+    elif ftype == "pm":
+        root = os.path.join(config["pspnet_prediction"], "prob_mask")
+        fname = os.path.join(root, im.replace(".jpg", ".h5"))
+        return fname
+    else:
+        print "File type not found."
+        raise Exception
 
 
 if __name__=="__main__":
