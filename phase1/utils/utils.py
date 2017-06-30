@@ -52,7 +52,7 @@ def apply_mask(image, mask):
     return masked_image
 
 def get_file(im, config, ftype="im"):
-    file_path = get_path(im, config, ftype=ftype)
+    file_path = get_file_path(im, config, ftype=ftype)
     if ftype == "im":
         return misc.imread(file_path)
     elif ftype == "gt":
@@ -64,9 +64,7 @@ def get_file(im, config, ftype="im"):
             output = f['allprob'][:]
             return output
     elif ftype == "pm":
-        with h5py.File(file_path, 'r') as f:
-            output = f['probmask'][:]
-            return output
+        return misc.imread(file_path)
     else:
         print "File type not found."
         raise Exception
@@ -87,7 +85,7 @@ def get_file_path(im, config, ftype="im"):
         return fname
     elif ftype == "pm":
         root = os.path.join(config["pspnet_prediction"], "prob_mask")
-        fname = os.path.join(root, im.replace(".jpg", ".h5"))
+        fname = os.path.join(root, im)
         return fname
     else:
         print "File type not found."

@@ -1,6 +1,7 @@
 import argparse
 import os
 import uuid
+import time
 
 from scipy import misc
 import numpy as np
@@ -17,8 +18,7 @@ class ImageVisualizer:
         self.config = utils.get_data_config(project)
 
     def visualize(self, im):
-
-        im_path = utils.get_file(im, self.config, ftype="im")
+        im_path = utils.get_file_path(im, self.config, ftype="im")
         cm, cm_path = self.get_category_mask(im)
         pm, pm_path = self.get_prob_mask(im)
         gt, gt_path = self.get_ground_truth(im)
@@ -28,11 +28,11 @@ class ImageVisualizer:
 
         diff = self.get_diff(cm, gt)
         diff_color, diff_color_path = self.add_color(diff)
-
+        
         ap, ap_path = self.get_all_prob(im)
         thresholds = self.get_thresholds(ap, cm)
         thresholds_color, thresholds_color_path = self.add_color(thresholds)
-
+        
         paths = {}
         paths["image"] = im_path
         paths["category_mask"] = cm_color_path
@@ -84,8 +84,8 @@ class ImageVisualizer:
         return diff
 
     def get_thresholds(self, ap, cm):
-        thresholds = [0,0.2,0.4,0.6,0.8,1.0]
-        all_img = []
+        thresholds = np.linspace(0.5,1,11)
+        all_imgs = []
         for threshold in thresholds:
             img = np.zeros(cm.shape)
             for i in xrange(150):
