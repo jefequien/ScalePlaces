@@ -1,10 +1,7 @@
 import sys
 import h5py
+import numpy as np
 
-def open_data(fname, dataset_name):
-    with h5py.File(fname, 'r') as f:
-        output = f[dataset_name]
-        return output[:]
 def get_datasets(fname):
     datasets = {}
     with h5py.File(fname, 'r') as f:
@@ -14,11 +11,25 @@ def get_datasets(fname):
     return datasets
 
 
-f1 = sys.argv[1]
-f2 = sys.argv[2]
+fnames = sys.argv[1:]
+keys = set()
+datasets = []
+for f in fnames:
+    f_datasets = get_datasets(f)
+    keys |= set(f_datasets.keys())
+    datasets.append(f_datasets)
 
-f1_datasets = get_datasets(f1)
-f2_datasets = get_datasets(f2)
+stacked = {}
+for key in keys:
+    arrays = []
+    for dataset in datasets:
+        if key in dataset:
+            arrays.append(dataset[key])
+    stacked[key] = np.concatenate(arrays, axis=0)
+    
+fname = "merged.h5"
+with h5py.File(fname, 'w') as f:
+    for key in stacked:
+        print key, stacked[key].shape
+        f.create_dataset(key, data=stacked[key])
 
-print f1_datasets.keys()
-print f2_datasets.keys()
