@@ -44,7 +44,7 @@ def evaluate_images(im_list, thresholds=[0]):
     n = len(im_list)
     ts = len(thresholds)
     all_results = np.zeros((ts, n, 150, 3))
-    for i in xrange(8):
+    for i in xrange(n):
         im = im_list[i]
         print im
 
@@ -71,20 +71,22 @@ def evaluate_images(im_list, thresholds=[0]):
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-p", required=True, help="Project name")
+parser.add_argument("-s", required=True, help="Start")
 args = parser.parse_args()
 
 project = args.p
+start = int(args.s)
 CONFIG = utils.get_data_config(project)
 
 im_list = [line.rstrip() for line in open(CONFIG["im_list"], 'r')]
-#im_list = im_list[:100]
-thresholds = np.linspace(0,1,21)
+im_list = im_list[start:start+2000]
+thresholds = np.linspace(0,1,11)
 results = evaluate_images(im_list, thresholds=thresholds)
 print results.shape
 
 for t in xrange(len(thresholds)):
     threshold = thresholds[t]
-    fname = "thresholded/{}_threshold={}.h5".format(project, threshold)
+    fname = "thresholded/{}_threshold={}_{}.h5".format(project, threshold, start)
     with h5py.File(fname, 'w') as f:
         f.create_dataset('precision', data=results[t,:,:,0])
         f.create_dataset('recall', data=results[t,:,:,1])
