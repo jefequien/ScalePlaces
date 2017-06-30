@@ -23,8 +23,8 @@ def evaluate_image(cm,ap,gt, threshold):
 
         intersection = np.logical_and(mask, gt_mask)
         union = np.logical_or(mask, gt_mask)
-        if np.sum(prob_mask) != 0:
-            precision = 1.*np.sum(intersection)/np.sum(prob_mask)
+        if np.sum(mask) != 0:
+            precision = 1.*np.sum(intersection)/np.sum(mask)
             results[i,0] = precision
         else:
             results[i,0] = np.nan
