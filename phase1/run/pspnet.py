@@ -12,18 +12,20 @@ class PSPNet:
         caffe.set_mode_gpu()
         caffe.set_device(DEVICE)
 
+        SEED = 3
+        random.seed(SEED)
+
         # MODEL_INFERENCE = 'models/train_pspnet_modified.prototxt'
         MODEL_INFERENCE = 'models/pspnet50_ADE20K_473.prototxt'
         WEIGHTS = '/data/vision/torralba/segmentation/places/PSPNet/evaluation/model/pspnet50_ADE20K.caffemodel'
-        self.net = caffe.Net(MODEL_INFERENCE, WEIGHTS, caffe.TEST)
 
-        SEED = 3
-        random.seed(SEED)
+        self.net = caffe.Net(MODEL_INFERENCE, WEIGHTS, caffe.TEST)
+        self.data_mean = np.array([[[123.68, 116.779, 103.939]]])
 
         self.log = 'logs/%s_seed%d_gpu%d.log'%(socket.gethostname(), SEED, DEVICE)
 
     def feed_forward(self, image):
-        image = image.astype('float32') - data_mean
+        image = image.astype('float32') - self.data_mean
 
         base_size = 512
         image = utils.resize(image, base_size)
@@ -31,31 +33,29 @@ class PSPNet:
         h,w,n = image.shape
         crop_size = 473
         stride_rate = 0.5
+        num_class = 150
         
         # sliding window params
         stride = crop_size * stride_rate
-        h_grid = int(math.ceil(1.*(max(0,h-crop_size))/stride) + 1)
-        w_grid = int(math.ceil(1.*(max(0,w-crop_size))/stride) + 1)
-
+        h_grid = np.arange(0,h,stride)
+        w_grid = np.arange(0,w,stride)
 
         # main loop
         probs = np.zeros((num_class, h, w), dtype=np.float32)
         cnts = np.zeros((1,h,w))
-        for h_step in range(h_grid):
-            for w_step in range(w_grid):
+        for sh in h_grid:
+            for sw in w_grid:
                 # start and end pixel idx
-                sh = h_step * stride
                 eh = min(h, sh+crop_size)
-                sw = w_step * stride
                 ew = min(w, sw+crop_size)
                 sh, eh, sw, ew = int(sh), int(eh), int(sw), int(ew)
 
-                image_input = np.tile(data_mean, (crop_size, crop_size, 1))
+                image_input = np.tile(self.data_mean, (crop_size, crop_size, 1))
                 image_input[0:eh-sh,0:ew-sw,:] = image[sh:eh,sw:ew,:]
                 cnts[0,sh:eh,sw:ew] += 1
 
                 # process the image
-                net.blobs['data'].data[...] = (image_input[:,:,(2,1,0)].transpose((2,0,1)))[np.newaxis,:,:,:]
+                self.net.blobs['data'].data[...] = (image_input[:,:,(2,1,0)].transpose((2,0,1)))[np.newaxis,:,:,:]
                 net.forward()
                 out = net.blobs['prob'].data[0,:,:,:]
                 probs[:,sh:eh,sw:ew] += out[:,0:eh-sh,0:ew-sw]

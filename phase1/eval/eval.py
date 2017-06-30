@@ -48,18 +48,21 @@ def evaluate_image(im, threshold):
             results[i,2] = np.nan
     return results
 
-def evaluate_images(im_list, threshold=0):
+def evaluate_images(im_list, thresholds=[0]):
     n = len(im_list)
-    all_results = np.zeros((n, 150, 3))
-    for i in xrange(n):
+    ts = len(thresholds)
+    all_results = np.zeros((ts, n, 150, 3))
+    for i in xrange(8):
         im = im_list[i]
         print im
-        results = evaluate_image(im, threshold)
-        if results is not None:
-            all_results[i] = results
-        else:
-            print "Skipping", im
-            all_results[i,:,:] = np.nan
+        for t in xrange(ts):
+            threshold = thresholds[t]
+            results = evaluate_image(im, threshold)
+            if results is not None:
+                all_results[t,i] = results
+            else:
+                print "Skipping", im, t
+                all_results[t,i,:,:] = np.nan
     return all_results
 
 parser = argparse.ArgumentParser()
@@ -71,13 +74,14 @@ CONFIG = utils.get_data_config(project)
 
 im_list = [line.rstrip() for line in open(CONFIG["im_list"], 'r')]
 #im_list = im_list[:100]
+thresholds = np.linspace(0,1,21)
+results = evaluate_images(im_list, thresholds=thresholds)
+print results.shape
 
-for t in np.linspace(0,1,20):
-    results = evaluate_images(im_list, threshold=t)
-    print t, results.shape
-
-    fname = "thresholded/{}_threshold={}.h5".format(project, t)
+for t in xrange(len(thresholds)):
+    threshold = thresholds[t]
+    fname = "thresholded/{}_threshold={}.h5".format(project, threshold)
     with h5py.File(fname, 'w') as f:
-        f.create_dataset('precision', data=results[:,:,0])
-        f.create_dataset('recall', data=results[:,:,1])
-        f.create_dataset('iou', data=results[:,:,2])
+        f.create_dataset('precision', data=results[t,:,:,0])
+        f.create_dataset('recall', data=results[t,:,:,1])
+        f.create_dataset('iou', data=results[t,:,:,2])
