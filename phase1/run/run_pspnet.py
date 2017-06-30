@@ -1,15 +1,26 @@
-
+import os
+from scipy import misc
 
 from pspnet import PSPNet
-from data_handler import DataHandler
+import utils_run as utils
 
+pspnet = PSPNet()
+pspnet.get_network_architecture()
 
-project = "ade20k"
-im_list = "ade20k_training.txt"
+CONFIG = utils.get_data_config("ade20k")
+im_list = utils.open_im_list("ade20k")
+root_images = CONFIG["images"]
 
-# data_handler = DataHandler(project, im_list)
-# pspnet = PSPNet(DEVICE=0)
+im_list = im_list[:100]
+for im in im_list:
+    image = misc.imread(os.path.join(root_images, im))
+    probs = pspnet.process(image)
 
-solver = caffe.get_solver('solver_FCN.prototxt')
+    cm_path = os.path.join("tmp/", im.replace('.jpg','.png'))
+    if not os.path.exists(os.path.dirname(cm_path)):
+        os.makedirs(os.path.dirname(cm_path))
+        
+    cm = np.argmax(probs, axis=0) + 1
+    misc.imsave(cm_path, cm.astype('uint8'))
 
 

@@ -1,11 +1,22 @@
-import pdb
-import sys, glob, socket, time, os, math, random, argparse
+import os
+import sys
+import time
+import random
+import socket
 import numpy as np
-import scipy, h5py
+from itertools import permutations
+from scipy import misc, ndimage
+
+import utils_run as utils
 
 CAFFE_ROOT = '/data/vision/torralba/segmentation/places/PSPNet/'
 sys.path.insert(0, os.path.join(CAFFE_ROOT, 'python'))
 import caffe
+
+WEIGHTS = '/data/vision/torralba/segmentation/places/PSPNet/evaluation/model/pspnet50_ADE20K.caffemodel'
+DATA_MEAN = np.array([[[123.68, 116.779, 103.939]]])
+INPUT_SIZE = 473
+NUM_CLASS = 150
 
 class PSPNet:
     def __init__(self, DEVICE=0):
@@ -17,57 +28,90 @@ class PSPNet:
 
         # MODEL_INFERENCE = 'models/train_pspnet_modified.prototxt'
         MODEL_INFERENCE = 'models/pspnet50_ADE20K_473.prototxt'
-        WEIGHTS = '/data/vision/torralba/segmentation/places/PSPNet/evaluation/model/pspnet50_ADE20K.caffemodel'
 
         self.net = caffe.Net(MODEL_INFERENCE, WEIGHTS, caffe.TEST)
-        self.data_mean = np.array([[[123.68, 116.779, 103.939]]])
 
         self.log = 'logs/%s_seed%d_gpu%d.log'%(socket.gethostname(), SEED, DEVICE)
 
-    def feed_forward(self, image):
-        image = image.astype('float32') - self.data_mean
+    def fine_tune(self):
+        solver = caffe.get_solver('models/solver_pspnet_modified.prototxt')
+        solver.net.copy_from(WEIGHTS)
 
-        base_size = 512
-        image = utils.resize(image, base_size)
+    def process(self, image):
+        localtime = time.asctime(time.localtime(time.time()))
+
+        if image.ndim != 3:
+            with open(self.log, 'a+') as f:
+                f.write('[%s] Modified image: channels != 3\n' %(localtime))
+            image = np.stack((image,image,image), axis=2)
+
+        image = image.astype('float32') - DATA_MEAN
+
+        # Resize consistent size
+        h_ori,w_ori,n = image.shape
+        short_side = min(h_ori, w_ori)
+        ratio = 1.*INPUT_SIZE/short_side
+        image = misc.imresize(image, ratio)
 
         h,w,n = image.shape
-        crop_size = 473
+
         stride_rate = 0.5
-        num_class = 150
-        
-        # sliding window params
-        stride = crop_size * stride_rate
-        h_grid = np.arange(0,h,stride)
-        w_grid = np.arange(0,w,stride)
+        stride = INPUT_SIZE * stride_rate
+        hs = np.arange(0,h,stride, dtype=int)
+        ws = np.arange(0,w,stride, dtype=int)
+        locs = [zip(hs, p) for p in permutations(ws)]
 
-        # main loop
-        probs = np.zeros((num_class, h, w), dtype=np.float32)
+        probs = np.zeros((NUM_CLASS, h, w), dtype=np.float32)
         cnts = np.zeros((1,h,w))
-        for sh in h_grid:
-            for sw in w_grid:
-                # start and end pixel idx
-                eh = min(h, sh+crop_size)
-                ew = min(w, sw+crop_size)
-                sh, eh, sw, ew = int(sh), int(eh), int(sw), int(ew)
+        for loc in locs:
+            sh, sw = loc
+            eh = sh + INPUT_SIZE
+            ew = sw + INPUT_SIZE
 
-                image_input = np.tile(self.data_mean, (crop_size, crop_size, 1))
-                image_input[0:eh-sh,0:ew-sw,:] = image[sh:eh,sw:ew,:]
-                cnts[0,sh:eh,sw:ew] += 1
+            data = np.tile(DATA_MEAN, (INPUT_SIZE, INPUT_SIZE, 1))
+            data[0:eh-sh,0:ew-sw,:] = image[sh:eh,sw:ew,:]
 
-                # process the image
-                self.net.blobs['data'].data[...] = (image_input[:,:,(2,1,0)].transpose((2,0,1)))[np.newaxis,:,:,:]
-                net.forward()
-                out = net.blobs['prob'].data[0,:,:,:]
-                probs[:,sh:eh,sw:ew] += out[:,0:eh-sh,0:ew-sw]
-        
+            out = self.feed_forward(data)
+
+            cnts[0,sh:eh,sw:ew] += 1
+            probs[:,sh:eh,sw:ew] += out[:,0:eh-sh,0:ew-sw]
+
         assert cnts.min()>=1
         probs /= cnts
         assert (probs.min()>=0 and probs.max()<=1), '%f,%f'%(probs.min(),probs.max())
+
+        # Resize back
+        probs = ndimage.zoom(probs, (1., 1/ratio, 1./ratio), order=1, prefilter=False, mode='nearest')
+        print probs.shape
+        assert probs.shape == (NUM_CLASS, h_ori, w_ori)
+        return probs
+        
+
+    def feed_forward(self, data):
+        '''
+        Input must be 473x473x3 in RGB
+        Output is 150x473x473
+        '''
+        assert data.shape == (473,473,3)
+        # RGB => BGR
+        data = data[:,:,(2,1,0)]
+        data.transpose((2,0,1))
+        data = data[np.newaxis,:,:,:]
+
+        self.net.blobs['data'].data[...] = data
+        self.net.forward()
+        out = net.blobs['prob'].data[0,:,:,:]
+        return out
         
 
     def get_network_architecture(self):
         for k,v in self.net.blobs.items():
             print v.data.shape, k
 
-pspnet = PSPNet()
-pspnet.get_network_architecture()
+
+
+
+
+
+
+

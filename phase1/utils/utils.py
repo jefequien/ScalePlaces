@@ -22,6 +22,11 @@ def get_data_config(project):
         config = data_config[project]
         return config
 
+def open_im_list(project):
+    CONFIG = get_data_config[project]
+    im_list = [line.rstrip().split()[0] for line in open(CONFIG["im_list"], 'r')]
+    return im_list
+
 def get_categories():
     categories = {}
     with open(os.path.join(PATH, "objectInfo150.txt"), 'r') as f:
