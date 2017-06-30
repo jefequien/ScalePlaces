@@ -3,11 +3,12 @@ import argparse
 import numpy as np
 from scipy import misc
 import h5py
-import traceback
+import time
 
 import utils_eval as utils
 
 def evaluate_image(im, threshold):
+    t = time.time()
     try:
         cm = utils.get(im, CONFIG, ftype="cm")
         ap = utils.get(im, CONFIG, ftype="ap")
@@ -16,6 +17,7 @@ def evaluate_image(im, threshold):
         raise
     except:
         return None
+    print time.time()-t
 
     # precision, recall, iou
     results = np.zeros((150,3))
