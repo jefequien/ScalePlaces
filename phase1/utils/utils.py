@@ -23,7 +23,7 @@ def get_data_config(project):
         return config
 
 def open_im_list(project):
-    CONFIG = get_data_config[project]
+    CONFIG = get_data_config(project)
     im_list = [line.rstrip().split()[0] for line in open(CONFIG["im_list"], 'r')]
     return im_list
 

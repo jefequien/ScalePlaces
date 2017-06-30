@@ -1,10 +1,11 @@
 import os
+import numpy as np
 from scipy import misc
 
 from pspnet import PSPNet
 import utils_run as utils
 
-pspnet = PSPNet()
+pspnet = PSPNet(DEVICE=2)
 pspnet.get_network_architecture()
 
 CONFIG = utils.get_data_config("ade20k")
@@ -13,6 +14,7 @@ root_images = CONFIG["images"]
 
 im_list = im_list[:100]
 for im in im_list:
+    print im
     image = misc.imread(os.path.join(root_images, im))
     probs = pspnet.process(image)
 

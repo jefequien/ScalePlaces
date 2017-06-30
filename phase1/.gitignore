@@ -3,6 +3,7 @@
 *.h5
 
 eval/sorted/*
+run/tmp/*
 vis/tmp/*
 vis/single_annotations/*
 vis/single_annotations_vis/*

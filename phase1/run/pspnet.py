@@ -4,7 +4,7 @@ import time
 import random
 import socket
 import numpy as np
-from itertools import permutations
+import itertools
 from scipy import misc, ndimage
 
 import utils_run as utils
@@ -46,7 +46,7 @@ class PSPNet:
             image = np.stack((image,image,image), axis=2)
 
         image = image.astype('float32') - DATA_MEAN
-
+        
         # Resize consistent size
         h_ori,w_ori,n = image.shape
         short_side = min(h_ori, w_ori)
@@ -54,20 +54,19 @@ class PSPNet:
         image = misc.imresize(image, ratio)
 
         h,w,n = image.shape
-
         stride_rate = 0.5
         stride = INPUT_SIZE * stride_rate
-        hs = np.arange(0,h,stride, dtype=int)
-        ws = np.arange(0,w,stride, dtype=int)
-        locs = [zip(hs, p) for p in permutations(ws)]
+        hs = np.arange(0,h-(INPUT_SIZE-stride),stride, dtype=int)
+        ws = np.arange(0,w-(INPUT_SIZE-stride),stride, dtype=int)
+        locs = list(itertools.product(hs,ws))
 
         probs = np.zeros((NUM_CLASS, h, w), dtype=np.float32)
         cnts = np.zeros((1,h,w))
         for loc in locs:
-            sh, sw = loc
-            eh = sh + INPUT_SIZE
-            ew = sw + INPUT_SIZE
-
+            sh,sw = loc
+            eh = min(h, sh + INPUT_SIZE)
+            ew = min(w, sw + INPUT_SIZE)
+            
             data = np.tile(DATA_MEAN, (INPUT_SIZE, INPUT_SIZE, 1))
             data[0:eh-sh,0:ew-sw,:] = image[sh:eh,sw:ew,:]
 
@@ -81,9 +80,8 @@ class PSPNet:
         assert (probs.min()>=0 and probs.max()<=1), '%f,%f'%(probs.min(),probs.max())
 
         # Resize back
-        probs = ndimage.zoom(probs, (1., 1/ratio, 1./ratio), order=1, prefilter=False, mode='nearest')
-        print probs.shape
-        assert probs.shape == (NUM_CLASS, h_ori, w_ori)
+        probs = ndimage.zoom(probs, (1.,1.*h_ori/h,1.*w_ori/w), order=1, prefilter=False, mode='nearest')
+        assert probs.shape == (NUM_CLASS,h_ori,w_ori)
         return probs
         
 
@@ -95,12 +93,12 @@ class PSPNet:
         assert data.shape == (473,473,3)
         # RGB => BGR
         data = data[:,:,(2,1,0)]
-        data.transpose((2,0,1))
+        data = data.transpose((2,0,1))
         data = data[np.newaxis,:,:,:]
 
         self.net.blobs['data'].data[...] = data
         self.net.forward()
-        out = net.blobs['prob'].data[0,:,:,:]
+        out = self.net.blobs['prob'].data[0,:,:,:]
         return out
         
 
