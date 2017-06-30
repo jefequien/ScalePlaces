@@ -57,12 +57,14 @@ class PSPNet:
         h,w,n = image.shape
         stride_rate = 0.3
         stride = INPUT_SIZE * stride_rate
-        hs = np.arange(0,h-(INPUT_SIZE-stride),stride, dtype=int)
-        ws = np.arange(0,w-(INPUT_SIZE-stride),stride, dtype=int)
+        hs_upper = max(1,h-(INPUT_SIZE-stride))
+        ws_upper = max(1,w-(INPUT_SIZE-stride))
+        hs = np.arange(0,hs_upper,stride, dtype=int)
+        ws = np.arange(0,ws_upper,stride, dtype=int)
         locs = list(itertools.product(hs,ws))
-        print image.shape
-        print hs
-        print ws
+        #print image.shape
+        #print hs
+        #print ws
 
         probs = np.zeros((NUM_CLASS, h, w), dtype=np.float32)
         cnts = np.zeros((1,h,w))

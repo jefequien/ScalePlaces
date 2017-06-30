@@ -1,6 +1,7 @@
 import os
 import argparse
 import numpy as np
+import h5py
 from scipy import misc
 
 from pspnet import PSPNet
@@ -45,8 +46,11 @@ for fn_im in im_list:
     if not os.path.exists(os.path.dirname(fn_allprob)):
         os.makedirs(os.path.dirname(fn_allprob))
 
-
-    image = utils.get_file(fn_im, CONFIG, ftype="im")
+    try:
+        image = utils.get_file(fn_im, CONFIG, ftype="im")
+    except:
+        print "Bad image"
+        continue
     probs = pspnet.process(image)
 
     # calculate output
@@ -56,8 +60,8 @@ for fn_im in im_list:
     all_prob = probs
 
     # write to file
-    scipy.misc.imsave(fn_mask, pred_mask.astype('uint8'))
-    scipy.misc.imsave(fn_prob, (prob_mask*255).astype('uint8'))
+    misc.imsave(fn_mask, pred_mask.astype('uint8'))
+    misc.imsave(fn_prob, (prob_mask*255).astype('uint8'))
     with h5py.File(fn_maxprob, 'w') as f:
         f.create_dataset('maxprob', data=max_prob)
     with h5py.File(fn_allprob, 'w') as f:
