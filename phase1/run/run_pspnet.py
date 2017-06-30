@@ -5,6 +5,13 @@ from scipy import misc
 from pspnet import PSPNet
 import utils_run as utils
 
+def add_color(img):
+    h,w = img.shape
+    img_color = np.zeros((h,w,3))
+    for i in xrange(1,151):
+        img_color[img == i] = utils.to_color(i)
+    return img_color
+
 pspnet = PSPNet(DEVICE=2)
 pspnet.get_network_architecture()
 
@@ -23,6 +30,9 @@ for im in im_list:
         os.makedirs(os.path.dirname(cm_path))
         
     cm = np.argmax(probs, axis=0) + 1
-    misc.imsave(cm_path, cm.astype('uint8'))
+    cm = cm.astype('uint8')
+    
+    color = add_color(cm)
+    misc.imsave(color)
 
 
