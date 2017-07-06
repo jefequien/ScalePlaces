@@ -47,8 +47,9 @@ class Visualizer:
 
         order = ["image", "prob_mask", "category_mask"]
         for key in order:
-            new_section += self.getImageTag(paths[key])
-            del paths[key]
+            if key in paths:
+                new_section += self.getImageTag(paths[key])
+                del paths[key]
         # Add the rest
         for key in paths:
             new_section += self.getImageTag(paths[key])
@@ -59,10 +60,12 @@ class Visualizer:
             f.write(new_html)
 
     def getImageTag(self, path):
-        if path:
-            if os.path.isabs(path):
-                path = self.symlink(path)
-            path = os.path.relpath(path, self.output_path)
+        if os.path.isabs(path):
+            path = self.symlink(path)
+
+        print path
+        print self.output_path
+        path = os.path.relpath(path, self.output_path)
         return "<img src=\"{}\" height=\"256px\">".format(path)
 
     def symlink(self, path):
