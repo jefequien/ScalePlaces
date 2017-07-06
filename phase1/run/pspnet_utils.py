@@ -38,8 +38,9 @@ def assemble_probs(image, crop_probs):
     n = len(crop_boxes)
     for i in xrange(n):
         sh,eh,sw,ew = crop_boxes[i]
-        prob = crop_probs[i]
-        probs[:,sh:eh,sw:ew] += prob[:,0:eh-sh,0:ew-sw]
+        crop_prob = crop_probs[i]
+
+        probs[:,sh:eh,sw:ew] += crop_prob[:,0:eh-sh,0:ew-sw]
         cnts[0,sh:eh,sw:ew] += 1
 
     assert cnts.min()>=1
@@ -78,4 +79,5 @@ def get_crop_locs(h,w):
     hs = np.arange(0,hs_upper,stride, dtype=int)
     ws = np.arange(0,ws_upper,stride, dtype=int)
     locs = list(itertools.product(hs,ws))
+    print locs
     return locs

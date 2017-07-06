@@ -108,7 +108,7 @@ class PSPNet:
 
         probs = pspnet_utils.assemble_probs(image_scaled,crop_probs)
         probs = pspnet_utils.unscale(probs,h_ori,w_ori)
-
+        
         return probs
 
     def feed_forward(self, data):

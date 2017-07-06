@@ -45,7 +45,6 @@ class Visualizer:
         new_section = "<br><br>{} {}<br><br>".format(self.project, im)
         paths = self.image_visualizer.visualize(im)
 
-        print paths
         order = ["image", "prob_mask", "category_mask"]
         for key in order:
             if key in paths:

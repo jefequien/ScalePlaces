@@ -40,7 +40,8 @@ class ImageVisualizer:
             gt_color, gt_color_path = self.add_color(gt)
             paths["ground_truth"] = gt_color_path
 
-            diff = self.get_diff(cm, gt)
+        diff = self.get_diff(cm, gt)
+        if diff is not None:
             diff_color, diff_color_path = self.add_color(diff)
             paths["diff"] = diff_color_path
 
@@ -90,6 +91,7 @@ class ImageVisualizer:
 
     def get_diff(self, cm, gt):
         if cm is None or gt is None:
+            print "Cannot make diff", im
             return None
         mask = gt - cm
         mask = np.invert(mask.astype(bool))
