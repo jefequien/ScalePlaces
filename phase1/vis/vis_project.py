@@ -36,7 +36,10 @@ class Visualizer:
         with open(self.output_path, 'w') as f:
             f.write(html)
 
-        print "http://places.csail.mit.edu/scaleplaces/ScalePlaces/phase1/vis/{}".format(self.output_path)
+        root = "/data/vision/oliva/scenedataset/"
+        abs_path = os.path.abspath(self.output_path)
+        rel_path = os.path.relpath(root, abspath)
+        print "http://places.csail.mit.edu/{}".format(rel_path)
 
     def add_image_section(self, im):
         new_section = "<br><br>{} {}<br><br>".format(self.project, im)
