@@ -35,6 +35,7 @@ for fn_im in im_list:
     fn_allprob = os.path.join(root_allprob, fn_im.replace('.jpg', '.h5'))
 
     if os.path.exists(fn_maxprob):
+        print "Already done."
         continue
 
     # make paths if not exist
@@ -50,7 +51,7 @@ for fn_im in im_list:
     try:
         image = utils.get_file(fn_im, CONFIG, ftype="im")
     except:
-        print "Bad image"
+        print "Unable to load image. Skipping..."
         continue
     probs = pspnet.process(image)
 
