@@ -68,7 +68,7 @@ class PSPNet:
         crop_boxes = pspnet_utils.get_crop_boxes(h,w)
         for i in xrange(n):
             sh,eh,sw,ew = crop_boxes[i]
-
+            out = outs[i]
 
             cnts[0,sh:eh,sw:ew] += 1
             probs[:,sh:eh,sw:ew] += out[:,0:eh-sh,0:ew-sw]
