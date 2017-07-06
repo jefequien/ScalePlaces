@@ -8,9 +8,9 @@ import utils_vis as utils
 from vis_image import ImageVisualizer
 
 class Visualizer:
-    def __init__(self, project, output_path=None, MAX=100):
+    def __init__(self, project, output_path=None, MAX=100, special_config=None):
         self.project = project
-        self.image_visualizer = ImageVisualizer(project)
+        self.image_visualizer = ImageVisualizer(project, special_config=special_config)
         self.images_dir = self.image_visualizer.images_dir
 
         self.MAX = MAX
@@ -76,15 +76,25 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("-p", required=True, help="Project name")
     parser.add_argument("--imlist", help="Image list")
+    parser.add_argument("--pspnet_prediction", help="")
     parser.add_argument("-n", default=10, help="Number of images")
     args = parser.parse_args()
 
     project = args.p
     n = int(args.n)
 
-    im_list = utils.open_im_list(args.imlist)
-    random.shuffle(im_list)
+    special_config = None
+    if args.pspnet_prediction is not None:
+        special_config = utils.get_data_config(project)
+        special_config["pspnet_prediction"] = args.pspnet_prediction
 
-    vis = Visualizer(project, MAX=n)
+    vis = Visualizer(project, MAX=n, special_config=special_config)
+
+
+    im_list = utils.open_im_list(project)
+    if args.imlist is not None:
+        im_list = utils.open_im_list(args.imlist)
+    # random.shuffle(im_list)
+
     vis.visualize_images(im_list)
 

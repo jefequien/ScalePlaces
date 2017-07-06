@@ -12,12 +12,14 @@ THRESHOLD = True
 
 class ImageVisualizer:
 
-    def __init__(self, project):
+    def __init__(self, project, special_config=None):
         self.images_dir = "tmp/images/"
         if not os.path.exists(self.images_dir):
             os.makedirs(self.images_dir)
 
         self.config = utils.get_data_config(project)
+        if special_config is not None:
+            self.config = special_config
 
     def visualize(self, im):
         paths = {}
