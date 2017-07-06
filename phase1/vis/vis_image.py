@@ -25,11 +25,13 @@ class ImageVisualizer:
         paths["image"] = im_path
 
         cm, cm_path = self.get_category_mask(im)
-        cm_color, cm_color_path = self.add_color(cm)
-        paths["category_mask"] = cm_color_path
+        if cm is not None:
+            cm_color, cm_color_path = self.add_color(cm)
+            paths["category_mask"] = cm_color_path
 
         pm, pm_path = self.get_prob_mask(im)
-        paths["prob_mask"] = pm_path
+        if pm is not None:
+            paths["prob_mask"] = pm_path
 
         gt, gt_path = self.get_ground_truth(im)
         if gt is not None:
