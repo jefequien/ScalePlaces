@@ -34,7 +34,6 @@ class ImageVisualizer:
             gt_color, gt_color_path = self.add_color(gt)
             paths["ground_truth"] = gt_color_path
 
-
             diff = self.get_diff(cm, gt)
             diff_color, diff_color_path = self.add_color(diff)
             paths["diff"] = diff_color_path
@@ -53,6 +52,7 @@ class ImageVisualizer:
             img = utils.get_file(im, self.config, ftype="cm")
             return img, path
         except:
+            print "No category mask", im
             return None, None
 
     def get_prob_mask(self, im):
@@ -61,6 +61,7 @@ class ImageVisualizer:
             img = utils.get_file(im, self.config, ftype="pm")
             return img, path
         except:
+            print "No prob mask", im
             return None, None
 
     def get_ground_truth(self, im):
@@ -69,6 +70,7 @@ class ImageVisualizer:
             img = utils.get_file(im, self.config, ftype="gt")
             return img, path
         except:
+            #print "No ground_truth", im
             return None, None
 
     def get_all_prob(self, im):
@@ -77,6 +79,7 @@ class ImageVisualizer:
             img = utils.get_file(im, self.config, ftype="ap")
             return img, path
         except:
+            print "No all prob", im
             return None, None
 
     def get_diff(self, cm, gt):
