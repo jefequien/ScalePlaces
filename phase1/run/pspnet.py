@@ -42,14 +42,8 @@ class PSPNet:
         DATA_MEAN = np.array([[[123.68, 116.779, 103.939]]])
         INPUT_SIZE = 473
         NUM_CLASS = 150
-        localtime = time.asctime(time.localtime(time.time()))
 
-        if image.ndim != 3:
-            with open(self.log, 'a+') as f:
-                f.write('[%s] Modified image: channels != 3\n' %(localtime))
-            image = np.stack((image,image,image), axis=2)
-
-        image = image.astype('float32') - DATA_MEAN
+        image = pspnet_utils.preprocess(image)
         
         # Resize consistent size
         h_ori,w_ori,n = image.shape
@@ -91,7 +85,7 @@ class PSPNet:
         assert (probs.min()>=0 and probs.max()<=1), '%f,%f'%(probs.min(),probs.max())
 
         # Resize back
-        probs = ndimage.zoom(probs, (1.,1.*h_ori/h,1.*w_ori/w), order=1, prefilter=False, mode='nearest')
+        probs = pspnet_utils.unscale(probs, h_ori, w_ori)
         assert probs.shape == (NUM_CLASS,h_ori,w_ori)
         return probs
 
