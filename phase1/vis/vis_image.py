@@ -8,6 +8,8 @@ import numpy as np
 
 import utils_vis as utils
 
+THRESHOLD = True
+
 class ImageVisualizer:
 
     def __init__(self, project):
@@ -38,8 +40,8 @@ class ImageVisualizer:
             diff_color, diff_color_path = self.add_color(diff)
             paths["diff"] = diff_color_path
 
-        if True:
-            ap, ap_path = self.get_all_prob(im)
+        ap, ap_path = self.get_all_prob(im)
+        if THRESHOLD and cm is not None and ap is not None:
             thresholds = self.get_thresholds(ap, cm)
             thresholds_color, thresholds_color_path = self.add_color(thresholds)
             paths["thresholds"] = thresholds_color_path

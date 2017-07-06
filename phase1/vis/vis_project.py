@@ -27,6 +27,7 @@ class Visualizer:
     def visualize_images(self, im_list):
         cnt = 0
         for im in im_list[:self.MAX]:
+            cnt += 1
             print cnt, im
             self.add_image_section(im)
 
