@@ -7,24 +7,28 @@ from scipy import misc
 from pspnet import PSPNet
 import utils_run as utils
 
-project = "street_view"
+parser = argparse.ArgumentParser()
+parser.add_argument('--id', default=0,type=int)
+parser.add_argument("-p", required=True, help="Project name")
+args = parser.parse_args()
+
+project = args.p
+pspnet = PSPNet(DEVICE=args.id)
+pspnet.print_network_architecture()
+
 CONFIG = utils.get_data_config(project)
+im_list = utils.open_im_list(project)
+
 root_result = CONFIG["pspnet_prediction"]
+root_images = CONFIG["images"]
 
 root_mask = os.path.join(root_result, 'category_mask')
 root_prob = os.path.join(root_result, 'prob_mask')
 root_maxprob = os.path.join(root_result, 'max_prob')
 root_allprob = os.path.join(root_result, 'all_prob')
 
-parser = argparse.ArgumentParser()
-parser.add_argument('--id', default=0,type=int)
-opt = parser.parse_args()
 
-pspnet = PSPNet(DEVICE=opt.id)
-pspnet.get_network_architecture()
 
-im_list = utils.open_im_list(project)
-root_images = CONFIG["images"]
 
 for fn_im in im_list:
     print fn_im

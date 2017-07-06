@@ -69,7 +69,7 @@ class PSPNet:
         return out
         
 
-    def get_network_architecture(self):
+    def print_network_architecture(self):
         for k,v in self.net.blobs.items():
             print v.data.shape, k
 
