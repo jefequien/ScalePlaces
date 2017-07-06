@@ -1,13 +1,14 @@
-import time
-import numpy as np
-import itertools
-from scipy import misc, ndimage
 
-DATA_MEAN = np.array([[[123.68, 116.779, 103.939]]])
-INPUT_SIZE = 473
-NUM_CLASS = 150
 
-def process(self, image):
+
+def old_process(self, image):
+    import time
+    import numpy as np
+    import itertools
+    from scipy import misc, ndimage
+    DATA_MEAN = np.array([[[123.68, 116.779, 103.939]]])
+    INPUT_SIZE = 473
+    NUM_CLASS = 150
     localtime = time.asctime(time.localtime(time.time()))
 
     if image.ndim != 3:
