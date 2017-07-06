@@ -63,9 +63,7 @@ class Visualizer:
         if os.path.isabs(path):
             path = self.symlink(path)
 
-        print path
-        print self.output_path
-        path = os.path.relpath(path, self.output_path)
+        path = os.path.relpath(path, os.path.dirname(self.output_path))
         return "<img src=\"{}\" height=\"256px\">".format(path)
 
     def symlink(self, path):
