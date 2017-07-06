@@ -48,7 +48,7 @@ class Visualizer:
         for key in paths:
             new_section += self.getImageTag(paths[key])
 
-        with open(self.output_path, 'rw') as f:
+        with open(self.output_path, 'r+') as f:
             html = f.read()
             new_html = html.replace("</body>", "{}</body>".format(new_section))
             f.write(new_html)
