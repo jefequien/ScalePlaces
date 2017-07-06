@@ -21,8 +21,9 @@ opt = parser.parse_args()
 pspnet = PSPNet(DEVICE=opt.id)
 pspnet.get_network_architecture()
 
-CONFIG = utils.get_data_config("ade20k")
-im_list = utils.open_im_list("ade20k")
+project = "street_view"
+CONFIG = utils.get_data_config(project)
+im_list = utils.open_im_list(project)
 root_images = CONFIG["images"]
 
 for fn_im in im_list:

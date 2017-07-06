@@ -24,7 +24,7 @@ def get_data_config(project):
 
 def open_im_list(project):
     CONFIG = get_data_config(project)
-    im_list = [line.rstrip().split()[0] for line in open(CONFIG["im_list"], 'r')]
+    im_list = [line.rstrip() for line in open(CONFIG["im_list"], 'r')]
     return im_list
 
 def get_categories():

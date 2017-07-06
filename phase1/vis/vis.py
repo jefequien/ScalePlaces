@@ -21,19 +21,18 @@ class Visualizer:
         cnt = 0
         for im in im_list[:self.MAX]:
             img_section = "<br><br>{} {}<br><br>".format(self.project, im)
-
-            im = im.split()[0]
+            
+            print cnt, im
             paths = self.image_visualizer.visualize(im)
             img_section += self.getImageTag(paths["image"])
             img_section += self.getImageTag(paths["prob_mask"])
             img_section += self.getImageTag(paths["category_mask"])
-            img_section += self.getImageTag(paths["ground_truth"])
-            img_section += self.getImageTag(paths["diff"])
+            #img_section += self.getImageTag(paths["ground_truth"])
+            #img_section += self.getImageTag(paths["diff"])
             img_section += self.getImageTag(paths["thresholds"])
 
             img_sections += img_section
 
-            print cnt, im
             cnt += 1
 
         body = "<body>{}</body>".format(img_sections)
