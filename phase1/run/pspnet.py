@@ -111,7 +111,7 @@ class PSPNet:
         self.net.blobs['data'].data[...] = data
         self.net.forward()
         out = self.net.blobs['prob'].data[0,:,:,:]
-        return out
+        return np.copy(out)
         
 
     def print_network_architecture(self):
