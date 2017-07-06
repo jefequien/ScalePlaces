@@ -61,7 +61,6 @@ for fn_im in im_list:
         print "Unable to load image. Skipping..."
         continue
     probs = pspnet.process(image)
-    # probs = pspnet.old_process(image)
 
     # calculate output
     pred_mask = np.argmax(probs, axis=0) + 1

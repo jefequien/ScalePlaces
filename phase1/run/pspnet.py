@@ -33,53 +33,6 @@ class PSPNet:
         solver = caffe.get_solver('models/solver_pspnet_modified.prototxt')
         solver.net.copy_from(WEIGHTS)
 
-
-    def old_process(self, image):
-        import time
-        import numpy as np
-        import itertools
-        from scipy import misc, ndimage
-        DATA_MEAN = np.array([[[123.68, 116.779, 103.939]]])
-        INPUT_SIZE = 473
-        NUM_CLASS = 150
-
-        image = pspnet_utils.preprocess(image)
-        
-        # Resize consistent size
-        h_ori,w_ori,n = image.shape
-
-        image = pspnet_utils.scale(image)
-
-        h,w,_ = image.shape
-        crops = pspnet_utils.split_crops(image)
-
-        probs = np.zeros((NUM_CLASS, h, w), dtype=np.float32)
-        cnts = np.zeros((1,h,w))
-
-        n = len(crops)
-        outs = []
-        for i in xrange(n):
-            data = crops[i]
-
-            out = self.feed_forward(data)
-            outs.append(out)
-
-
-        crop_boxes = pspnet_utils.get_crop_boxes(h,w)
-        for i in xrange(n):
-            sh,eh,sw,ew = crop_boxes[i]
-            out = outs[i]
-
-            cnts[0,sh:eh,sw:ew] += 1
-            probs[:,sh:eh,sw:ew] += out[:,0:eh-sh,0:ew-sw]
-
-        probs /= cnts
-
-        # Resize back
-        probs = pspnet_utils.unscale(probs, h_ori, w_ori)
-        assert probs.shape == (NUM_CLASS,h_ori,w_ori)
-        return probs
-
     def process(self, image):
         image = pspnet_utils.preprocess(image)
         h_ori,w_ori,_ = image.shape

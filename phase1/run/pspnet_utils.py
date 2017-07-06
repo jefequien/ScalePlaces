@@ -79,5 +79,4 @@ def get_crop_locs(h,w):
     hs = np.arange(0,hs_upper,stride, dtype=int)
     ws = np.arange(0,ws_upper,stride, dtype=int)
     locs = list(itertools.product(hs,ws))
-    print locs
     return locs
