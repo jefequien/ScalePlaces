@@ -91,7 +91,7 @@ class ImageVisualizer:
 
     def get_diff(self, cm, gt):
         if cm is None or gt is None:
-            print "Cannot make diff", im
+            print "Cannot make diff"
             return None
         mask = gt - cm
         mask = np.invert(mask.astype(bool))
