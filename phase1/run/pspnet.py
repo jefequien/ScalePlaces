@@ -52,6 +52,7 @@ class PSPNet:
 
         h,w,_ = image.shape
         crop_boxes = pspnet_utils.get_crop_boxes(h,w)
+        crops = pspnet_utils.split_crops(image_scaled)
 
         probs = np.zeros((NUM_CLASS, h, w), dtype=np.float32)
         cnts = np.zeros((1,h,w))
@@ -59,9 +60,7 @@ class PSPNet:
         n = len(crop_boxes)
         for i in xrange(n):
             sh,eh,sw,ew = crop_boxes[i]
-            
-            data = np.tile(DATA_MEAN, (INPUT_SIZE, INPUT_SIZE, 1))
-            data[0:eh-sh,0:ew-sw,:] = image[sh:eh,sw:ew,:]
+            data = crops[i]
 
             out = self.feed_forward(data)
 
