@@ -51,18 +51,14 @@ class PSPNet:
         image = pspnet_utils.scale(image)
 
         h,w,_ = image.shape
-        locs = pspnet_utils.get_crop_locs(h,w)
-        print locs
-        #print image.shape
-        #print hs
-        #print ws
+        crop_boxes = pspnet_utils.get_crop_boxes(h,w)
 
         probs = np.zeros((NUM_CLASS, h, w), dtype=np.float32)
         cnts = np.zeros((1,h,w))
-        for loc in locs:
-            sh,sw = loc
-            eh = min(h, sh + INPUT_SIZE)
-            ew = min(w, sw + INPUT_SIZE)
+
+        n = len(crop_boxes)
+        for i in xrange(n):
+            sh,eh,sw,ew = crop_boxes[i]
             
             data = np.tile(DATA_MEAN, (INPUT_SIZE, INPUT_SIZE, 1))
             data[0:eh-sh,0:ew-sw,:] = image[sh:eh,sw:ew,:]
