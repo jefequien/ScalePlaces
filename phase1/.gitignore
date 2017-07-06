@@ -4,7 +4,7 @@
 
 eval/sorted/*
 run/tmp/*
-run/my_pspnet_prediction/*
+run/pspnet_prediction_tmp/*
 vis/tmp/*
 vis/single_annotations/*
 vis/single_annotations_vis/*

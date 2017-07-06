@@ -23,7 +23,7 @@ def split_crops(image):
         crops[i] = crop
     return crops
 
-def assemble_probs(image, probs):
+def assemble_probs(image, crop_probs):
     h,w,_ = image.shape
     probs = np.zeros((NUM_CLASS, h, w), dtype=np.float32)
     cnts = np.zeros((1,h,w))
@@ -32,8 +32,7 @@ def assemble_probs(image, probs):
     n = len(crop_boxes)
     for i in xrange(n):
         sh,eh,sw,ew = crop_boxes[i]
-        prob = probs[i]
-
+        prob = crop_probs[i]
         probs[:,sh:eh,sw:ew] += prob[:,0:eh-sh,0:ew-sw]
         cnts[0,sh:eh,sw:ew] += 1
 
@@ -62,7 +61,7 @@ def get_crop_boxes(h,w):
         sh,sw = loc
         eh = min(h, sh + INPUT_SIZE)
         ew = min(w, sw + INPUT_SIZE)
-        box = (sh,eh,sw,eh)
+        box = (sh,eh,sw,ew)
         boxes.append(box)
     return boxes
 
