@@ -35,8 +35,8 @@ class PSPNet:
         solver.net.copy_from(WEIGHTS)
 
     def process(self, image):
-        return old_process.process(image)
-        
+        return solf.old_process(image)
+
         if image.ndim != 3:
             image = np.stack((image,image,image), axis=2)
         h_ori,w_ori,_ = image.shape
