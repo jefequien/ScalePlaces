@@ -9,6 +9,12 @@ NUM_CLASS = 150
 stride_rate = 0.3
 scale_size = 512
 
+def preprocess(image):
+    if image.ndim != 3:
+        image = np.stack((image,image,image), axis=2)
+    image = image.astype('float32') - DATA_MEAN
+    return image
+
 def split_crops(image):
     h,w,_ = image.shape
     crop_boxes = get_crop_boxes(h,w)
