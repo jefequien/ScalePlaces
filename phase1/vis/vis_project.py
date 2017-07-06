@@ -35,7 +35,8 @@ class Visualizer:
         html = "<html><head></head><body></body></html>"
         with open(self.output_path, 'w') as f:
             f.write(html)
-        print "http://places.csail.mit.edu/scaleplaces/ScalePlaces/phase1/{}".format(self.output_path)
+
+        print "http://places.csail.mit.edu/scaleplaces/ScalePlaces/phase1/vis/{}".format(self.output_path)
 
     def add_image_section(self, im):
         new_section = "<br><br>{} {}<br><br>".format(self.project, im)
