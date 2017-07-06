@@ -2,17 +2,19 @@ import os
 import random
 
 import utils_vis as utils
-from vis import Visualizer
+from vis_project import Visualizer
 
 project = "street_view"
 output_dir = "vis_{}".format(project)
 config = utils.get_data_config(project)
 im_list = utils.open_im_list(project)
 
-vis = Visualizer(project, output_dir, MAX=10)
 for i in xrange(1):
-    #random.shuffle(im_list)
-    vis.makeHTML(im_list,fname="{}_{}.html".format(project,i))
+    random.shuffle(im_list)
+    fname = "{}_{}.html".format(project,i)
+    output_path = os.path.join(output_dir, fname)
+    vis = Visualizer(project, output_path=output_path, MAX=100)
+    vis.visualize_images(im_list)
 
 raise
 im_list_dir = "../eval/sorted/{}".format(project)

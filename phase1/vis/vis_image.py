@@ -18,28 +18,33 @@ class ImageVisualizer:
         self.config = utils.get_data_config(project)
 
     def visualize(self, im):
-        im_path = utils.get_file_path(im, self.config, ftype="im")
-        cm, cm_path = self.get_category_mask(im)
-        pm, pm_path = self.get_prob_mask(im)
-        #gt, gt_path = self.get_ground_truth(im)
-
-        cm_color, cm_color_path = self.add_color(cm)
-        #gt_color, gt_color_path = self.add_color(gt)
-
-        #diff = self.get_diff(cm, gt)
-        #diff_color, diff_color_path = self.add_color(diff)
-        
-        ap, ap_path = self.get_all_prob(im)
-        thresholds = self.get_thresholds(ap, cm)
-        thresholds_color, thresholds_color_path = self.add_color(thresholds)
-        
         paths = {}
+        im_path = utils.get_file_path(im, self.config, ftype="im")
         paths["image"] = im_path
+
+        cm, cm_path = self.get_category_mask(im)
+        cm_color, cm_color_path = self.add_color(cm)
         paths["category_mask"] = cm_color_path
+
+        pm, pm_path = self.get_prob_mask(im)
         paths["prob_mask"] = pm_path
-        #paths["ground_truth"] = gt_color_path
-        #paths["diff"] = diff_color_path
-        paths["thresholds"] = thresholds_color_path
+
+        gt, gt_path = self.get_ground_truth(im)
+        if gt is not None:
+            gt_color, gt_color_path = self.add_color(gt)
+            paths["ground_truth"] = gt_color_path
+
+
+            diff = self.get_diff(cm, gt)
+            diff_color, diff_color_path = self.add_color(diff)
+            paths["diff"] = diff_color_path
+
+        if True:
+            ap, ap_path = self.get_all_prob(im)
+            thresholds = self.get_thresholds(ap, cm)
+            thresholds_color, thresholds_color_path = self.add_color(thresholds)
+            paths["thresholds"] = thresholds_color_path
+
         return paths
 
     def get_category_mask(self, im):
@@ -126,8 +131,7 @@ if __name__ == "__main__":
     project = args.p
     im = args.i
     if not im:
-        f = utils.get_data_config(project)["im_list"]
-        im_list = [line.rstrip() for line in open(f, 'r')]
+        im_list = utils.open_im_list(project)
         im = im_list[0]
 
     print project, im

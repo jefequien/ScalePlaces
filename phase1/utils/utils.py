@@ -22,9 +22,14 @@ def get_data_config(project):
         config = data_config[project]
         return config
 
-def open_im_list(project):
-    CONFIG = get_data_config(project)
-    im_list = [line.rstrip() for line in open(CONFIG["im_list"], 'r')]
+# Can also be project
+def open_im_list(txt_im_list):
+    if ".txt" not in txt_im_list:
+        project = txt_im_list
+        CONFIG = get_data_config(project)
+        txt_im_list = CONFIG["im_list"]
+
+    im_list = [line.rstrip() for line in open(txt_im_list, 'r')]
     return im_list
 
 def get_categories():
