@@ -38,7 +38,7 @@ class Visualizer:
 
         root = "/data/vision/oliva/scenedataset/"
         abs_path = os.path.abspath(self.output_path)
-        rel_path = os.path.relpath(root, abs_path)
+        rel_path = os.path.relpath(abs_path, root)
         print "http://places.csail.mit.edu/{}".format(rel_path)
 
     def add_image_section(self, im):
