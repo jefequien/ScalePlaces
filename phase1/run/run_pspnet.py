@@ -8,9 +8,12 @@ from pspnet import PSPNet
 import utils_run as utils
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--id', default=0,type=int)
 parser.add_argument("-p", required=True, help="Project name")
+parser.add_argument('--id', default=0,type=int)
+parser.add_argument('--local', action='store_true', default=False)
 args = parser.parse_args()
+
+print args.local
 
 project = args.p
 pspnet = PSPNet(DEVICE=args.id)
@@ -19,8 +22,10 @@ pspnet.print_network_architecture()
 CONFIG = utils.get_data_config(project)
 im_list = utils.open_im_list(project)
 
-root_result = CONFIG["pspnet_prediction"]
 root_images = CONFIG["images"]
+root_result = CONFIG["pspnet_prediction"]
+if args.local:
+    root_result = "pspnet_prediction_tmp/"
 
 root_mask = os.path.join(root_result, 'category_mask')
 root_prob = os.path.join(root_result, 'prob_mask')
