@@ -13,8 +13,6 @@ parser.add_argument('--id', default=0,type=int)
 parser.add_argument('--local', action='store_true', default=False)
 args = parser.parse_args()
 
-print args.local
-
 project = args.p
 pspnet = PSPNet(DEVICE=args.id)
 pspnet.print_network_architecture()

@@ -14,7 +14,7 @@ def split_crops(image):
     crop_boxes = get_crop_boxes(h,w)
     n = len(crop_boxes)
 
-    crops = np.zeros((n,INPUT_SIZE,INPUT_SIZE))
+    crops = np.zeros((n,INPUT_SIZE,INPUT_SIZE,3))
     for i in xrange(n):
         sh,eh,sw,ew = crop_boxes[i]
 
