@@ -47,19 +47,11 @@ class PSPNet:
         
         # Resize consistent size
         h_ori,w_ori,n = image.shape
-        short_side = min(h_ori, w_ori)
-        long_side = max(h_ori, w_ori)
-        ratio = 1.*512/long_side
-        image = misc.imresize(image, ratio)
 
-        h,w,n = image.shape
-        stride_rate = 0.3
-        stride = INPUT_SIZE * stride_rate
-        hs_upper = max(1,h-(INPUT_SIZE-stride))
-        ws_upper = max(1,w-(INPUT_SIZE-stride))
-        hs = np.arange(0,hs_upper,stride, dtype=int)
-        ws = np.arange(0,ws_upper,stride, dtype=int)
-        locs = list(itertools.product(hs,ws))
+        image = pspnet_utils.scale(image)
+
+        h,w,_ = image.shape
+        locs = pspnet_utils.get_crop_locs(h,w)
         print locs
         #print image.shape
         #print hs
