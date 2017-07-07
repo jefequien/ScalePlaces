@@ -83,10 +83,14 @@ class DataLayer(caffe.Layer):
         # Random crop
         crop_size = 473
         h,w,n = data.shape
-        dx = random.randint(0,w-crop_size)
-        dy = random.randint(0,h-crop_size)
-        data = data[dy:473+dy,dx:473+dx]
-        label = label[dy:473+dy,dx:473+dx]
+        sh = random.randint(0,h-crop_size)
+        sw = random.randint(0,w-crop_size)
+        eh = sh + crop_size
+        ew = sw + crop_size
+
+        box = (sh,eh,sw,ew)
+        data = pspnet_utils.crop_image(data, box)
+        label = pspnet_utils.crop_label(label, box)
 
         # Make label
         # K = 150

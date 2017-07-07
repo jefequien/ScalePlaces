@@ -22,12 +22,20 @@ def split_crops(image):
 
     crops = np.zeros((n,INPUT_SIZE,INPUT_SIZE,3))
     for i in xrange(n):
-        sh,eh,sw,ew = crop_boxes[i]
-
-        crop = np.tile(DATA_MEAN, (INPUT_SIZE, INPUT_SIZE, 1))
-        crop[0:eh-sh,0:ew-sw,:] = image[sh:eh,sw:ew,:]
-        crops[i] = crop
+        box = crop_boxes[i]
+        crops[i] = crop_image(image, box)
     return crops
+
+def crop_image(image, box):
+    sh,eh,sw,ew = box
+    crop = np.tile(DATA_MEAN, (INPUT_SIZE, INPUT_SIZE, 1))
+    crop[0:eh-sh,0:ew-sw,:] = image[sh:eh,sw:ew,:]
+    return crop
+def crop_label(label, box):
+    sh,eh,sw,ew = box
+    crop = np.zeros(label.shape)
+    crop[0:eh-sh,0:ew-sw] = label[sh:eh,sw:ew]
+    return crop
 
 def assemble_probs(image, crop_probs):
     h,w,_ = image.shape
