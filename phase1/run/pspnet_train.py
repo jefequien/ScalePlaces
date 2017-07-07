@@ -11,6 +11,8 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--id', default=0,type=int)
 args = parser.parse_args()
 
+DEVICE = args.id
+
 caffe.set_mode_gpu()
 caffe.set_device(DEVICE)
 
