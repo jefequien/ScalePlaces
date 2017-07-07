@@ -3897,8 +3897,13 @@ layer {
   }
 }
 layer {
-  name: "softmax"
-  type: "Softmax"
+  name: "loss"
+  type: "SoftmaxWithLoss"
   bottom: "conv6_interp"
-  top: "prob"
+  bottom: "label"
+  top: "loss"
+  loss_param {
+    ignore_label: 0
+    normalize: false
+  }
 }
