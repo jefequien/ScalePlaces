@@ -6,7 +6,7 @@ import socket
 import numpy as np
 
 import utils_run as utils
-import pspnet_utils
+import utils_pspnet
 
 CAFFE_ROOT = '/data/vision/torralba/segmentation/places/PSPNet/'
 sys.path.insert(0, os.path.join(CAFFE_ROOT, 'python'))
@@ -35,11 +35,11 @@ class PSPNet:
         solver.solve()
 
     def sliding_window(self, image):
-        image = pspnet_utils.preprocess(image)
+        image = utils_pspnet.preprocess(image)
         h_ori,w_ori,_ = image.shape
 
-        image_scaled = pspnet_utils.scale(image)
-        crops = pspnet_utils.split_crops(image_scaled)
+        image_scaled = utils_pspnet.scale(image)
+        crops = utils_pspnet.split_crops(image_scaled)
 
         n,h,w,_ = crops.shape
         K = 150
@@ -48,8 +48,8 @@ class PSPNet:
             crop = crops[i]
             crop_probs[i] = self.feed_forward(crop)
 
-        probs = pspnet_utils.assemble_probs(image_scaled,crop_probs)
-        probs = pspnet_utils.unscale(probs,h_ori,w_ori)
+        probs = utils_pspnet.assemble_probs(image_scaled,crop_probs)
+        probs = utils_pspnet.unscale(probs,h_ori,w_ori)
 
         return probs
 

@@ -7,7 +7,7 @@ from scipy import misc
 import random
 
 import utils_run as utils
-import pspnet_utils
+import utils_pspnet
 
 class DataLayer(caffe.Layer):
     """
@@ -22,7 +22,7 @@ class DataLayer(caffe.Layer):
         
         """
         project = "ade20k"
-        CONFIG = utils.get_data_config(project)
+        CONFIG = utils.get_config(project)
         self.im_list = utils.open_im_list(project)
         self.image_dir = CONFIG["images"]
         self.label_dir = CONFIG["ground_truth"]
@@ -76,8 +76,8 @@ class DataLayer(caffe.Layer):
         pass
 
     def transform(self, data, label):
-        data = pspnet_utils.scale(data)
-        label = pspnet_utils.scale(label, interp='nearest')
+        data = utils_pspnet.scale(data)
+        label = utils_pspnet.scale(label, interp='nearest')
 
         # Random crop
         crop_size = 473
@@ -93,8 +93,8 @@ class DataLayer(caffe.Layer):
         ew = min(w,sw + crop_size)
 
         box = (sh,eh,sw,ew)
-        data = pspnet_utils.crop_image(data, box)
-        label = pspnet_utils.crop_label(label, box)
+        data = utils_pspnet.crop_image(data, box)
+        label = utils_pspnet.crop_label(label, box)
 
         # Make label
         # K = 150
@@ -114,7 +114,7 @@ class DataLayer(caffe.Layer):
         - subtract mean
         """
         img = misc.imread(os.path.join(self.image_dir, im))
-        in_ = pspnet_utils.preprocess(img)
+        in_ = utils_pspnet.preprocess(img)
         return in_
 
     def load_label(self, im):
