@@ -90,8 +90,8 @@ class DataLayer(caffe.Layer):
             sh = random.randint(0,h-crop_size)
         if w > crop_size:
             sw = random.randint(0,w-crop_size)
-        eh = sh + crop_size
-        ew = sw + crop_size
+        eh = min(h,sh + crop_size)
+        ew = min(w,sw + crop_size)
 
         box = (sh,eh,sw,ew)
         data = pspnet_utils.crop_image(data, box)
