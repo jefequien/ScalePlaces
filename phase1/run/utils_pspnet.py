@@ -15,6 +15,17 @@ def preprocess(image):
     image = image.astype('float32') - DATA_MEAN
     return image
 
+def make_label(ground_truth):
+    h,w = label.shape
+    label = np.zeros((NUM_CLASS,h,w))
+    for i in xrange(NUM_CLASS):
+        c = i + 1
+        mask = ground_truth == c
+        if np.sum(mask) > 0:
+            mask[mask == 0] = 0.0001
+            label[i] = mask
+    return label
+
 def split_crops(image):
     h,w,_ = image.shape
     crop_boxes = get_crop_boxes(h,w)
