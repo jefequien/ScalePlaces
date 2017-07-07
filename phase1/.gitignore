@@ -3,6 +3,8 @@
 *.h5
 
 eval/sorted/*
+run/snapshot/*
+run/good/*
 run/tmp/*
 run/pspnet_prediction_tmp/*
 vis/tmp/*

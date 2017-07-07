@@ -1,5 +1,7 @@
 import os
+import random
 import argparse
+import sys
 
 CAFFE_ROOT = '/data/vision/torralba/segmentation/places/PSPNet/'
 sys.path.insert(0, os.path.join(CAFFE_ROOT, 'python'))
