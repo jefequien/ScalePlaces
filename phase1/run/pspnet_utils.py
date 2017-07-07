@@ -33,7 +33,7 @@ def crop_image(image, box):
     return crop
 def crop_label(label, box):
     sh,eh,sw,ew = box
-    crop = np.zeros(label.shape)
+    crop = np.zeros((INPUT_SIZE,INPUT_SIZE))
     crop[0:eh-sh,0:ew-sw] = label[sh:eh,sw:ew]
     return crop
 
