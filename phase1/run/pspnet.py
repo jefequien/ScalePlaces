@@ -22,29 +22,31 @@ class PSPNet:
         SEED = 3
         random.seed(SEED)
 
-        MODEL_INFERENCE = 'models/train_pspnet_modified.prototxt'
-        # MODEL_INFERENCE = 'models/pspnet50_ADE20K_473.prototxt'
-
+        # Only used for eval
+        MODEL_INFERENCE = 'models/pspnet50_ADE20K_473.prototxt'
         self.test_net = caffe.Net(MODEL_INFERENCE, WEIGHTS, caffe.TEST)
+
 
         self.log = 'logs/%s_seed%d_gpu%d.log'%(socket.gethostname(), SEED, DEVICE)
 
     def fine_tune(self):
-        solver = caffe.get_solver('models/solver_pspnet_modified.prototxt')
+        solver = caffe.get_solver('models/solver_pspnet_with_data_layer.prototxt')
         solver.net.copy_from(WEIGHTS)
         solver.solve()
 
-    def process(self, image):
+    def sliding_window(self, image):
         image = pspnet_utils.preprocess(image)
         h_ori,w_ori,_ = image.shape
 
         image_scaled = pspnet_utils.scale(image)
         crops = pspnet_utils.split_crops(image_scaled)
 
-        crop_probs = []
-        for crop in crops:
-            crop_prob = self.feed_forward(crop)
-            crop_probs.append(crop_prob)
+        n,h,w,_ = crops.shape
+        K = 150
+        crop_probs = np.zeros((n,K,h,w))
+        for i in xrange(n):
+            crop = crops[i]
+            crop_probs[i] = self.feed_forward(crop)
 
         probs = pspnet_utils.assemble_probs(image_scaled,crop_probs)
         probs = pspnet_utils.unscale(probs,h_ori,w_ori)
