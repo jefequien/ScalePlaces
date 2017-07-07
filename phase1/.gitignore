@@ -6,6 +6,7 @@ eval/sorted/*
 run/tmp/*
 run/pspnet_prediction_tmp/*
 vis/tmp/*
+vis/color_mask/*
 vis/single_annotations/*
 vis/single_annotations_vis/*
 vis/vis_ade20k/*

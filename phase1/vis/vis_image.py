@@ -8,7 +8,7 @@ import numpy as np
 
 import utils_vis as utils
 
-THRESHOLD = True
+THRESHOLD = False
 
 class ImageVisualizer:
 
