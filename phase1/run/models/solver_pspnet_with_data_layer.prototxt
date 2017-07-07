@@ -1,4 +1,4 @@
-net: "models/train_pspnet_modified.prototxt"
+net: "models/pspnet_with_data_layer.prototxt"
 test_iter: 10
 # make test net, but don't invoke it from the solver itself
 test_interval: 999999999
