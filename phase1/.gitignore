@@ -2,6 +2,9 @@
 *.swp
 *.h5
 
+*.caffemodel
+*.solverstate
+
 eval/sorted/*
 run/snapshot/*
 run/good/*
