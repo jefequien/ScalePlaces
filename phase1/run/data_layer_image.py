@@ -49,10 +49,9 @@ class DataLayer(caffe.Layer):
         # load image + label image pair
         data = self.load_image(self.im_list[self.idx])
         label = self.load_label(self.im_list[self.idx])
-        print data.shape, label.shape
 
         self.data, self.label = self.transform(data, label)
-        print self.data.shape, self.label.shape
+        # print self.data.shape, self.label.shape
 
         # reshape tops to fit (leading 1 is for batch dimension)
         top[0].reshape(1, *self.data.shape)
@@ -106,7 +105,6 @@ class DataLayer(caffe.Layer):
        
         data = data[:,:,(2,1,0)]
         data = data.transpose((2,0,1))
-        # label = label[np.newaxis, ...]
         return data, label
 
     def load_image(self, im):
