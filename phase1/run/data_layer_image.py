@@ -83,8 +83,13 @@ class DataLayer(caffe.Layer):
         # Random crop
         crop_size = 473
         h,w,n = data.shape
-        sh = random.randint(0,h-crop_size)
-        sw = random.randint(0,w-crop_size)
+
+        sh = 0
+        sw = 0
+        if h > crop_size:
+            sh = random.randint(0,h-crop_size)
+        if w > crop_size:
+            sw = random.randint(0,w-crop_size)
         eh = sh + crop_size
         ew = sw + crop_size
 
