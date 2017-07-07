@@ -11,6 +11,7 @@ run/good/*
 run/tmp/*
 run/pspnet_prediction_tmp/*
 vis/tmp/*
+vis/tmp2/*
 vis/color_mask/*
 vis/single_annotations/*
 vis/single_annotations_vis/*
