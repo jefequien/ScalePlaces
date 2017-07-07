@@ -25,7 +25,7 @@ class PSPNet:
         MODEL_INFERENCE = 'models/train_pspnet_modified.prototxt'
         # MODEL_INFERENCE = 'models/pspnet50_ADE20K_473.prototxt'
 
-        # self.net = caffe.Net(MODEL_INFERENCE, WEIGHTS, caffe.TEST)
+        self.test_net = caffe.Net(MODEL_INFERENCE, WEIGHTS, caffe.TEST)
 
         self.log = 'logs/%s_seed%d_gpu%d.log'%(socket.gethostname(), SEED, DEVICE)
 
@@ -62,14 +62,14 @@ class PSPNet:
         data = data.transpose((2,0,1))
         data = data[np.newaxis,:,:,:]
 
-        self.net.blobs['data'].data[...] = data
-        self.net.forward()
-        out = self.net.blobs['prob'].data[0,:,:,:]
+        self.test_net.blobs['data'].data[...] = data
+        self.test_net.forward()
+        out = self.test_net.blobs['prob'].data[0,:,:,:]
         return np.copy(out)
         
 
     def print_network_architecture(self):
-        for k,v in self.net.blobs.items():
+        for k,v in self.test_net.blobs.items():
             print v.data.shape, k
 
 
