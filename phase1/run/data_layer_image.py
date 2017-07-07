@@ -106,7 +106,7 @@ class DataLayer(caffe.Layer):
        
         data = data[:,:,(2,1,0)]
         data = data.transpose((2,0,1))
-        label = label[np.newaxis, ...]
+        # label = label[np.newaxis, ...]
         return data, label
 
     def load_image(self, im):
