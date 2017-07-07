@@ -22,16 +22,17 @@ class PSPNet:
         SEED = 3
         random.seed(SEED)
 
-        # MODEL_INFERENCE = 'models/train_pspnet_modified.prototxt'
-        MODEL_INFERENCE = 'models/pspnet50_ADE20K_473.prototxt'
+        MODEL_INFERENCE = 'models/train_pspnet_modified.prototxt'
+        # MODEL_INFERENCE = 'models/pspnet50_ADE20K_473.prototxt'
 
-        self.net = caffe.Net(MODEL_INFERENCE, WEIGHTS, caffe.TEST)
+        # self.net = caffe.Net(MODEL_INFERENCE, WEIGHTS, caffe.TEST)
 
         self.log = 'logs/%s_seed%d_gpu%d.log'%(socket.gethostname(), SEED, DEVICE)
 
     def fine_tune(self):
         solver = caffe.get_solver('models/solver_pspnet_modified.prototxt')
         solver.net.copy_from(WEIGHTS)
+        solver.solve()
 
     def process(self, image):
         image = pspnet_utils.preprocess(image)

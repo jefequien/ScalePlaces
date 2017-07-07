@@ -7,6 +7,7 @@ from scipy import misc
 import random
 
 import utils_run as utils
+import pspnet_utils
 
 class DataLayer(caffe.Layer):
     """
@@ -18,26 +19,18 @@ class DataLayer(caffe.Layer):
     def setup(self, bottom, top):
         """
         Setup data layer according to parameters:
-        - ade_dir: path to ADE dir
-        - split: train / val / test
-        - mean: tuple of mean values to subtract
-        - randomize: load in random order (default: True)
-        - seed: seed for randomization (default: None / current time)
         
         """
         project = "ade20k"
         CONFIG = utils.get_data_config(project)
+        self.im_list = utils.open_im_list(project)
         self.image_dir = CONFIG["images"]
         self.label_dir = CONFIG["ground_truth"]
-        self.all_prob_dir = os.path.join(CONFIG["pspnet_prediction"], "all_prob")
-        self.im_list = [line.rstrip() for line in open(CONFIG["im_list"], 'r')]
 
         # Params
         self.idx = 0
-        params = eval(self.param_str)
-        self.mean = np.array(params['mean'])
-        self.random = params.get('randomize', True)
-        self.seed = params.get('seed', None)
+        self.random = False
+        self.seed = 1337
 
         # two tops: data and label
         if len(top) != 2:
@@ -45,9 +38,6 @@ class DataLayer(caffe.Layer):
         # data layers have no bottoms
         if len(bottom) != 0:
             raise Exception("Do not define a bottom.")
-
-        # make eval deterministic
-        self.random = False
 
         # randomization: seed and pick
         if self.random:
@@ -60,6 +50,7 @@ class DataLayer(caffe.Layer):
         data = self.load_image(self.im_list[self.idx])
         label = self.load_label(self.im_list[self.idx])
         print data.shape, label.shape
+
         self.data, self.label = self.transform(data, label)
         print self.data.shape, self.label.shape
 
@@ -86,10 +77,8 @@ class DataLayer(caffe.Layer):
         pass
 
     def transform(self, data, label):
-        # Resize
-        base_size = 512
-        data = utils.resize(data, base_size)
-        label = utils.resize(label, base_size, interp='nearest')
+        data = pspnet_utils.scale(data)
+        label = pspnet_utils.scale(label, interp='nearest')
 
         # Random crop
         crop_size = 473
@@ -100,12 +89,13 @@ class DataLayer(caffe.Layer):
         label = label[dy:473+dy,dx:473+dx]
 
         # Make label
-        K = 150
-        new_label = np.zeros((K,crop_size,crop_size))
-        for i in xrange(K):
-            c = i+1
-            new_label[i] = label == c
+        # K = 150
+        # new_label = np.zeros((K,crop_size,crop_size))
+        # for i in xrange(K):
+        #     c = i+1
+        #     new_label[i] = label == c
        
+        data = data[:,:,(2,1,0)]
         data = data.transpose((2,0,1))
         label = label[np.newaxis, ...]
         return data, label
@@ -117,11 +107,7 @@ class DataLayer(caffe.Layer):
         - subtract mean
         """
         img = misc.imread(os.path.join(self.image_dir, im))
-        in_ = np.array(img, dtype=np.float32)
-
-        if (in_.ndim == 2):
-            in_ = np.repeat(in_[:,:,None], 3, axis = 2)
-        in_ -= self.mean
+        in_ = pspnet_utils.preprocess(img)
         return in_
 
     def load_label(self, im):
@@ -129,6 +115,7 @@ class DataLayer(caffe.Layer):
         Load label image as 1 x height x width integer array of label indices.
         The leading singleton dimension is required by the loss.
         """
-        img = misc.imread(os.path.join(self.label_dir, im.replace(".jpg",".png")))
+        ground_truth_path = os.path.join(self.label_dir, im.replace(".jpg",".png"))
+        img = misc.imread(ground_truth_path)
         label = np.array(img, dtype=np.uint8)
         return label

@@ -48,13 +48,13 @@ def assemble_probs(image, crop_probs):
     assert (probs.min()>=0 and probs.max()<=1), '%f,%f'%(probs.min(),probs.max())
     return probs
 
-def scale(image):
+def scale(image, interp='bilinear'):
     h = image.shape[0]
     w = image.shape[1]
     short_side = min(h, w)
     long_side = max(h, w)
     ratio = 1.*scale_size/long_side # Make long_side == scale_size
-    return misc.imresize(image, ratio)
+    return misc.imresize(image, ratio, interp=interp)
 
 def unscale(probs,h_ori,w_ori):
     _,h,w = probs.shape

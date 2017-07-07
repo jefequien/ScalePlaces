@@ -6,7 +6,7 @@ layer {
   python_param {
     module: "data_layer_image"
     layer: "DataLayer"
-    param_str: "{\'seed\': 1, \'mean\': (109.5388, 118.6897, 124.6901)}"
+    param_str: "{\'seed\': 1}"
   }
 }
 layer {
