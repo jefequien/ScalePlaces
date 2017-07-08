@@ -21,6 +21,6 @@ caffe.set_device(DEVICE)
 SEED = 3
 random.seed(SEED)
 
-solver = caffe.get_solver('models/solver_pspnet_with_data_layer.prototxt')
+solver = caffe.get_solver('models/solver_pspnet_sigmoid.prototxt')
 solver.net.copy_from(WEIGHTS)
 solver.solve()
