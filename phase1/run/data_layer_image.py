@@ -101,22 +101,22 @@ class DataLayer(caffe.Layer):
         label = utils_pspnet.crop_ground_truth(gt, box)
 
         if self.loss_type == "softmax":
-            label = gt
             # Make ignored category 150
             label[label==0] = 151
             label -= 1
 
         elif self.loss_type == "sigmoid":
             K = 150
-            label = np.zeros((K,crop_size,crop_size))
+            new_label = np.zeros((K,crop_size,crop_size))
             # Ignore category 2
-            label.fill(2)
+            new_label.fill(2)
 
             for i in xrange(K):
                 c = i+1
-                mask = gt == c
+                mask = label == c
                 if np.sum(mask) > 0:
-                    label[i] = mask
+                    new_label[i] = mask
+            label = new_label
         else:
             raise
        
