@@ -98,7 +98,7 @@ class DataLayer(caffe.Layer):
 
         # Make data and label
         data = utils_pspnet.crop_image(img, box)
-        label = utils_pspnet.crop_gt(gt, box)
+        label = utils_pspnet.crop_ground_truth(gt, box)
 
         if self.loss_type == "softmax":
             label = gt
