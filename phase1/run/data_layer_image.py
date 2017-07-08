@@ -25,12 +25,15 @@ class DataLayer(caffe.Layer):
         CONFIG = utils.get_config(project)
         self.im_list = utils.open_im_list(project)
         self.image_dir = CONFIG["images"]
-        self.label_dir = CONFIG["ground_truth"]
+        self.gt_dir = CONFIG["ground_truth"]
 
         # Params
         self.idx = 0
         self.random = False
         self.seed = 1337
+
+        params = eval(self.param_str)
+        self.loss_type = params['loss_type']
 
         # two tops: data and label
         if len(top) != 2:
@@ -47,11 +50,11 @@ class DataLayer(caffe.Layer):
 
     def reshape(self, bottom, top):
         # load image + label image pair
-        data = self.load_image(self.im_list[self.idx])
-        label = self.load_label(self.im_list[self.idx])
+        im = self.im_list[self.idx]
+        img = self.load_image(im)
+        gt = self.load_ground_truth(im)
 
-        self.data, self.label = self.transform(data, label)
-        # print self.data.shape, self.label.shape
+        self.data, self.label = self.transform(img, gt)
 
         # reshape tops to fit (leading 1 is for batch dimension)
         top[0].reshape(1, *self.data.shape)
@@ -75,13 +78,13 @@ class DataLayer(caffe.Layer):
     def backward(self, top, propagate_down, bottom):
         pass
 
-    def transform(self, data, label):
-        data = utils_pspnet.scale(data)
-        label = utils_pspnet.scale(label, interp='nearest')
+    def transform(self, img, gt):
+        img = utils_pspnet.scale(img)
+        gt = utils_pspnet.scale(gt, interp='nearest')
 
         # Random crop
         crop_size = 473
-        h,w,n = data.shape
+        h,w,n = img.shape
 
         sh = 0
         sw = 0
@@ -93,18 +96,30 @@ class DataLayer(caffe.Layer):
         ew = min(w,sw + crop_size)
 
         box = (sh,eh,sw,ew)
-        data = utils_pspnet.crop_image(data, box)
-        label = utils_pspnet.crop_label(label, box)
+        img = utils_pspnet.crop_image(img, box)
+        gt = utils_pspnet.crop_gt(gt, box)
 
-        label[label==0] = 201
-        label -= 1
+        # Make label from gt
+        label = None
+        if self.loss_type == "softmax":
+            label = gt
+            # Make ignored category 150
+            label[label==0] = 151
+            label -= 1
 
-        # Make label
-        # K = 150
-        # new_label = np.zeros((K,crop_size,crop_size))
-        # for i in xrange(K):
-        #     c = i+1
-        #     new_label[i] = label == c
+        elif self.loss_type == "sigmoid":
+            K = 150
+            label = np.zeros((K,crop_size,crop_size))
+            # Ignore category 2
+            label.fill(2)
+
+            for i in xrange(K):
+                c = i+1
+                mask = gt == c
+                if np.sum(mask) > 0:
+                    label[i] = mask
+        else:
+            raise
        
         data = data[:,:,(2,1,0)]
         data = data.transpose((2,0,1))
@@ -120,12 +135,12 @@ class DataLayer(caffe.Layer):
         in_ = utils_pspnet.preprocess(img)
         return in_
 
-    def load_label(self, im):
+    def load_ground_truth(self, im):
         """
         Load label image as 1 x height x width integer array of label indices.
         The leading singleton dimension is required by the loss.
         """
-        ground_truth_path = os.path.join(self.label_dir, im.replace(".jpg",".png"))
-        img = misc.imread(ground_truth_path)
-        label = np.array(img, dtype=np.uint8)
-        return label
+        gt_path = os.path.join(self.gt_dir, im.replace(".jpg",".png"))
+        gt = misc.imread(gt_path)
+        gt = np.array(gt, dtype=np.uint8)
+        return gt

@@ -1,4 +1,4 @@
-net: "models/pspnet_with_data_layer.prototxt"
+net: "models/train_pspnet.prototxt"
 test_iter: 10
 # make test net, but don't invoke it from the solver itself
 test_interval: 999999999
@@ -14,5 +14,5 @@ iter_size: 1
 max_iter: 300000
 weight_decay: 0.0005
 snapshot: 2000
-snapshot_prefix: "snapshot/snapshot"
+snapshot_prefix: "snapshots/softmax/snapshot"
 test_initialization: false

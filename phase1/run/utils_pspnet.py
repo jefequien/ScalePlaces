@@ -42,10 +42,10 @@ def crop_image(image, box):
     crop = np.tile(DATA_MEAN, (INPUT_SIZE, INPUT_SIZE, 1))
     crop[0:eh-sh,0:ew-sw,:] = image[sh:eh,sw:ew,:]
     return crop
-def crop_label(label, box):
+def crop_ground_truth(gt, box):
     sh,eh,sw,ew = box
     crop = np.zeros((INPUT_SIZE,INPUT_SIZE))
-    crop[0:eh-sh,0:ew-sw] = label[sh:eh,sw:ew]
+    crop[0:eh-sh,0:ew-sw] = gt[sh:eh,sw:ew]
     return crop
 
 def assemble_probs(image, crop_probs):

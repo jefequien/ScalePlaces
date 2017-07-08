@@ -6,7 +6,7 @@ layer {
   python_param {
     module: "data_layer_image"
     layer: "DataLayer"
-    param_str: "{\'seed\': 1}"
+    param_str: "{\'loss_type\': 'softmax'}"
   }
 }
 layer {
@@ -3903,7 +3903,7 @@ layer {
   bottom: "label"
   top: "loss"
   loss_param {
-    ignore_label: 200
+    ignore_label: 150
     normalize: false
   }
 }
