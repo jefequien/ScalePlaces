@@ -97,7 +97,7 @@ class DataLayer(caffe.Layer):
 
         box = (sh,eh,sw,ew)
         img = utils_pspnet.crop_image(img, box)
-        gt = utils_pspnet.crop_gt(gt, box)
+        gt = utils_pspnet.crop_ground_truth(gt, box)
 
         # Make label from gt
         label = None
