@@ -94,13 +94,12 @@ class DataLayer(caffe.Layer):
             sw = random.randint(0,w-crop_size)
         eh = min(h,sh + crop_size)
         ew = min(w,sw + crop_size)
-
         box = (sh,eh,sw,ew)
-        img = utils_pspnet.crop_image(img, box)
-        gt = utils_pspnet.crop_gt(gt, box)
 
-        # Make label from gt
-        label = None
+        # Make data and label
+        data = utils_pspnet.crop_image(img, box)
+        label = utils_pspnet.crop_gt(gt, box)
+
         if self.loss_type == "softmax":
             label = gt
             # Make ignored category 150
