@@ -14,5 +14,5 @@ iter_size: 1
 max_iter: 300000
 weight_decay: 0.0005
 snapshot: 2000
-snapshot_prefix: "snapshot/"
+snapshot_prefix: "snapshot/snapshot"
 test_initialization: false

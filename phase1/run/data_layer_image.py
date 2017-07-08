@@ -96,7 +96,7 @@ class DataLayer(caffe.Layer):
         data = utils_pspnet.crop_image(data, box)
         label = utils_pspnet.crop_label(label, box)
 
-        label[label==0] = 200
+        label[label==0] = 201
         label -= 1
 
         # Make label
