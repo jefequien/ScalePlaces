@@ -3907,7 +3907,6 @@ layer {
   bottom: "label"
   top: "loss"
   loss_param {
-    ignore_label: 2
     normalize: false
   }
 }

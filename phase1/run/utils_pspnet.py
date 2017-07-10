@@ -14,7 +14,7 @@ def all_masks_label(gt):
     h,w = gt.shape
     label = np.zeros((NUM_CLASS,h,w))
     # Ignore category 2
-    label.fill(2)
+    # label.fill(2)
 
     for i in xrange(NUM_CLASS):
         c = i+1
