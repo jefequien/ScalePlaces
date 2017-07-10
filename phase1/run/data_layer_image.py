@@ -98,18 +98,8 @@ class DataLayer(caffe.Layer):
             label -= 1
 
         elif self.loss_type == "sigmoid":
-            K = 150
-            crop_size = 473
-            new_label = np.zeros((K,crop_size,crop_size))
-            # Ignore category 2
-            new_label.fill(2)
-
-            for i in xrange(K):
-                c = i+1
-                mask = label == c
-                if np.sum(mask) > 0:
-                    new_label[i] = mask
-            label = new_label
+            c = 1
+            label = label == c
         else:
             print "Wrong loss type"
             raise
