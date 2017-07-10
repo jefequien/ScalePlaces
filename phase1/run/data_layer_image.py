@@ -87,7 +87,7 @@ class DataLayer(caffe.Layer):
         data = utils_pspnet.crop_image(img, box)
         label = utils_pspnet.crop_ground_truth(gt, box)
 
-        label = misc.imresize(label, 1./8, interp='nearest')
+        label = misc.imresize(label, (60,60), interp='nearest')
         print label.shape
 
         # Setup data

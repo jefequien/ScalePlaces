@@ -11,7 +11,8 @@ stride_rate = 0.3
 scale_size = 512
 
 def all_masks_label(gt):
-    label = np.zeros((NUM_CLASS,INPUT_SIZE,INPUT_SIZE))
+    h,w = gt.shape
+    label = np.zeros((NUM_CLASS,h,w))
     # Ignore category 2
     label.fill(2)
 
