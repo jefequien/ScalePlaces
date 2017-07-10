@@ -3796,11 +3796,15 @@ layer {
   bottom: "conv5_3_pool1_interp"
   top: "conv5_3_concat"
 }
+
+
+
+
 layer {
-  name: "conv5_4"
+  name: "conv5_4_new"
   type: "Convolution"
   bottom: "conv5_3_concat"
-  top: "conv5_4"
+  top: "conv5_4_new"
   param {
     lr_mult: 10
     decay_mult: 1
@@ -3817,10 +3821,10 @@ layer {
   }
 }
 layer {
-  name: "conv5_4/bn"
+  name: "conv5_4_new/bn"
   type: "BN"
-  bottom: "conv5_4"
-  top: "conv5_4"
+  bottom: "conv5_4_new"
+  top: "conv5_4_new"
   param {
     lr_mult: 10
     decay_mult: 0
@@ -3851,25 +3855,25 @@ layer {
   }
 }
 layer {
-  name: "conv5_4/relu"
+  name: "conv5_4_new/relu"
   type: "ReLU"
-  bottom: "conv5_4"
-  top: "conv5_4"
+  bottom: "conv5_4_new"
+  top: "conv5_4_new"
 }
 layer {
-  name: "conv5_4/dropout"
+  name: "conv5_4_new/dropout"
   type: "Dropout"
-  bottom: "conv5_4"
-  top: "conv5_4"
+  bottom: "conv5_4_new"
+  top: "conv5_4_new"
   dropout_param {
     dropout_ratio: 0.1
   }
 }
 layer {
-  name: "conv6_to_one"
+  name: "conv6_new"
   type: "Convolution"
-  bottom: "conv5_4"
-  top: "conv6"
+  bottom: "conv5_4_new"
+  top: "conv6_new"
   param {
     lr_mult: 10
     decay_mult: 1
@@ -3879,7 +3883,7 @@ layer {
     decay_mult: 1
   }
   convolution_param {
-    num_output: 1
+    num_output: 150
     kernel_size: 1
     stride: 1
     weight_filler {
@@ -3888,10 +3892,10 @@ layer {
   }
 }
 layer {
-  name: "conv6_interp"
+  name: "conv6_new_interp"
   type: "Interp"
-  bottom: "conv6"
-  top: "conv6_interp"
+  bottom: "conv6_new"
+  top: "conv6_new_interp"
   interp_param {
     zoom_factor: 8
   }
@@ -3899,7 +3903,7 @@ layer {
 layer {
   name: "loss"
   type: "SigmoidCrossEntropyLoss"
-  bottom: "conv6_interp"
+  bottom: "conv6_new_interp"
   bottom: "label"
   top: "loss"
   loss_param {
