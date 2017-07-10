@@ -83,7 +83,7 @@ class DataLayer(caffe.Layer):
         gt = utils_pspnet.scale(gt, interp='nearest')
 
         # Random crop
-        box = utils.pspnet.random_crop(img)
+        box = utils_pspnet.random_crop(img)
         data = utils_pspnet.crop_image(img, box)
         label = utils_pspnet.crop_ground_truth(gt, box)
 
@@ -99,6 +99,7 @@ class DataLayer(caffe.Layer):
 
         elif self.loss_type == "sigmoid":
             K = 150
+            crop_size = 473
             new_label = np.zeros((K,crop_size,crop_size))
             # Ignore category 2
             new_label.fill(2)

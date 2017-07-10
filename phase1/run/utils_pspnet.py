@@ -1,3 +1,4 @@
+import random
 import numpy as np
 import itertools
 from scipy import misc, ndimage
