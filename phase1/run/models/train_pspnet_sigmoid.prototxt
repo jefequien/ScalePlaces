@@ -3892,18 +3892,9 @@ layer {
   }
 }
 layer {
-  name: "conv6_new_interp"
-  type: "Interp"
-  bottom: "conv6_new"
-  top: "conv6_new_interp"
-  interp_param {
-    zoom_factor: 8
-  }
-}
-layer {
   name: "loss"
   type: "SigmoidCrossEntropyLoss"
-  bottom: "conv6_new_interp"
+  bottom: "conv6_new"
   bottom: "label"
   top: "loss"
   loss_param {
