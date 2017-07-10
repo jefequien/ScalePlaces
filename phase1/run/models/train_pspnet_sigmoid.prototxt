@@ -3866,7 +3866,7 @@ layer {
   }
 }
 layer {
-  name: "conv6"
+  name: "conv6_to_one"
   type: "Convolution"
   bottom: "conv5_4"
   top: "conv6"
