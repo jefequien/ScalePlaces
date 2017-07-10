@@ -95,8 +95,6 @@ class DataLayer(caffe.Layer):
 
         # Setup label
         if self.loss_type == "softmax":
-            # Make ignored category 150
-            label[label==0] = 151
             label -= 1
 
         elif self.loss_type == "sigmoid":
@@ -107,7 +105,7 @@ class DataLayer(caffe.Layer):
         else:
             print "Wrong loss type"
             raise
-        
+        #print label        
         return data, label
 
     def load_image(self, im):
@@ -127,5 +125,5 @@ class DataLayer(caffe.Layer):
         """
         gt_path = os.path.join(self.gt_dir, im.replace(".jpg",".png"))
         gt = misc.imread(gt_path)
-        gt = np.array(gt, dtype=np.uint8)
+        gt = np.array(gt, dtype=np.int32)
         return gt

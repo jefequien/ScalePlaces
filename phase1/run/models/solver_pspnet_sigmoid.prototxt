@@ -1,5 +1,5 @@
 net: "models/train_pspnet_sigmoid.prototxt"
-display: 5
+display: 1
 average_loss: 20 # Display loss averaged over last x iterations
 snapshot: 2000
 snapshot_prefix: "snapshots/sigmoid/snapshot"

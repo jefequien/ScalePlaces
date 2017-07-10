@@ -4,9 +4,9 @@ average_loss: 20 # Display loss averaged over last x iterations
 snapshot: 2000
 snapshot_prefix: "snapshots/specific/snapshot"
 
-base_lr: 1e-10
+base_lr: 1e-8
 lr_policy: "fixed"
-momentum: 0.99
+momentum: 0.5
 weight_decay: 0.0005
 iter_size: 1 # no gradient accumulation between iterations
 max_iter: 300000

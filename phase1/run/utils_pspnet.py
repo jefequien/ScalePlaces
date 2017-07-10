@@ -13,14 +13,19 @@ scale_size = 512
 def all_masks_label(gt):
     h,w = gt.shape
     label = np.zeros((NUM_CLASS,h,w))
-    # Ignore category 2
-    # label.fill(2)
-
+    # Ignore category -1
+    label.fill(-1)
+    
+    cnt = 0
     for i in xrange(NUM_CLASS):
         c = i+1
         mask = gt == c
         if np.sum(mask) > 0:
             label[i] = mask
+            cnt += 1
+    label = label.astype(int)
+    print cnt
+    #print label
     return label
 
 def preprocess(image):
@@ -36,7 +41,7 @@ def crop_image(image, box):
     return crop
 def crop_ground_truth(gt, box):
     sh,eh,sw,ew = box
-    crop = np.zeros((INPUT_SIZE,INPUT_SIZE))
+    crop = np.zeros((INPUT_SIZE,INPUT_SIZE), dtype=int)
     crop[0:eh-sh,0:ew-sw] = gt[sh:eh,sw:ew]
     return crop
 def random_crop(img):
