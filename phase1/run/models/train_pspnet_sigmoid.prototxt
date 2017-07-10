@@ -3892,9 +3892,31 @@ layer {
   }
 }
 layer {
+  name: "category_specific"
+  type: "Convolution"
+  bottom: "conv6_new"
+  top: "category_specific"
+  param {
+    lr_mult: 10
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 20
+    decay_mult: 1
+  }
+  convolution_param {
+    num_output: 1
+    kernel_size: 1
+    stride: 1
+    weight_filler {
+      type: "msra"
+    }
+  }
+}
+layer {
   name: "loss"
   type: "SigmoidCrossEntropyLoss"
-  bottom: "conv6_new"
+  bottom: "category_specific"
   bottom: "label"
   top: "loss"
   loss_param {
