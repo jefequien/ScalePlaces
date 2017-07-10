@@ -87,8 +87,7 @@ class DataLayer(caffe.Layer):
         data = utils_pspnet.crop_image(img, box)
         label = utils_pspnet.crop_ground_truth(gt, box)
 
-        label = misc.imresize(label, (60,60), interp='nearest')
-        print label.shape
+        # label = misc.imresize(label, (60,60), interp='nearest')
 
         # Setup data
         data = data[:,:,(2,1,0)]
@@ -101,7 +100,8 @@ class DataLayer(caffe.Layer):
             label -= 1
 
         elif self.loss_type == "sigmoid":
-            #label = utils_pspnet.all_masks_label(label)
+            label = utils_pspnet.all_masks_label(label)
+        elif self.loss_type == "specific":
             c = 1
             label = label == c
         else:
