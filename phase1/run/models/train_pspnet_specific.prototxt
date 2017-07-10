@@ -3914,9 +3914,18 @@ layer {
   }
 }
 layer {
+  name: "_interp"
+  type: "Interp"
+  bottom: "category_specific"
+  top: "_interp"
+  interp_param {
+    zoom_factor: 8
+  }
+}
+layer {
   name: "loss"
   type: "SigmoidCrossEntropyLoss"
-  bottom: "category_specific"
+  bottom: "_interp"
   bottom: "label"
   top: "loss"
   loss_param {
