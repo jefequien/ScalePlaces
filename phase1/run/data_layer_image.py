@@ -83,23 +83,15 @@ class DataLayer(caffe.Layer):
         gt = utils_pspnet.scale(gt, interp='nearest')
 
         # Random crop
-        crop_size = 473
-        h,w,n = img.shape
-
-        sh = 0
-        sw = 0
-        if h > crop_size:
-            sh = random.randint(0,h-crop_size)
-        if w > crop_size:
-            sw = random.randint(0,w-crop_size)
-        eh = min(h,sh + crop_size)
-        ew = min(w,sw + crop_size)
-        box = (sh,eh,sw,ew)
-
-        # Make data and label
+        box = utils.pspnet.random_crop(img)
         data = utils_pspnet.crop_image(img, box)
         label = utils_pspnet.crop_ground_truth(gt, box)
 
+        # Setup data
+        data = data[:,:,(2,1,0)]
+        data = data.transpose((2,0,1))
+
+        # Setup label
         if self.loss_type == "softmax":
             # Make ignored category 150
             label[label==0] = 151
@@ -118,10 +110,9 @@ class DataLayer(caffe.Layer):
                     new_label[i] = mask
             label = new_label
         else:
+            print "Wrong loss type"
             raise
-       
-        data = data[:,:,(2,1,0)]
-        data = data.transpose((2,0,1))
+        
         return data, label
 
     def load_image(self, im):
@@ -129,6 +120,7 @@ class DataLayer(caffe.Layer):
         Load input image and preprocess for Caffe:
         - cast to float
         - subtract mean
+        - make into 3 channel image
         """
         img = misc.imread(os.path.join(self.image_dir, im))
         in_ = utils_pspnet.preprocess(img)
@@ -136,8 +128,7 @@ class DataLayer(caffe.Layer):
 
     def load_ground_truth(self, im):
         """
-        Load label image as 1 x height x width integer array of label indices.
-        The leading singleton dimension is required by the loss.
+        Load ground_truth image as height x width integer array of label indices.
         """
         gt_path = os.path.join(self.gt_dir, im.replace(".jpg",".png"))
         gt = misc.imread(gt_path)

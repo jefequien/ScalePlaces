@@ -15,16 +15,29 @@ def preprocess(image):
     image = image.astype('float32') - DATA_MEAN
     return image
 
-def make_label(ground_truth):
-    h,w = label.shape
-    label = np.zeros((NUM_CLASS,h,w))
-    for i in xrange(NUM_CLASS):
-        c = i + 1
-        mask = ground_truth == c
-        if np.sum(mask) > 0:
-            mask[mask == 0] = 0.0001
-            label[i] = mask
-    return label
+def crop_image(image, box):
+    sh,eh,sw,ew = box
+    crop = np.tile(DATA_MEAN, (INPUT_SIZE, INPUT_SIZE, 1))
+    crop[0:eh-sh,0:ew-sw,:] = image[sh:eh,sw:ew,:]
+    return crop
+def crop_ground_truth(gt, box):
+    sh,eh,sw,ew = box
+    crop = np.zeros((INPUT_SIZE,INPUT_SIZE))
+    crop[0:eh-sh,0:ew-sw] = gt[sh:eh,sw:ew]
+    return crop
+def random_crop(img):
+    h,w,_ = img.shape
+
+    sh = 0
+    sw = 0
+    if h > INPUT_SIZE:
+        sh = random.randint(0,h-INPUT_SIZE)
+    if w > INPUT_SIZE:
+        sw = random.randint(0,w-INPUT_SIZE)
+    eh = min(h,sh + INPUT_SIZE)
+    ew = min(w,sw + INPUT_SIZE)
+    box = (sh,eh,sw,ew)
+    return box
 
 def split_crops(image):
     h,w,_ = image.shape
@@ -36,17 +49,6 @@ def split_crops(image):
         box = crop_boxes[i]
         crops[i] = crop_image(image, box)
     return crops
-
-def crop_image(image, box):
-    sh,eh,sw,ew = box
-    crop = np.tile(DATA_MEAN, (INPUT_SIZE, INPUT_SIZE, 1))
-    crop[0:eh-sh,0:ew-sw,:] = image[sh:eh,sw:ew,:]
-    return crop
-def crop_ground_truth(gt, box):
-    sh,eh,sw,ew = box
-    crop = np.zeros((INPUT_SIZE,INPUT_SIZE))
-    crop[0:eh-sh,0:ew-sw] = gt[sh:eh,sw:ew]
-    return crop
 
 def assemble_probs(image, crop_probs):
     h,w,_ = image.shape
