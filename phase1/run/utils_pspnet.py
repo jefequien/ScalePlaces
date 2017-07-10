@@ -15,7 +15,7 @@ def all_masks_label(gt):
     # Ignore category 2
     label.fill(2)
 
-    for i in xrange(K):
+    for i in xrange(NUM_CLASS):
         c = i+1
         mask = gt == c
         if np.sum(mask) > 0:
