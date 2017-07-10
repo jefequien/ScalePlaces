@@ -101,7 +101,9 @@ class DataLayer(caffe.Layer):
             label -= 1
 
         elif self.loss_type == "sigmoid":
-            label = utils_pspnet.all_masks_label(label)
+            #label = utils_pspnet.all_masks_label(label)
+            c = 1
+            label = label == c
         else:
             print "Wrong loss type"
             raise
