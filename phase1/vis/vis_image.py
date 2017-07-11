@@ -2,6 +2,7 @@ import argparse
 import os
 import uuid
 import time
+import cv2
 
 from scipy import misc
 import numpy as np
@@ -53,7 +54,7 @@ class ImageVisualizer:
             paths["thresholds"] = thresholds_color_path
 
         if INDIV_SLICES and ap is not None:
-            indiv_slices = self.get_individual_slices(ap, 40)
+            indiv_slices = self.get_individual_slices(ap, 20)
             indiv_slices_path = self.save(indiv_slices)
             #indiv_slices_color, indiv_slices_color_path = self.add_color(indiv_slices)
             paths["indiv_slices"] = indiv_slices_path
@@ -125,19 +126,25 @@ class ImageVisualizer:
     def get_individual_slices(self, ap, n):
         threshold = 0.5
         K,h,w = ap.shape
-        all_slices = []
-        for i in xrange(K):
+        labeled_slices = []
+        sums = [np.sum(slic) for slic in ap]
+        top_slices = np.flip(np.argsort(sums), 0)
+        for i in top_slices[:n]:
             c = i+1
-            slic = ap[i]
-            #slic[slic >= threshold] = c
-            #slic[slic < threshold] = 0
-            all_slices.append(slic)
-
-        # all_slices.sort(key=np.count_nonzero, reverse=True)
-        top_slices = all_slices[:75]
-        output = np.concatenate(top_slices, axis=1)
-        print output.shape
+            slic = ap[i,:,:]
+            slic = slic > threshold
+            labeled = self.label_img(slic, c)
+            labeled_slices.append(labeled)
+        output = np.concatenate(labeled_slices, axis=1)
         return output
+
+    def label_img(self, img, c):
+        color = utils.to_color(c)
+        if np.ndim(img) == 2:
+            img = cv2.cvtColor(img, cv2.COLOR_GRAY2RGB)
+        img[:50,:150,:] = color
+        cv2.putText(img, str(c), (0,50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,0))
+        return img
 
     def add_color(self, img):
         if img is None:

@@ -9,6 +9,8 @@ from vis_image import ImageVisualizer
 
 class Visualizer:
     def __init__(self, project, output_path=None, MAX=100, special_config=None):
+        self.t = time.time()
+
         self.project = project
         self.image_visualizer = ImageVisualizer(project, special_config=special_config)
         self.images_dir = self.image_visualizer.images_dir
@@ -23,6 +25,7 @@ class Visualizer:
         if not os.path.exists(os.path.dirname(self.output_path)):
             os.makedirs(os.path.dirname(self.output_path))
         self.init_output_file()
+        print time.time() - self.t
 
     def visualize_images(self, im_list):
         cnt = 0
@@ -30,6 +33,7 @@ class Visualizer:
             cnt += 1
             print cnt, im
             self.add_image_section(im)
+            print time.time() - self.t
 
     def init_output_file(self):
         html = "<html><head></head><body></body></html>"
@@ -83,7 +87,7 @@ if __name__ == "__main__":
 
     project = args.p
     n = int(args.n)
-
+    
     special_config = None
     if args.pspnet_prediction is not None:
         special_config = utils.get_config(project)
@@ -91,11 +95,13 @@ if __name__ == "__main__":
 
     vis = Visualizer(project, MAX=n, special_config=special_config)
 
-
+    print "Opening list..."
+    t = time.time()
     im_list = utils.open_im_list(project)
     if args.imlist is not None:
         im_list = utils.open_im_list(args.imlist)
     #random.shuffle(im_list)
+    print time.time() - t
 
     vis.visualize_images(im_list)
 

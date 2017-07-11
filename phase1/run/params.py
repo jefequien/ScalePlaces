@@ -7,9 +7,8 @@ model_sigmoid = 'models/test_pspnet_sigmoid.prototxt'
 
 snapshots_dir = '/data/vision/oliva/scenedataset/scaleplaces/ScalePlaces/phase1/run/snapshots/'
 softmax = snapshots_dir + "softmax/snapshot_iter_{}.caffemodel".format(300000)
-sigmoid = snapshots_dir + "sigmoid/snapshot_iter_{}.caffemodel".format(26000)
+sigmoid = snapshots_dir + "old/sigmoid/snapshot_iter_{}.caffemodel".format(28000)
 sigmoid_slower = snapshots_dir + "sigmoid_slower/snapshot_iter_{}.caffemodel".format(22000)
 
-
-WEIGHTS = sigmoid_slower
+WEIGHTS = sigmoid
 MODEL = model_sigmoid

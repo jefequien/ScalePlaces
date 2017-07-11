@@ -31,7 +31,7 @@ class DataLayer(caffe.Layer):
         self.idx = 0
         self.random = False
         self.seed = 1337
-        self.batch_size = 1
+        self.batch_size = 2
 
         params = eval(self.param_str)
         self.loss_type = params['loss_type']
