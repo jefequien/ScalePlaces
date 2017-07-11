@@ -11,5 +11,5 @@ sigmoid = snapshots_dir + "sigmoid/snapshot_iter_{}.caffemodel".format(26000)
 sigmoid_slower = snapshots_dir + "sigmoid_slower/snapshot_iter_{}.caffemodel".format(22000)
 
 
-WEIGHTS = sigmoid
+WEIGHTS = sigmoid_slower
 MODEL = model_sigmoid

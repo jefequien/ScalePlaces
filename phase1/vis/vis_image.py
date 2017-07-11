@@ -54,8 +54,9 @@ class ImageVisualizer:
 
         if INDIV_SLICES and ap is not None:
             indiv_slices = self.get_individual_slices(ap, 40)
-            indiv_slices_color, indiv_slices_color_path = self.add_color(indiv_slices)
-            paths["indiv_slices"] = indiv_slices_color_path
+            indiv_slices_path = self.save(indiv_slices)
+            #indiv_slices_color, indiv_slices_color_path = self.add_color(indiv_slices)
+            paths["indiv_slices"] = indiv_slices_path
 
         return paths
 
@@ -128,13 +129,15 @@ class ImageVisualizer:
         for i in xrange(K):
             c = i+1
             slic = ap[i]
-            slic[slic >= threshold] = c
-            slic[slic < threshold] = 0
+            #slic[slic >= threshold] = c
+            #slic[slic < threshold] = 0
             all_slices.append(slic)
 
         # all_slices.sort(key=np.count_nonzero, reverse=True)
-        top_slices = all_slices[:100]
-        return np.concatenate(top_slices, axis=1)
+        top_slices = all_slices[:75]
+        output = np.concatenate(top_slices, axis=1)
+        print output.shape
+        return output
 
     def add_color(self, img):
         if img is None:
