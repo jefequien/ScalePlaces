@@ -19,9 +19,9 @@ class PSPNet:
         SEED = 3
         random.seed(SEED)
 
+        self.test_net = caffe.Net(MODEL, WEIGHTS, caffe.TEST)
         print "Model: ", MODEL
         print "WEIGHTS: ", WEIGHTS
-        self.test_net = caffe.Net(MODEL, WEIGHTS, caffe.TEST)
 
     def sliding_window(self, image):
         image = preprocess(image)
