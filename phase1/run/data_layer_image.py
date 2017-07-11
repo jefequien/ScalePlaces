@@ -69,8 +69,8 @@ class DataLayer(caffe.Layer):
         self.label = np.stack(labels, axis=0)
 
         # reshape tops to fit (leading 1 is for batch dimension)
-        top[0].reshape(self.data.shape)
-        top[1].reshape(self.label.shape)
+        top[0].reshape(self.batch_size, *datas[0].shape)
+        top[1].reshape(self.batch_size, *labels[0].shape)
 
 
     def forward(self, bottom, top):
