@@ -31,6 +31,7 @@ class DataLayer(caffe.Layer):
         self.idx = 0
         self.random = False
         self.seed = 1337
+        self.batch_size = 1
 
         params = eval(self.param_str)
         self.loss_type = params['loss_type']
@@ -49,16 +50,27 @@ class DataLayer(caffe.Layer):
 
 
     def reshape(self, bottom, top):
-        # load image + label image pair
-        im = self.im_list[self.idx]
-        img = self.load_image(im)
-        gt = self.load_ground_truth(im)
+        datas = []
+        labels = []
+        for i in xrange(self.batch_size):
+            self.idx = self.next_idx()
 
-        self.data, self.label = self.transform(img, gt)
+            # load image + label image pair
+            im = self.im_list[self.idx]
+            img = self.load_image(im)
+            gt = self.load_ground_truth(im)
+
+            data, label = self.transform(img, gt)
+
+            datas.append(data)
+            labels.append(label)
+
+        self.data = np.stack(datas, axis=0)
+        self.label = np.stack(labels, axis=0)
 
         # reshape tops to fit (leading 1 is for batch dimension)
-        top[0].reshape(1, *self.data.shape)
-        top[1].reshape(1, *self.label.shape)
+        top[0].reshape(self.data.shape)
+        top[1].reshape(self.label.shape)
 
 
     def forward(self, bottom, top):
@@ -66,13 +78,16 @@ class DataLayer(caffe.Layer):
         top[0].data[...] = self.data
         top[1].data[...] = self.label
 
+    def next_idx(self):
         # pick next input
         if self.random:
-            self.idx = random.randint(0, len(self.im_list)-1)
+            return random.randint(0, len(self.im_list)-1)
         else:
-            self.idx += 1
-            if self.idx == len(self.im_list):
-                self.idx = 0
+            next += 1
+            if next == len(self.im_list):
+                next = 0
+            return next
+
 
 
     def backward(self, top, propagate_down, bottom):
