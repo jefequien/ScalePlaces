@@ -23,9 +23,9 @@ def all_masks_label(gt):
         if np.sum(mask) > 0:
             label[i] = mask
             cnt += 1
-    label = label.astype(int)
     print cnt
-    #print label
+    
+    label = label.astype(int)
     return label
 
 def preprocess(image):
