@@ -3793,10 +3793,10 @@ layer {
   top: "conv5_3_concat"
 }
 layer {
-  name: "conv5_4"
+  name: "_conv5_4"
   type: "Convolution"
   bottom: "conv5_3_concat"
-  top: "conv5_4"
+  top: "_conv5_4"
   param {
     lr_mult: 10
     decay_mult: 1
@@ -3813,10 +3813,10 @@ layer {
   }
 }
 layer {
-  name: "conv5_4/bn"
+  name: "_conv5_4/bn"
   type: "BN"
-  bottom: "conv5_4"
-  top: "conv5_4"
+  bottom: "_conv5_4"
+  top: "_conv5_4"
   param {
     lr_mult: 10
     decay_mult: 0
@@ -3847,25 +3847,25 @@ layer {
   }
 }
 layer {
-  name: "conv5_4/relu"
+  name: "_conv5_4/relu"
   type: "ReLU"
-  bottom: "conv5_4"
-  top: "conv5_4"
+  bottom: "_conv5_4"
+  top: "_conv5_4"
 }
 layer {
-  name: "conv5_4/dropout"
+  name: "_conv5_4/dropout"
   type: "Dropout"
-  bottom: "conv5_4"
-  top: "conv5_4"
+  bottom: "_conv5_4"
+  top: "_conv5_4"
   dropout_param {
     dropout_ratio: 0.1
   }
 }
 layer {
-  name: "conv6"
+  name: "_conv6"
   type: "Convolution"
-  bottom: "conv5_4"
-  top: "conv6"
+  bottom: "_conv5_4"
+  top: "_conv6"
   param {
     lr_mult: 10
     decay_mult: 1
@@ -3884,10 +3884,10 @@ layer {
   }
 }
 layer {
-  name: "conv6_interp"
+  name: "_interp"
   type: "Interp"
-  bottom: "conv6"
-  top: "conv6_interp"
+  bottom: "_conv6"
+  top: "_interp"
   interp_param {
     zoom_factor: 8
   }
@@ -3895,6 +3895,6 @@ layer {
 layer {
   name: "sigmoid"
   type: "Sigmoid"
-  bottom: "conv6_interp"
+  bottom: "_interp"
   top: "prob"
 }
