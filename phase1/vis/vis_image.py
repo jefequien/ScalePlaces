@@ -9,7 +9,7 @@ import numpy as np
 import utils_vis as utils
 
 THRESHOLD = False
-INDIV_MASKS = True
+INDIV_SLICES = True
 
 class ImageVisualizer:
 
@@ -52,9 +52,9 @@ class ImageVisualizer:
             thresholds_color, thresholds_color_path = self.add_color(thresholds)
             paths["thresholds"] = thresholds_color_path
 
-        if INDIV_MASKS and ap is not None:
-            indiv_masks = self.get_individual_masks(ap, 10)
-            indiv_masks_color, indiv_masks_color_path = self.add_color(indiv_masks)
+        if INDIV_SLICES and ap is not None:
+            indiv_slices = self.get_individual_slices(ap, 10)
+            indiv_slices_color, indiv_slices_color_path = self.add_color(indiv_slices)
             paths["indiv_masks"] = indiv_masks_color_path
 
         return paths
@@ -121,20 +121,20 @@ class ImageVisualizer:
             all_imgs.append(img)
         return np.concatenate(all_imgs, axis=1)
 
-    def get_individual_masks(self, ap, n):
+    def get_individual_slices(self, ap, n):
         threshold = 0.5
         K,h,w = ap.shape
-        all_masks = []
+        all_slices = []
         for i in xrange(K):
             c = i+1
             slic = ap[i]
             slic[slic >= threshold] = c
             slic[slic < threshold] = 0
-            all_masks.append(slic)
+            all_slices.append(slic)
 
-        all_masks.sort(key=np.sum)
-        all_masks = all_masks[:n]
-        return np.concatenate(all_masks, axis=1)
+        all_slices.sort(key=np.sum)
+        top_slices = all_slices[:n]
+        return np.concatenate(top_slices, axis=1)
 
     def add_color(self, img):
         if img is None:
