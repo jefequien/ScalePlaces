@@ -1,8 +1,8 @@
 
 original_weights = '/data/vision/torralba/segmentation/places/PSPNet/evaluation/model/pspnet50_ADE20K.caffemodel'
 
-model_softmax = 'models/pspnet50_ADE20K_473.prototxt'
-model_sigmoid = 'models/pspnet_sigmoid.prototxt'
+model_softmax = 'models/test_pspnet_softmax.prototxt'
+model_sigmoid = 'models/test_pspnet_sigmoid.prototxt'
 
 
 snapshots_dir = '/data/vision/oliva/scenedataset/scaleplaces/ScalePlaces/phase1/run/snapshots/'
@@ -12,4 +12,4 @@ sigmoid_slower = snapshots_dir + "sigmoid_slower/snapshot_iter_{}.caffemodel".fo
 
 
 WEIGHTS = softmax
-MODEL = model_sigmoid
+MODEL = model_softmax
