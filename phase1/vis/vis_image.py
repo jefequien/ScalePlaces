@@ -55,7 +55,7 @@ class ImageVisualizer:
         if INDIV_SLICES and ap is not None:
             indiv_slices = self.get_individual_slices(ap, 10)
             indiv_slices_color, indiv_slices_color_path = self.add_color(indiv_slices)
-            paths["indiv_masks"] = indiv_masks_color_path
+            paths["indiv_slices"] = indiv_slices_color_path
 
         return paths
 
