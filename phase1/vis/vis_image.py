@@ -132,7 +132,7 @@ class ImageVisualizer:
             slic[slic < threshold] = 0
             all_slices.append(slic)
 
-        all_slices.sort(key=np.sum)
+        all_slices.sort(key=np.count_nonzero)
         top_slices = all_slices[:n]
         return np.concatenate(top_slices, axis=1)
 
