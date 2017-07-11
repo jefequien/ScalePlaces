@@ -11,5 +11,5 @@ sigmoid = snapshots_dir + "sigmoid/snapshot_iter_{}.caffemodel".format(26000)
 sigmoid_slower = snapshots_dir + "sigmoid_slower/snapshot_iter_{}.caffemodel".format(22000)
 
 
-WEIGHTS = softmax
-MODEL = model_softmax
+WEIGHTS = sigmoid
+MODEL = model_sigmoid

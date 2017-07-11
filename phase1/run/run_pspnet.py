@@ -16,7 +16,7 @@ args = parser.parse_args()
 
 project = args.p
 pspnet = PSPNet(DEVICE=args.id)
-pspnet.print_network_architecture()
+# pspnet.print_network_architecture()
 
 CONFIG = utils.get_config(project)
 im_list = utils.open_im_list(project)
