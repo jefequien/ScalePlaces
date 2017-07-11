@@ -53,7 +53,7 @@ class DataLayer(caffe.Layer):
         datas = []
         labels = []
         for i in xrange(self.batch_size):
-            self.idx = self.next_idx()
+            self.next_idx()
 
             # load image + label image pair
             im = self.im_list[self.idx]
@@ -81,14 +81,11 @@ class DataLayer(caffe.Layer):
     def next_idx(self):
         # pick next input
         if self.random:
-            return random.randint(0, len(self.im_list)-1)
+            self.idx = random.randint(0, len(self.im_list)-1)
         else:
-            next += 1
-            if next == len(self.im_list):
-                next = 0
-            return next
-
-
+            self.idx += 1
+            if self.idx == len(self.im_list):
+                self.idx = 0
 
     def backward(self, top, propagate_down, bottom):
         pass
