@@ -53,7 +53,7 @@ class ImageVisualizer:
             paths["thresholds"] = thresholds_color_path
 
         if INDIV_SLICES and ap is not None:
-            indiv_slices = self.get_individual_slices(ap, 10)
+            indiv_slices = self.get_individual_slices(ap, 40)
             indiv_slices_color, indiv_slices_color_path = self.add_color(indiv_slices)
             paths["indiv_slices"] = indiv_slices_color_path
 
@@ -132,7 +132,7 @@ class ImageVisualizer:
             slic[slic < threshold] = 0
             all_slices.append(slic)
 
-        all_slices.sort(key=np.count_nonzero)
+        all_slices.sort(key=np.count_nonzero, reverse=True)
         top_slices = all_slices[:n]
         return np.concatenate(top_slices, axis=1)
 
