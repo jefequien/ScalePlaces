@@ -132,8 +132,8 @@ class ImageVisualizer:
             slic[slic < threshold] = 0
             all_slices.append(slic)
 
-        all_slices.sort(key=np.count_nonzero, reverse=True)
-        top_slices = all_slices[:n]
+        # all_slices.sort(key=np.count_nonzero, reverse=True)
+        top_slices = all_slices
         return np.concatenate(top_slices, axis=1)
 
     def add_color(self, img):
