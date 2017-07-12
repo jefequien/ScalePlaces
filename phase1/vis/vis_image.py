@@ -124,7 +124,7 @@ class ImageVisualizer:
         return np.concatenate(all_imgs, axis=1)
 
     def get_individual_slices(self, ap, n):
-        threshold = 0.5
+        threshold = 0.1
         K,h,w = ap.shape
 
         ap = ap > threshold
@@ -144,12 +144,12 @@ class ImageVisualizer:
 
     def label_img(self, img, c):
         if img.dtype == bool:
-            img = img.astype(int)*255
-        color = utils.to_color(c)
+            img = img.astype('float32')
         if np.ndim(img) == 2:
             img = cv2.cvtColor(img, cv2.COLOR_GRAY2RGB)
-        img[:50,:100,:] = color
-        cv2.putText(img, str(c), (0,30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,0))
+        color = utils.to_color(c)
+        img[:50,:200,:] = color
+        cv2.putText(img, c), (5,30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,0))
         return img
 
     def add_color(self, img):
