@@ -16,6 +16,15 @@ COLORS = [RED,GREEN,BLUE]
 
 PATH = os.path.dirname(__file__)
 
+def get_categories():
+    categories = {}
+    with open(os.path.join(PATH, "objectInfo150.txt"), 'r') as f:
+        for line in f.readlines():
+            split = line.split()
+            cat = split[0]
+            if cat.isdigit():
+                categories[int(cat)] = split[4].replace(',','')
+        return categories
 categories = get_categories()
 
 def get_config(project):
@@ -34,15 +43,6 @@ def open_im_list(txt_im_list):
     im_list = [line.rstrip() for line in open(txt_im_list, 'r')]
     return im_list
 
-def get_categories():
-    categories = {}
-    with open(os.path.join(PATH, "objectInfo150.txt"), 'r') as f:
-        for line in f.readlines():
-            split = line.split()
-            cat = split[0]
-            if cat.isdigit():
-                categories[int(cat)] = split[4].replace(',','')
-        return categories
 
 def to_color(category):
     v = (category-1)*(137.5/360)
