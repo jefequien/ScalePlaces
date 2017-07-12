@@ -2,6 +2,7 @@ import random
 import numpy as np
 import itertools
 from scipy import misc, ndimage
+import cv2
 
 DATA_MEAN = np.array([[[123.68, 116.779, 103.939]]])
 INPUT_SIZE = 473
@@ -88,13 +89,37 @@ def assemble_probs(image, crop_probs):
     assert (probs.min()>=0 and probs.max()<=1), '%f,%f'%(probs.min(),probs.max())
     return probs
 
-def scale(image, interp='bilinear'):
+def scale_image(image):
     h = image.shape[0]
     w = image.shape[1]
     short_side = min(h, w)
     long_side = max(h, w)
     ratio = 1.*scale_size/long_side # Make long_side == scale_size
-    return misc.imresize(image, ratio, interp=interp)
+    image =  misc.imresize(image, ratio, interp='bilinear')
+    return image
+
+def scale_ground_truth(gt):
+    interp = 'nearest'
+    interpolation = cv2.INTER_LINEAR
+    if interp == 'bilinear':
+        interpolation = cv2.INTER_LINEAR
+    elif interp == 'nearest':
+        interpolation = cv2.INTER_NEAREST
+
+    h = gt.shape[0]
+    w = gt.shape[1]
+    short_side = min(h, w)
+    long_side = max(h, w)
+    ratio = 1.*scale_size/long_side # Make long_side == scale_size
+    resized = cv2.resize(gt, None, fx=ratio, fy=ratio, interpolation=interpolation)
+    return resized
+
+def print_gt(gt):
+    for c in xrange(1,151):
+            mask = gt == c
+            cnt = np.sum(mask)
+            if cnt != 0:
+                print c, cnt
 
 def unscale(probs,h_ori,w_ori):
     _,h,w = probs.shape

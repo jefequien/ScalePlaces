@@ -125,17 +125,16 @@ class ImageVisualizer:
 
     def get_individual_slices(self, ap, n):
         threshold = 0.1
-        K,h,w = ap.shape
-
-        ap = ap > threshold
+        #ap = ap > threshold
+        
         sums = [np.sum(slic) for slic in ap]
-        top_slices = np.flip(np.argsort(sums), 0)
+        #top_slices = np.flip(np.argsort(sums), 0)
+        top_slices = range(150)
 
         labeled_slices = []
         for i in top_slices[:n]:
             c = i+1
             slic = ap[i,:,:]
-            slic = slic > threshold
 
             labeled = self.label_img(slic, c)
             labeled_slices.append(labeled)
@@ -149,7 +148,7 @@ class ImageVisualizer:
             img = cv2.cvtColor(img, cv2.COLOR_GRAY2RGB)
         color = utils.to_color(c)
         img[:50,:200,:] = color
-        tag = "{} {}".format(str(c), utils.categories(c))
+        tag = "{} {}".format(str(c), utils.categories[c])
         cv2.putText(img, tag, (5,30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,0))
         return img
 

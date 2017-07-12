@@ -28,7 +28,7 @@ class PSPNet:
         h_ori,w_ori,_ = image.shape
 
         # Scale image to fixed size
-        image_scaled = scale(image)
+        image_scaled = scale_image(image)
         # Split image into crops with sliding window
         crops = split_crops(image_scaled)
 

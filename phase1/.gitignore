@@ -6,7 +6,7 @@
 *.solverstate
 
 eval/sorted/*
-run/snapshot/*
+run/sigmoid_pred/*
 run/snapshots/*
 run/predictions/*
 run/good/*

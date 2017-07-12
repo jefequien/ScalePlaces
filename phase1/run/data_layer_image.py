@@ -31,7 +31,7 @@ class DataLayer(caffe.Layer):
         self.idx = 0
         self.random = False
         self.seed = 1337
-        self.batch_size = 2
+        self.batch_size = 1
 
         params = eval(self.param_str)
         self.loss_type = params['loss_type']
@@ -57,6 +57,7 @@ class DataLayer(caffe.Layer):
 
             # load image + label image pair
             im = self.im_list[self.idx]
+            print im
             img = self.load_image(im)
             gt = self.load_ground_truth(im)
 
@@ -91,33 +92,32 @@ class DataLayer(caffe.Layer):
         pass
 
     def transform(self, img, gt):
-        img = utils_pspnet.scale(img)
-        gt = utils_pspnet.scale(gt, interp='nearest')
+        img = utils_pspnet.scale_image(img)
+        gt = utils_pspnet.scale_ground_truth(gt)
 
         # Random crop
         box = utils_pspnet.random_crop(img)
-        data = utils_pspnet.crop_image(img, box)
-        label = utils_pspnet.crop_ground_truth(gt, box)
-
+        img = utils_pspnet.crop_image(img, box)
+        gt = utils_pspnet.crop_ground_truth(gt, box)
+        
         # label = misc.imresize(label, (60,60), interp='nearest')
 
         # Setup data
-        data = data[:,:,(2,1,0)]
+        data = img[:,:,(2,1,0)]
         data = data.transpose((2,0,1))
 
         # Setup label
+        label = None
         if self.loss_type == "softmax":
-            label -= 1
-
+            label = gt - 1
         elif self.loss_type == "sigmoid":
-            label = utils_pspnet.all_masks_label(label)
+            label = utils_pspnet.all_masks_label(gt)
         elif self.loss_type == "specific":
             c = 1
-            label = label == c
+            label = gt == c
         else:
             print "Wrong loss type"
             raise
-        #print label        
         return data, label
 
     def load_image(self, im):
