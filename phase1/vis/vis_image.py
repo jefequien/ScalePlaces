@@ -149,7 +149,8 @@ class ImageVisualizer:
             img = cv2.cvtColor(img, cv2.COLOR_GRAY2RGB)
         color = utils.to_color(c)
         img[:50,:200,:] = color
-        cv2.putText(img, c), (5,30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,0))
+        tag = "{} {}".format(str(c), utils.categories(c))
+        cv2.putText(img, tag, (5,30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,0))
         return img
 
     def add_color(self, img):

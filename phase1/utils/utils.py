@@ -16,6 +16,8 @@ COLORS = [RED,GREEN,BLUE]
 
 PATH = os.path.dirname(__file__)
 
+categories = get_categories()
+
 def get_config(project):
     with open(os.path.join(PATH, "../../../LabelMe/data_config.json"), 'r') as f:
         data_config = json.load(f)
