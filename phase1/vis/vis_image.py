@@ -143,6 +143,8 @@ class ImageVisualizer:
         return output
 
     def label_img(self, img, c):
+        if img.dtype == bool:
+            img = img.astype(int)*255
         color = utils.to_color(c)
         if np.ndim(img) == 2:
             img = cv2.cvtColor(img, cv2.COLOR_GRAY2RGB)
