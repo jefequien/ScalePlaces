@@ -126,13 +126,17 @@ class ImageVisualizer:
     def get_individual_slices(self, ap, n):
         threshold = 0.5
         K,h,w = ap.shape
-        labeled_slices = []
+
+        ap = ap > threshold
         sums = [np.sum(slic) for slic in ap]
         top_slices = np.flip(np.argsort(sums), 0)
+
+        labeled_slices = []
         for i in top_slices[:n]:
             c = i+1
             slic = ap[i,:,:]
             slic = slic > threshold
+
             labeled = self.label_img(slic, c)
             labeled_slices.append(labeled)
         output = np.concatenate(labeled_slices, axis=1)
@@ -142,8 +146,8 @@ class ImageVisualizer:
         color = utils.to_color(c)
         if np.ndim(img) == 2:
             img = cv2.cvtColor(img, cv2.COLOR_GRAY2RGB)
-        img[:50,:150,:] = color
-        cv2.putText(img, str(c), (0,50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,0))
+        img[:50,:100,:] = color
+        cv2.putText(img, str(c), (0,30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,0))
         return img
 
     def add_color(self, img):
