@@ -108,7 +108,7 @@ class ImageVisualizer:
         return diff
 
     def threshold_cm(self, cm, ap):
-        thresholds = np.linspace(0,1,21)
+        thresholds = np.linspace(0,1,11)
         all_imgs = []
         for threshold in thresholds:
             img = np.zeros(cm.shape)
