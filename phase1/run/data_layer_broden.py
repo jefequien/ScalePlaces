@@ -10,7 +10,7 @@ import random
 
 TEST_DIR = '/data/vision/torralba/deepscene/david_data/bulk/uniseg4_384'
 
-class UnisegDataLayer(caffe.Layer):
+class DataLayer(caffe.Layer):
     """
     Load (input image, label image) pairs from PASCAL VOC
     one-at-a-time while reshaping the net to preserve dimensions.
