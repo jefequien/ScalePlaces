@@ -100,7 +100,9 @@ if __name__ == "__main__":
     im_list = utils.open_im_list(project)
     if args.imlist is not None:
         im_list = utils.open_im_list(args.imlist)
-    #random.shuffle(im_list)
+    SEED = 3
+    random.seed(SEED)
+    random.shuffle(im_list)
     print time.time() - t
 
     vis.visualize_images(im_list)

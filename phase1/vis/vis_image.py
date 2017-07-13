@@ -124,12 +124,12 @@ class ImageVisualizer:
         return np.concatenate(all_imgs, axis=1)
 
     def get_individual_slices(self, ap, n):
-        threshold = 0.1
+        threshold = 0.5
         #ap = ap > threshold
         
         sums = [np.sum(slic) for slic in ap]
-        #top_slices = np.flip(np.argsort(sums), 0)
-        top_slices = range(150)
+        top_slices = np.flip(np.argsort(sums), 0)
+        #top_slices = range(150)
 
         labeled_slices = []
         for i in top_slices[:n]:

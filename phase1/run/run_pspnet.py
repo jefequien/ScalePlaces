@@ -2,6 +2,7 @@ import os
 import argparse
 import numpy as np
 import h5py
+import random
 from scipy import misc
 
 from pspnet import PSPNet
@@ -33,7 +34,7 @@ root_prob = os.path.join(root_result, 'prob_mask')
 root_maxprob = os.path.join(root_result, 'max_prob')
 root_allprob = os.path.join(root_result, 'all_prob')
 
-
+random.shuffle(im_list)
 for im in im_list:
     print im
 
