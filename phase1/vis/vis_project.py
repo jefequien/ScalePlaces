@@ -49,7 +49,7 @@ class Visualizer:
         new_section = "<br><br>{} {}<br><br>".format(self.project, im)
         paths = self.image_visualizer.visualize(im)
 
-        order = ["image", "prob_mask", "category_mask"]
+        order = ["image", "prob_mask", "category_mask", "ground_truth", "diff"]
         for key in order:
             if key in paths:
                 new_section += self.getImageTag(paths[key])

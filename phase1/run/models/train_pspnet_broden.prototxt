@@ -4,9 +4,9 @@ layer {
   top: "data"
   top: "label"
   python_param {
-    module: "data_layer_image"
+    module: "data_layer_broden"
     layer: "DataLayer"
-    param_str: "{\'loss_type\': 'specific'}"
+    param_str: "{\'seed\': 1337, \'split\': \'train\', \'mean\': (109.5388, 118.6897, 124.6901)}"
   }
 }
 layer {
@@ -3892,31 +3892,9 @@ layer {
   }
 }
 layer {
-  name: "category_specific"
-  type: "Convolution"
-  bottom: "_conv6"
-  top: "category_specific"
-  param {
-    lr_mult: 10
-    decay_mult: 1
-  }
-  param {
-    lr_mult: 20
-    decay_mult: 1
-  }
-  convolution_param {
-    num_output: 1
-    kernel_size: 1
-    stride: 1
-    weight_filler {
-      type: "msra"
-    }
-  }
-}
-layer {
   name: "_interp"
   type: "Interp"
-  bottom: "category_specific"
+  bottom: "_conv6"
   top: "_interp"
   interp_param {
     zoom_factor: 8
@@ -3929,6 +3907,7 @@ layer {
   bottom: "label"
   top: "loss"
   loss_param {
-    normalize: false
+    ignore_label: -1
+    normalize: true
   }
 }

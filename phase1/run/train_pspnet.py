@@ -25,6 +25,6 @@ SEED = 3
 random.seed(SEED)
 
 solver = caffe.get_solver(solver_path)
-#solver.net.copy_from(WEIGHTS)
-solver.restore(SOLVER_STATE)
+solver.net.copy_from(WEIGHTS)
+# solver.restore(SOLVER_STATE)
 solver.solve()

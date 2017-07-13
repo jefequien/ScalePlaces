@@ -1,12 +1,12 @@
-net: "models/train_pspnet_specific.prototxt"
+net: "models/train_pspnet_broden.prototxt"
 display: 1
 average_loss: 20 # Display loss averaged over last x iterations
 snapshot: 2000
-snapshot_prefix: "snapshots/specific/snapshot"
+snapshot_prefix: "snapshots/broden/snapshot"
 
-base_lr: 1e-8
+base_lr: 1e-10
 lr_policy: "fixed"
-momentum: 0.5
+momentum: 0.9
 weight_decay: 0.0005
 iter_size: 1 # no gradient accumulation between iterations
 max_iter: 300000

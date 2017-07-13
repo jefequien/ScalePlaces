@@ -10,19 +10,20 @@ import random
 import utils_run as utils
 import utils_pspnet
 
-class DataLayer(caffe.Layer):
-    """
-    Load (input image, label image) pairs from PASCAL VOC
-    one-at-a-time while reshaping the net to preserve dimensions.
-    Use this to feed data to a fully convolutional network.
-    """
+ROOT = "/data/vision/torralba/deepscene/david_data/bulk/uniseg4_384/"
 
+class BrodenDataLoader():
+    """
+    Prepares Broden dataset for loading into caffe.
+        Resizes images to 473x473x3 RGB
+        Creates the sigmoid label.
+    """
     def setup(self, bottom, top):
         """
         Setup data layer according to parameters:
         
         """
-        project = "ade20k"
+        project = "broden"
         CONFIG = utils.get_config(project)
         self.im_list = utils.open_im_list(project)
         self.image_dir = CONFIG["images"]
