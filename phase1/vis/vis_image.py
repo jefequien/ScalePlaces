@@ -9,7 +9,7 @@ import numpy as np
 
 import utils_vis as utils
 
-THRESHOLD = False
+THRESHOLD = True
 INDIV_SLICES = True
 
 class ImageVisualizer:
@@ -49,7 +49,7 @@ class ImageVisualizer:
 
         ap, ap_path = self.get_all_prob(im)
         if THRESHOLD and cm is not None and ap is not None:
-            thresholds = self.get_thresholds(ap, cm)
+            thresholds = self.threshold_cm(cm, ap)
             thresholds_color, thresholds_color_path = self.add_color(thresholds)
             paths["thresholds"] = thresholds_color_path
 
@@ -107,7 +107,7 @@ class ImageVisualizer:
         diff[mask] = 0
         return diff
 
-    def get_thresholds(self, ap, cm):
+    def threshold_cm(self, cm, ap):
         thresholds = np.linspace(0.5,1,11)
         all_imgs = []
         for threshold in thresholds:
