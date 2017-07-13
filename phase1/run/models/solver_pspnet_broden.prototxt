@@ -1,5 +1,5 @@
 net: "models/train_pspnet_broden.prototxt"
-display: 1
+display: 40
 average_loss: 20 # Display loss averaged over last x iterations
 snapshot: 2000
 snapshot_prefix: "snapshots/broden/snapshot"
