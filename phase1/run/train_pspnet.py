@@ -8,6 +8,7 @@ sys.path.insert(0, os.path.join(CAFFE_ROOT, 'python'))
 import caffe
 
 WEIGHTS = '/data/vision/torralba/segmentation/places/PSPNet/evaluation/model/pspnet50_ADE20K.caffemodel'
+SOLVER_STATE = '/data/vision/oliva/scenedataset/scaleplaces/ScalePlaces/phase1/run/snapshots/sigmoid/snapshot_iter_4000.solverstate'
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--id', default=0,type=int)
@@ -24,5 +25,6 @@ SEED = 3
 random.seed(SEED)
 
 solver = caffe.get_solver(solver_path)
-solver.net.copy_from(WEIGHTS)
+#solver.net.copy_from(WEIGHTS)
+solver.restore(SOLVER_STATE)
 solver.solve()
