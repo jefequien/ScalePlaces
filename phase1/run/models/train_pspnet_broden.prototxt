@@ -3883,7 +3883,7 @@ layer {
     decay_mult: 1
   }
   convolution_param {
-    num_output: 150
+    num_output: 584
     kernel_size: 1
     stride: 1
     weight_filler {
