@@ -2,6 +2,7 @@ import caffe
 
 import os
 import numpy as np
+import time
 from scipy import misc
 
 import random
@@ -29,9 +30,8 @@ class DataLayer(caffe.Layer):
 
         # Params
         self.idx = 0
-        self.random = False
+        self.random = True
         self.seed = 1337
-        self.batch_size = 1
 
         params = eval(self.param_str)
         self.loss_type = params['loss_type']
@@ -48,31 +48,28 @@ class DataLayer(caffe.Layer):
             random.seed(self.seed)
             self.idx = random.randint(0, len(self.im_list)-1)
 
+        self.t = time.time()
 
     def reshape(self, bottom, top):
-        datas = []
-        labels = []
-        for i in xrange(self.batch_size):
-            self.next_idx()
-
-            # load image + label image pair
-            im = self.im_list[self.idx]
-            print im
-            img = self.load_image(im)
-            gt = self.load_ground_truth(im)
-
-            data, label = self.transform(img, gt)
-
-            datas.append(data)
-            labels.append(label)
-
-        self.data = np.stack(datas, axis=0)
-        self.label = np.stack(labels, axis=0)
+        #print "Backprob", time.time() - self.t
+        #self.t = time.time()
+        
+        self.next_idx()
+        im = self.im_list[self.idx]
+        print im
+        
+        # Load img and gt
+        img = self.load_image(im)
+        gt = self.load_ground_truth(im)
+        
+        self.data, self.label = self.transform(img, gt)
 
         # reshape tops to fit (leading 1 is for batch dimension)
-        top[0].reshape(self.batch_size, *datas[0].shape)
-        top[1].reshape(self.batch_size, *labels[0].shape)
-
+        top[0].reshape(1, *self.data.shape)
+        top[1].reshape(1, *self.label.shape)
+        
+        #print "Overhead", time.time() - self.t
+        #self.t = time.time()
 
     def forward(self, bottom, top):
         # assign output
@@ -94,13 +91,11 @@ class DataLayer(caffe.Layer):
     def transform(self, img, gt):
         img = utils_pspnet.scale_image(img)
         gt = utils_pspnet.scale_ground_truth(gt)
-
+        
         # Random crop
         box = utils_pspnet.random_crop(img)
         img = utils_pspnet.crop_image(img, box)
         gt = utils_pspnet.crop_ground_truth(gt, box)
-        
-        # label = misc.imresize(label, (60,60), interp='nearest')
 
         # Setup data
         data = img[:,:,(2,1,0)]
@@ -111,7 +106,14 @@ class DataLayer(caffe.Layer):
         if self.loss_type == "softmax":
             label = gt - 1
         elif self.loss_type == "sigmoid":
-            label = utils_pspnet.all_masks_label(gt)
+            # One hot encode 2D array
+            NUM_CLASS = 150
+            label = (np.arange(NUM_CLASS) == gt[:,:,None] - 1)
+            label = label.transpose((2,0,1))
+            # Ignore blank slices
+            #for i in xrange(NUM_CLASS):
+            #    if np.sum(label[i]) == 0:
+            #        label[i] = 0
         elif self.loss_type == "specific":
             c = 1
             label = gt == c

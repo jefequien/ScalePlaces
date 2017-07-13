@@ -11,24 +11,6 @@ NUM_CLASS = 150
 stride_rate = 0.3
 scale_size = 512
 
-def all_masks_label(gt):
-    h,w = gt.shape
-    label = np.zeros((NUM_CLASS,h,w))
-    # Ignore category -1
-    #label.fill(-1)
-    
-    cnt = 0
-    for i in xrange(NUM_CLASS):
-        c = i+1
-        mask = gt == c
-        if np.sum(mask) > 0:
-            label[i] = mask
-            cnt += 1
-    print cnt
-    
-    label = label.astype(int)
-    return label
-
 def preprocess(image):
     if image.ndim != 3:
         image = np.stack((image,image,image), axis=2)
