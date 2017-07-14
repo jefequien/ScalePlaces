@@ -111,13 +111,14 @@ class DataLayer(caffe.Layer):
         self.image = full_data[0]
         
         ls = []
-	for i in xrange(len(self.categories)):
+        for i in xrange(len(self.categories)):
             data = full_data[i+1]
             NUM_CLASS = self.categories_num_class[i]
             print NUM_CLASS, data.shape
-	    
+            
             l = self.one_hot_encode(data - 1,NUM_CLASS)
             ls.append(l)
+        
         self.label = numpy.concatenate(ls, axis=1)
 
         print self.label.shape

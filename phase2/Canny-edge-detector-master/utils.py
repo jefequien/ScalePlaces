@@ -8,6 +8,12 @@ import numpy as np
 import colorsys
 import random
 
+RED = [255,0,0]
+GREEN = [0,192,0]
+BLUE = [0,0,255]
+
+COLORS = [RED,GREEN,BLUE]
+
 PATH = os.path.dirname(__file__)
 
 def get_categories():
