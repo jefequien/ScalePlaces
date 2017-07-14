@@ -43,7 +43,6 @@ class tracking:
         return x >= 0 and x < self.im.shape[0] and y >= 0 and y < self.im.shape[1]
 
 def run(img):
-    img = img[:, :, 0]
     gim = gaussian(img)
     grim, gphase = gradient(gim)
     gmax = maximum(grim, gphase)
