@@ -4,12 +4,8 @@ from gradient import gradient
 from nonmax_suppression import maximum
 from double_thresholding import thresholding
 from numpy import array, zeros
-import numpy as np
 from PIL import Image
 from matplotlib.pyplot import imshow, show, subplot, gray, title, axis
-
-from scipy import misc
-import time
 
 class tracking:
     def __init__(self, tr):
@@ -42,34 +38,30 @@ class tracking:
     def exists(self, x, y):
         return x >= 0 and x < self.im.shape[0] and y >= 0 and y < self.im.shape[1]
 
-def run(img):
-    img = img[:, :, 0]
-    gim = gaussian(img)
-    grim, gphase = gradient(gim)
-    gmax = maximum(grim, gphase)
-    # gmax = (gmax/np.max(gmax))*255
-    # return gmax.astype('uint8')
-    return gmax
-
 
 if __name__ == '__main__':
     from sys import argv
-    im = misc.imread(argv[1])
-    t = time.time()
-    gmax = run(im)
-    print gmax.shape, gmax.dtype
-    print np.min(gmax), np.max(gmax)
+    if len(argv) < 2:
+        print "Usage: python %s <image>" % argv[0]
+        exit()
+    im = array(Image.open(argv[1]))
+    subplot(1, 2, 1)
+    imshow(im)
+    axis('off')
+    title('Original')
 
-    # misc.imsave("woo1.png",gmax.astype('uint8'))
-    print time.time() - t
+    im = im[:, :, 0]
+    gim = gaussian(im)
+    grim, gphase = gradient(gim)
+    gmax = maximum(grim, gphase)
     thres = thresholding(gmax)
     edge = tracking(thres)
 
     gray()
-    subplot(1, 2, 1)
-    imshow()
-    axis('off')
-    title('double')
+    # subplot(1, 2, 1)
+    # imshow()
+    # axis('off')
+    # title('double')
 
     subplot(1, 2, 2)
     imshow(edge.im)

@@ -12,6 +12,9 @@ def thresholding(im):
     weak   = 0.5
     mmax = max(im)
     lo, hi = 0.1 * mmax, 0.8 * mmax
+    lo = 10
+    hi = 100
+    print lo, hi
     strongs = []
     for i in xrange(im.shape[0]):
         for j in xrange(im.shape[1]):
