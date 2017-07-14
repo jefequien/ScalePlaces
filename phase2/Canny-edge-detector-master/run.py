@@ -4,7 +4,7 @@ import numpy as np
 import random
 from scipy import misc
 
-import utils_run as utils
+import utils
 from edge_detector import *
 
 parser = argparse.ArgumentParser()
@@ -22,12 +22,12 @@ root_images = CONFIG["images"]
 root_result = args.o
 
 s = args.start
-im_list = im_list[start:start+8000]
+im_list = im_list[s:]
 
 for im in im_list:
     print im
-
-    img = misc.imread(argv[1])
+    img_path = os.path.join(root_images, im)
+    img = misc.imread(img_path, mode='L')
     edges = run(img)
 
     output_path = os.path.join(root_result, im.replace('.jpg', '.png'))
