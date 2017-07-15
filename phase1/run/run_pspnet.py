@@ -1,4 +1,5 @@
 import os
+import os
 import argparse
 import numpy as np
 import h5py
@@ -10,14 +11,16 @@ import utils_run as utils
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-p", required=True, help="Project name")
+parser.add_argument("--model", required=True, help="Model")
+parser.add_argument("--snapshot", required=True, help="Snapshot .caffemodel")
 parser.add_argument('--id', default=0,type=int)
-parser.add_argument('--local', action='store_true', default=False)
-parser.add_argument("-o", help="Output dir")
+parser.add_argument('--local', action='store_true', default=False, help="./predictions")
 args = parser.parse_args()
 
 project = args.p
-pspnet = PSPNet(DEVICE=args.id)
-# pspnet.print_network_architecture()
+model = args.model
+snapshot = args.snapshot
+pspnet = PSPNet(model, snapshot, DEVICE=args.id)
 
 CONFIG = utils.get_config(project)
 im_list = utils.open_im_list(project)
@@ -25,9 +28,9 @@ im_list = utils.open_im_list(project)
 root_images = CONFIG["images"]
 root_result = CONFIG["pspnet_prediction"]
 if args.local:
-    root_result = "pspnet_prediction_tmp/"
-if args.o:
-    root_result = args.o
+    root_result = snapshot.replace("snapshots", "predictions")
+    root_result = snapshot.replace(".caffemodel", "/")
+print "Outputting to ", root_result
 
 root_mask = os.path.join(root_result, 'category_mask')
 root_prob = os.path.join(root_result, 'prob_mask')

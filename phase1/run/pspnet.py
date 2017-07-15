@@ -4,7 +4,6 @@ import time
 import random
 import numpy as np
 
-from params import WEIGHTS, MODEL
 from utils_pspnet import *
 
 CAFFE_ROOT = '/data/vision/torralba/segmentation/places/PSPNet/'
@@ -12,7 +11,7 @@ sys.path.insert(0, os.path.join(CAFFE_ROOT, 'python'))
 import caffe
 
 class PSPNet:
-    def __init__(self, DEVICE=0):
+    def __init__(self, MODEL, WEIGHTS, DEVICE=0):
         caffe.set_mode_gpu()
         caffe.set_device(DEVICE)
 
