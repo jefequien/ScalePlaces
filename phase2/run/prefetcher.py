@@ -1,7 +1,9 @@
 
 from multiprocessing import Pool, cpu_count
 
+import utils_run as utils
 from image_processor import ImageProcessor
+from data_source import DataSource
 
 class PreFetcher:
     def __init__(self, datasource, batch_size=1, ahead=12):
@@ -46,10 +48,10 @@ if __name__ == "__main__":
     project = "ade20k"
     config = utils.get_config(project)
 
-    data_source = DataSource(config, random=True)
+    datasource = DataSource(config, random=True)
     idx = 0
     batch_size = 5
-    datasource, idx, batch_size = d
+    d = (datasource, idx, batch_size)
     batch = build_batch(d)
 
     data, label = batch
