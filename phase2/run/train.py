@@ -3,8 +3,8 @@ import random
 import argparse
 import sys
 
-CAFFE_ROOT = '/data/vision/torralba/segmentation/places/PSPNet/'
-sys.path.insert(0, os.path.join(CAFFE_ROOT, 'python'))
+# CAFFE_ROOT = '/data/vision/torralba/segmentation/places/PSPNet/'
+# sys.path.insert(0, os.path.join(CAFFE_ROOT, 'python'))
 import caffe
 
 SNAPSHOTS = '/data/vision/oliva/scenedataset/scaleplaces/ScalePlaces/phase2/run/snapshots/'
