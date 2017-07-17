@@ -11,7 +11,7 @@ class DataSource:
     def __init__(self, config, random=True):
         self.image_dir = config["images"]
         self.all_prob_dir = os.path.join(config["pspnet_prediction"], "all_prob")
-        # self.canny_dir = config["canny"]
+        self.canny_dir = config["canny"]
         self.ground_truth_dir = config["ground_truth"]
 
         im_list_txt = config["im_list"]
@@ -59,7 +59,8 @@ class DataSource:
 
             t = time.time()
             img = self.get_image(idx)
-            edges = canny(img)
+            img = img.transpose((1,2,0))
+            edges = make_canny(img)
             misc.imsave(canny_path, edges)
             print time.time() - t
         canny = misc.imread(canny_path)

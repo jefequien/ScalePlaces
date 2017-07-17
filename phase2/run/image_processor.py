@@ -1,6 +1,6 @@
 import random
 import numpy as np
-from scipy import ndimage
+from scipy import misc,ndimage
 
 class ImageProcessor:
     def __init__(self, datasource):
@@ -17,8 +17,9 @@ class ImageProcessor:
 
         # Load additional features
         img = self.datasource.get_image(idx)
-        # canny = self.datasource.get_canny(idx)
-        additional_features = [img]
+        canny = self.datasource.get_canny(idx)
+        print ap.dtype, gt.dtype, img.dtype, canny.dtype
+        additional_features = [img, canny]
 
         data, label = self.build_top(ap, gt, additional_features=additional_features, n=n)
         return data,label
@@ -63,8 +64,8 @@ class ImageProcessor:
         s = 473
         _,h,w = img.shape
         data = ndimage.zoom(img, (1.,1.*s/h,1.*s/w), order=1, prefilter=False, mode='constant')
-        label = ndimage.zoom(gt, (1.,1.*s/h,1.*s/w), order=1, prefilter=False, mode='nearest')
-        label = np.squeeze(label)
+        gt = np.squeeze(gt) 
+        label = misc.imresize(gt,(s,s), interp='nearest') 
         return data, label
 
     def get_slices(self, ap):

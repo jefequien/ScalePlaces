@@ -6,7 +6,7 @@ import numpy as np
 from scipy import misc
 import cv2
 
-def canny(img):
+def make_canny(img):
     # Blur image
     kernel = (5, 5)
     blur = cv2.GaussianBlur(img, kernel, 0)
