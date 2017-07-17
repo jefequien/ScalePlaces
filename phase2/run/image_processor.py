@@ -62,7 +62,7 @@ class ImageProcessor:
         # Rescale
         s = 473
         _,h,w = img.shape
-        data = ndimage.zoom(img, (1.,1.*s/h,1.*s/w), order=1, prefilter=False, mode='bilinear')
+        data = ndimage.zoom(img, (1.,1.*s/h,1.*s/w), order=1, prefilter=False, mode='constant')
         label = ndimage.zoom(gt, (1.,1.*s/h,1.*s/w), order=1, prefilter=False, mode='nearest')
         return data, label
 
