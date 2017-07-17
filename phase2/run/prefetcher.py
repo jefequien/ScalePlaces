@@ -41,3 +41,17 @@ def build_batch(d):
     batch = image_processor.process(idx, n=batch_size)
     return batch
 
+
+if __name__ == "__main__":
+    project = "ade20k"
+    config = utils.get_config(project)
+
+    data_source = DataSource(config, random=True)
+    idx = 0
+    batch_size = 5
+    datasource, idx, batch_size = d
+    batch = build_batch(d)
+
+    data, label = batch
+    print data.shape, label.shape
+

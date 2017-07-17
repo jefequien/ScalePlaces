@@ -4,7 +4,7 @@ from data_source import DataSource
 from prefetcher import PreFetcher
 
 
-project = "local"
+project = "ade20k"
 config = utils.get_config(project)
 
 data_source = DataSource(config, random=True)
