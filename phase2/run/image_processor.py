@@ -1,5 +1,6 @@
 import random
 import numpy as np
+from scipy import ndimage
 
 class ImageProcessor:
     def __init__(self, datasource):
@@ -58,13 +59,11 @@ class ImageProcessor:
         if len(features) > 1:
             img = np.concatenate(features, axis=0)
 
-        # Crop and scale
-        # box = self.random_crop()
+        # Rescale
         s = 473
-        data = img[:,:s,:s]
-        label = gt[:,:s,:s]
-        # data = self.crop(img, box)
-        # label = self.crop(label, box)
+        _,h,w = img.shape
+        data = ndimage.zoom(img, (1.,1.*s/h,1.*s/w), order=1, prefilter=False, mode='bilinear')
+        label = ndimage.zoom(gt, (1.,1.*s/h,1.*s/w), order=1, prefilter=False, mode='nearest')
         return data, label
 
     def get_slices(self, ap):
