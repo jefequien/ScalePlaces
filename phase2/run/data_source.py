@@ -46,6 +46,7 @@ class DataSource:
         ap_path = os.path.join(self.all_prob_dir, im.replace('.jpg', '.h5'))
         with h5py.File(ap_path, 'r') as f:
             output = f['allprob'][:]
+            output = (output*255).astype('uint8')
             return output
 
     def get_canny(self, idx):
