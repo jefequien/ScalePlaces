@@ -21,29 +21,30 @@ class ImageProcessor:
         data, label = self.build_top(ap, gt, additional_features=additional_features, n=n)
         return data,label
 
-    def build_top(self, ap, gt, additional_features=None, n=None):
+    def build_top(self, ap, gt, additional_features=[], n=None):
         '''
         Returns
         data nxcxhxw
         label nxhxw
         '''
         slices = self.get_slices(ap)
+        random.shuffle(slices)
         if n is not None:
             while len(slices) < n:
-                slices = slices + slices
+                slices = np.concatenate([slices, slices], axis=0)
                 slices = slices[:n]
 
         datas = []
         labels = []
         for i in slices:
-            data,label = self.build_top(ap[s],gt[s],additional_features)
+            data,label = self.build_top_i(ap[s],gt[s],additional_features=additional_features)
             datas.append(data)
             labels.append(label)
         data = np.stack(datas)
         label = np.stack(labels)
         return data, label
 
-    def build_top_i(self,img,gt,additional_features=None):
+    def build_top_i(self,img,gt,additional_features=[]):
         '''
         Builds top for a single slice.
         Returns:
@@ -51,14 +52,15 @@ class ImageProcessor:
         label hxw
         '''
         # Stack along c dimension
-        if additional_features is not None:
-            additional_features.append(img)
-            img = np.concatenate(additional_features, axis=0)
+        features = [img]
+        features += additional_features
+        if len(features) > 1:
+            img = np.concatenate(features, axis=0)
 
         # Crop and scale
         # box = self.random_crop()
         s = 473
-        data = data[:,:s,:s]
+        data = img[:,:s,:s]
         label = label[:,:s,:s]
         # data = self.crop(img, box)
         # label = self.crop(label, box)
