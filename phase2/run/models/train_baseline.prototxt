@@ -50,7 +50,7 @@ layer {
 layer {
   name: "loss"
   type: "SigmoidCrossEntropyLoss"
-  bottom: "_interp"
+  bottom: "output"
   bottom: "label"
   top: "loss"
   loss_param {

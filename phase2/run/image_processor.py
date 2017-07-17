@@ -18,8 +18,7 @@ class ImageProcessor:
         # Load additional features
         img = self.datasource.get_image(idx)
         canny = self.datasource.get_canny(idx)
-        print ap.dtype, gt.dtype, img.dtype, canny.dtype
-        additional_features = [img, canny]
+        additional_features = [canny]
 
         data, label = self.build_top(ap, gt, additional_features=additional_features, n=n)
         return data,label
