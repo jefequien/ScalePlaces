@@ -32,7 +32,10 @@ class DataSource:
     def get_image(self, idx):
         im = self.im_list[idx]
         img_path = os.path.join(self.image_dir, im)
-        return misc.imread(img_path)
+        img = misc.imread(img_path)
+        img = img.transpose((2,0,1))
+        return img
+
     def get_ground_truth(self, idx):
         im = self.im_list[idx]
         gt_path = os.path.join(self.ground_truth_dir, im.replace('.jpg', '.png'))
@@ -58,5 +61,7 @@ class DataSource:
             edges = canny(img)
             misc.imsave(canny_path, edges)
             print time.time() - t
-        return misc.imread(canny_path)
+        canny = misc.imread(canny_path)
+        canny = canny[np.newaxis,:,:]
+        return canny
 

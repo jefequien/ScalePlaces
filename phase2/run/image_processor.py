@@ -1,3 +1,4 @@
+import random
 import numpy as np
 
 class ImageProcessor:
@@ -37,7 +38,7 @@ class ImageProcessor:
         datas = []
         labels = []
         for i in slices:
-            data,label = self.build_top_i(ap[s],gt[s],additional_features=additional_features)
+            data,label = self.build_top_i(ap[i],gt[i],additional_features=additional_features)
             datas.append(data)
             labels.append(label)
         data = np.stack(datas)
@@ -61,7 +62,7 @@ class ImageProcessor:
         # box = self.random_crop()
         s = 473
         data = img[:,:s,:s]
-        label = label[:,:s,:s]
+        label = gt[:,:s,:s]
         # data = self.crop(img, box)
         # label = self.crop(label, box)
         return data, label

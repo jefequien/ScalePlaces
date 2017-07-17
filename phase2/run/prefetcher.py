@@ -1,4 +1,3 @@
-
 from multiprocessing import Pool, cpu_count
 
 import utils_run as utils
@@ -21,7 +20,7 @@ class PreFetcher:
         try:
             self.refill_tasks()
             result = self.batch_queue.pop(0)
-            return result.get(31536000)
+            return result.get(31536000)[0]
         except KeyboardInterrupt:
             print("Caught KeyboardInterrupt, terminating workers")
             self.pool.terminate()
