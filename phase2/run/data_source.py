@@ -36,7 +36,7 @@ class DataSource:
     def get_ground_truth(self, idx):
         im = self.im_list[idx]
         gt_path = os.path.join(self.ground_truth_dir, im.replace('.jpg', '.png'))
-        return misc.imread()
+        return misc.imread(gt_path)
 
     def get_all_prob(self, idx):
         im = self.im_list[idx]
