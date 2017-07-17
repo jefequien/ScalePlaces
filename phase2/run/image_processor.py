@@ -64,18 +64,10 @@ class ImageProcessor:
         _,h,w = img.shape
         data = ndimage.zoom(img, (1.,1.*s/h,1.*s/w), order=1, prefilter=False, mode='constant')
         label = ndimage.zoom(gt, (1.,1.*s/h,1.*s/w), order=1, prefilter=False, mode='nearest')
+        label = np.squeeze(label)
         return data, label
 
     def get_slices(self, ap):
         max_activation = [np.max(s) for s in ap]
         slices = np.argwhere(max_activation > self.threshold)
         return slices
-
-def prep(features, gt):
-    '''
-    Crop and scale box to 473x473
-    Returns
-    data:  len(features)xhxw
-    label: 1xhxw
-    '''
-    pass
