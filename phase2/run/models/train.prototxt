@@ -6,7 +6,7 @@ layer {
   python_param {
     module: "data_layer"
     layer: "DataLayer"
-    param_str: "{\'batch_size\': 10}"
+    param_str: "{\'batch_size\': 5}"
   }
 }
 layer {

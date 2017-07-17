@@ -4,17 +4,17 @@ import random
 import h5py
 from scipy import misc
 
-from utils_run import *
+import utils_run as utils
 from canny import *
 
 class DataSource:
     def __init__(self, config, random=True):
         self.image_dir = config["images"]
         self.all_prob_dir = os.path.join(config["pspnet_prediction"], "all_prob")
-        self.canny_dir = config["canny"]
+        # self.canny_dir = config["canny"]
         self.ground_truth_dir = config["ground_truth"]
 
-        im_list_txt = config["im_list_txt"]
+        im_list_txt = config["im_list"]
         self.im_list = utils.open_im_list(im_list_txt)
         self.idx = 0
         self.random = random
@@ -25,7 +25,7 @@ class DataSource:
             self.idx += 1
             if self.idx == len(self.im_list):
                 self.idx = 0
-        else
+        else:
             self.idx = random.randint(0,len(self.im_list))
         return idx
 

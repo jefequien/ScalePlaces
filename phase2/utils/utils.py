@@ -1,7 +1,7 @@
 import os
 import json
 
-# PATH = os.path.dirname(__file__)
+PATH = os.path.dirname(__file__)
 
 def get_categories():
     categories = {}

@@ -1,54 +1,28 @@
 import numpy as np
 
+from image_processor import ImageProcessor
 
 class BatchBuilder:
-    def __init__(self, datasource, batch_size=4):
+    def __init__(self, datasource, batch_size=5):
         self.datasource = datasource
+        self.image_processor = ImageProcessor(self.datasource)
+
         self.batch_size = batch_size
+        self.batch = (None, None)
 
     def build_batch(self):
-        datas = []
-        labels = []
-        for i in xrange(batch_size):
+        data, label = self.batch
+        while data is None or data.shape[0] <= self.batch_size:
             idx = self.datasource.next_idx()
-            img = self.datasource.get_image(idx)
-            gt = self.datasource.get_ground_truth(idx)
-            ap = self.datasource.get_all_prob(idx)
-            canny = self.datasource.get_canny(idx)
+            new_data,new_label = self.image_processor.process(idx)
 
-            data, label = self.build_top(img,gt,ap,canny)
-            datas.append(data)
-            labels.append(label)
-        data = np.concatenate(datas, axis=0)
-        label = np.concatenate(labels, axis=0)
-        return data, label
+            data = np.concatenate((data, new_data), axis=0)
+            label = np.concatenate((label, new_data), axis=0)
 
-    def build_top(self,img,gt,ap,canny):
-        threshold = 0.5
-
-        max_activation = [np.max(s) for s in ap]
-        slices = np.argwhere(max_activation > threshold)
-
-        datas = []
-        labels = []
-        for i in slices:
-            data, label = self.build_top
-            datas.append
-
-
-
-    def build_top_per_slice(self,img,gt,ap,canny,i=-1):
-        '''
-        Data: 2xhxw
-        Label: 1xhxw
-        '''
-        h,w,_ = img.shape
-        channels = [ap[s],canny]
-        data = np.stack(channels)
-
-        c = i+1
-        label = gt == c
-        label = label[np.newaxis,:,:]
-        return label, gt
-
-
+        batch_data = data[:self.batch_size, ...]
+        batch_label = label[:self.batch_size, ...]
+        r_data = data[self.batch_size, ...]
+        r_label = label[self.batch_size, ...]
+        
+        self.batch = (r_data, r_label)
+        return batch_data, batch_label

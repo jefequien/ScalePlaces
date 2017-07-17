@@ -10,6 +10,9 @@ from data_source import DataSource
 import utils_run as utils
 import utils_pspnet
 
+PRED_DIR = "/data/vision/oliva/scenedataset/scaleplaces/ScalePlaces/phase1/run/predictions/sigmoid/snapshot_iter_50000/"
+CANNY = "/data/vision/oliva/scenedataset/scaleplaces/ADE20K/canny/"
+
 class DataLayer(caffe.Layer):
     """
     Load (input image, label image) pairs from ADE20K
@@ -18,21 +21,18 @@ class DataLayer(caffe.Layer):
     def setup(self, bottom, top):
         """
         Setup data layer according to parameters:
-        
         """
         project = "ade20k"
-        CONFIG = utils.get_config(project)
-        self.im_list = utils.open_im_list(project)
-        self.image_dir = CONFIG["images"]
-        self.gt_dir = CONFIG["ground_truth"]
+        config = utils.get_config(project)
+        config["pspnet_prediction"] = PRED_DIR
+        config["canny"] = CANNY
 
         params = eval(self.param_str)
-        self.loss_type = params['loss_type']
+        self.batch_size = params['batch_size']
 
         random = True
         data_source = DataSource(config, random=random)
-        self.batch_builder = BatchBuilder(data_source, batch_size=4)
-        # self.data_loader = PreFetcher(batch_builder)
+        self.prefetcher = PreFetcher(data_source, batch_size=self.batch_size, ahead=12)
 
         # two tops: data and label
         if len(top) != 2:
@@ -42,8 +42,7 @@ class DataLayer(caffe.Layer):
             raise Exception("Do not define a bottom.")
 
     def reshape(self, bottom, top):
-        self.data, self.label = self.batch_builder.build_batch()
-        # self.data, self.label = self.prefetch.fetch_batch()
+        self.data, self.label = self.prefetcher.fetch_batch()
 
         top[0].reshape(self.data.shape)
         top[1].reshape(self.label.shape)
