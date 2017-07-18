@@ -32,6 +32,7 @@ class PreFetcher:
         # Then it will call pool.map_async
         while len(self.batch_queue) < self.ahead:
             idx = self.datasource.next_idx()
+            print idx
             d = (self.datasource, idx, self.batch_size)
             batch = self.pool.map_async(build_batch, [d])
             self.batch_queue.append(batch)
