@@ -11,6 +11,7 @@ import utils_vis as utils
 
 THRESHOLD = True
 INDIV_SLICES = True
+BETTER_SLICES = True
 
 class ImageVisualizer:
 
@@ -58,6 +59,12 @@ class ImageVisualizer:
             indiv_slices_path = self.save(indiv_slices)
             #indiv_slices_color, indiv_slices_color_path = self.add_color(indiv_slices)
             paths["indiv_slices"] = indiv_slices_path
+
+        better_ap = self.get_better_ap(im)
+        if BETTER_SLICES and better_ap is not None:
+            better_slices = self.get_individual_slices(better_ap, 20)
+            better_slices_path = self.save(better_slices)
+            paths["better_slices"] = better_slices_path
 
         return paths
 
@@ -140,6 +147,13 @@ class ImageVisualizer:
             labeled_slices.append(labeled)
         output = np.concatenate(labeled_slices, axis=1)
         return output
+
+    def get_better_ap(self, im):
+        path = "/data/vision/oliva/scenedataset/scaleplaces/ScalePlaces/phase2/run/predictions/"
+        file_path = os.path.join(path, im.replace('.jpg','.h5'))
+        with h5py.File(file_path, 'r') as f:
+            output = f['allprob'][:]
+            return output
 
     def label_img(self, img, c):
         if img.dtype == bool:
