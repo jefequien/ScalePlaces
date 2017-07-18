@@ -83,6 +83,7 @@ if __name__ == "__main__":
     parser.add_argument("--imlist", help="Image list")
     parser.add_argument("--pspnet_prediction", help="")
     parser.add_argument("-n", default=10, help="Number of images")
+    parser.add_argument('-i',type=int)
     args = parser.parse_args()
 
     project = args.p
@@ -96,14 +97,16 @@ if __name__ == "__main__":
     vis = Visualizer(project, MAX=n, special_config=special_config)
 
     print "Opening list..."
-    t = time.time()
     im_list = utils.open_im_list(project)
     if args.imlist is not None:
         im_list = utils.open_im_list(args.imlist)
-    SEED = 3
-    random.seed(SEED)
-    random.shuffle(im_list)
-    print time.time() - t
+
+    if args.i:
+        im_list = [im_list[i]]
+    else:
+        SEED = 3
+        random.seed(SEED)
+        random.shuffle(im_list)
 
     vis.visualize_images(im_list)
 
