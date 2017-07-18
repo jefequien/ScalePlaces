@@ -24,30 +24,21 @@ class Network:
         print "WEIGHTS: ", WEIGHTS
 
     def process(self, idx):
-        data, label = self.image_processor.process(idx)
+        ap = self.datasource.get_all_prob(idx)
+        NUM_CLASS,h_ori,w_ori = ap.shape
+        slices = self.datasource.get_slices(ap)
+
+        data = self.image_processor.build_data(idx)
 
         self.test_net.blobs['data'].data[...] = data
         self.test_net.forward()
         out = self.test_net.blobs['prob'].data[:,:,:,:]
 
+        _,h,w = out.shape
+        out_scaled = ndimage.zoom(out, (1.,1.*h_ori/h,1.*w_ori/w), order=1, prefilter=False)
 
-    def feed_forward(self, im):
-        '''
-        Input must be 473x473x3 in RGB
-        Output is 150x473x473
-        '''
-        assert data.shape == (473,473,3)
-        # RGB => BGR
-        data = data[:,:,(2,1,0)]
-        data = data.transpose((2,0,1))
-        data = data[np.newaxis,:,:,:]
-
-        self.test_net.blobs['data'].data[...] = data
-        self.test_net.forward()
-        out = self.test_net.blobs['prob'].data[0,:,:,:]
-        return np.copy(out)
-        
-
-    def print_network_architecture(self):
-        for k,v in self.test_net.blobs.items():
-            print v.data.shape, k
+        output = np.zeros(ap.shape)
+        for i in xrange(len(slices)):
+            s = slices[i]
+            output[s] = out_scaled[i]
+        return output
