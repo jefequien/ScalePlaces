@@ -4,7 +4,7 @@ average_loss: 20 # Display loss averaged over last x iterations
 snapshot: 2000
 snapshot_prefix: "snapshots/baseline/snapshot"
 
-base_lr: 1e-6
+base_lr: 1e-9
 lr_policy: "fixed"
 momentum: 0.9
 weight_decay: 0.0005
