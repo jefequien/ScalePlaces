@@ -3,14 +3,14 @@ import random
 import argparse
 import sys
 
-# CAFFE_ROOT = '/data/vision/torralba/segmentation/places/PSPNet/'
-# sys.path.insert(0, os.path.join(CAFFE_ROOT, 'python'))
+CAFFE_ROOT = '/data/vision/torralba/segmentation/places/PSPNet/'
+sys.path.insert(0, os.path.join(CAFFE_ROOT, 'python'))
 import caffe
 
 SNAPSHOTS = '/data/vision/oliva/scenedataset/scaleplaces/ScalePlaces/phase2/run/snapshots/'
 
 def get_model(solver_path):
-    models = ["softmax", "sigmoid", "broden"]
+    models = ["baseline"]
     for model in models:
         prototxt = os.path.basename(solver_path)
         if model in prototxt:
@@ -56,7 +56,7 @@ if args.resume:
     solver.restore(latest_snapshot)
 
 # Print net architecture
-for k,v in self.solver.net.blobs.items():
+for k,v in solver.net.blobs.items():
     print v.data.shape, k
 
 solver.solve()

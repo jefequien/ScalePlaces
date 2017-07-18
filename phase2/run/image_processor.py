@@ -63,8 +63,10 @@ class ImageProcessor:
         s = 473
         _,h,w = img.shape
         data = ndimage.zoom(img, (1.,1.*s/h,1.*s/w), order=1, prefilter=False, mode='constant')
-        gt = np.squeeze(gt) 
+        
+        gt = np.squeeze(gt)
         label = misc.imresize(gt,(s,s), interp='nearest') 
+        label = label[np.newaxis,:,:]
         return data, label
 
     def get_slices(self, ap):

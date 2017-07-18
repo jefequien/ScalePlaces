@@ -21,7 +21,7 @@ class DataSource:
 
     def next_idx(self):
         idx = self.idx
-        if not random:
+        if not self.random:
             self.idx += 1
             if self.idx == len(self.im_list):
                 self.idx = 0

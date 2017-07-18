@@ -5,10 +5,10 @@ from image_processor import ImageProcessor
 from data_source import DataSource
 
 class PreFetcher:
-    def __init__(self, datasource, batch_size=1, ahead=12):
+    def __init__(self, datasource, batch_size=1, ahead=4):
 
-        n_procs = cpu_count()
-        self.pool = Pool(processes=n_procs)
+        cpus = cpu_count()
+        self.pool = Pool(processes=min(ahead, cpus))
 
         self.datasource = datasource
         self.batch_size = batch_size

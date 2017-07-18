@@ -6,9 +6,9 @@ import time
 from scipy import misc
 import random
 from data_source import DataSource
+from prefetcher import PreFetcher
 
 import utils_run as utils
-import utils_pspnet
 
 PRED_DIR = "/data/vision/oliva/scenedataset/scaleplaces/ScalePlaces/phase1/run/predictions/sigmoid/snapshot_iter_50000/"
 CANNY = "/data/vision/oliva/scenedataset/scaleplaces/ADE20K/canny/"
@@ -43,9 +43,10 @@ class DataLayer(caffe.Layer):
 
     def reshape(self, bottom, top):
         self.data, self.label = self.prefetcher.fetch_batch()
-
-        top[0].reshape(self.data.shape)
-        top[1].reshape(self.label.shape)
+        print self.data.shape, self.label.shape
+        
+        top[0].reshape(*self.data.shape)
+        top[1].reshape(*self.label.shape)
 
     def forward(self, bottom, top):
         # assign output
