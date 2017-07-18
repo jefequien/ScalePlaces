@@ -11,7 +11,7 @@ class DataSource:
     def __init__(self, config, random=True):
         self.image_dir = config["images"]
         self.all_prob_dir = os.path.join(config["pspnet_prediction"], "all_prob")
-        self.canny_dir = config["canny"]
+        self.canny_dir = os.path.join(config["workspace"], "canny")
         self.ground_truth_dir = config["ground_truth"]
 
         im_list_txt = config["im_list"]
@@ -36,6 +36,9 @@ class DataSource:
         im = self.im_list[idx]
         img_path = os.path.join(self.image_dir, im)
         img = misc.imread(img_path)
+        
+        if img.ndim != 3:
+            img = np.stack((img,img,img), axis=2)
         img = img.transpose((2,0,1))
         return img
 

@@ -7,71 +7,74 @@ class ImageProcessor:
         self.datasource = datasource
         self.threshold = 0.5*255 # ap has been scaled by 255
 
-    def process(self, idx, n=None):
+    def build_data(self, idx):
         ap = self.datasource.get_all_prob(idx)
+        slices = self.get_slices(ap)
+
+        # Load additional features
+        img = self.datasource.get_image(idx)
+        canny = self.datasource.get_canny(idx)
+        additional_features = [canny]
+
+        data = self.build_top(ap, slices, additional_features=additional_features)
+        return data,label
+
+    def build_data_and_label(self, idx, batch_size=None):
+        ap = self.datasource.get_all_prob(idx)
+        # One hot encoded gt
         gt = self.datasource.get_ground_truth(idx)
-        # One hot encode gt
         NUM_CLASS = 150
         gt = (np.arange(NUM_CLASS) == gt[:,:,None] - 1)
         gt = gt.transpose((2,0,1))
+
+        slices = self.get_slices(ap)
+        # Make slices = batch size
+        if batch_size is not None:
+            random.shuffle(slices)
+            while len(slices) < batch_size:
+                slices = np.concatenate([slices, slices], axis=0)
+            slices = slices[:batch_size]
 
         # Load additional features
         img = self.datasource.get_image(idx)
         canny = self.datasource.get_canny(idx)
         additional_features = [canny]
         
-        data, label = self.build_top(ap, gt, additional_features=additional_features, n=n)
+        data = self.build_top(ap, slices, additional_features=additional_features)
+        label = self.build_top(gt, slices)
+        label = np.squeeze(label)
         return data,label
 
-    def build_top(self, ap, gt, additional_features=[], n=None):
+    def build_top(self, a, slices, additional_features=[]):
         '''
-        Returns
-        data nxcxhxw
-        label nxhxw
+        Returns top: nxcxhxw
         '''
-        slices = self.get_slices(ap)
-        random.shuffle(slices)
-        if n is not None:
-            while len(slices) < n:
-                slices = np.concatenate([slices, slices], axis=0)
-            slices = slices[:n]
+        top_slices = [self.build_top_i(a[i], additional_features=additional_features) for i in slices]
+        data = np.stack(top_slices)
+        return data
 
-        datas = []
-        labels = []
-        for i in slices:
-            data,label = self.build_top_i(ap[i],gt[i],additional_features=additional_features)
-            datas.append(data)
-            labels.append(label)
-        data = np.stack(datas)
-        label = np.stack(labels)
-        return data, label
-
-    def build_top_i(self,img,gt,additional_features=[]):
+    def build_top_i(self,s,additional_features=[]):
         '''
-        Builds top for a single slice.
-        Returns:
-        data cxhxw
-        label hxw
+        Builds top for a single slice. Returns slice: cxhxw
         '''
         # Stack along c dimension
-        data = img
-        features = [img]
-        features += additional_features
+        features = [s] + additional_features
         features = [a[np.newaxis,:,:] for a in features if np.ndim(a) != 3]
+        data = None
         if len(features) == 1:
             data = features[0]
         else:
-            data = np.concatenate(features)
+            data = np.concatenate(features, axis=0)
         
         # Rescale
         s = 473
         _,h,w = data.shape
         data = ndimage.zoom(data, (1.,1.*s/h,1.*s/w), order=1, prefilter=False, mode='constant')
         
-        gt = np.squeeze(gt)
-        label = misc.imresize(gt,(s,s), interp='nearest') 
-        label = label == 255
-        return data, label
+        # data = ndimage.zoom(data, (1.,1.*s/h,1.*s/w), order=1, prefilter=False, mode='constant')
+        # label = misc.imresize(gt,(s,s), interp='nearest') 
+        # label = label == 255
+        return data
 
     def get_slices(self, ap):
         max_activation = np.array([np.max(s) for s in ap])

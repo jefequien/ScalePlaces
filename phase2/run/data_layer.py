@@ -11,7 +11,6 @@ from prefetcher import PreFetcher
 import utils_run as utils
 
 PRED_DIR = "/data/vision/oliva/scenedataset/scaleplaces/ScalePlaces/phase1/run/predictions/sigmoid/snapshot_iter_50000/"
-CANNY = "/data/vision/oliva/scenedataset/scaleplaces/ADE20K/canny/"
 
 class DataLayer(caffe.Layer):
     """
@@ -25,7 +24,6 @@ class DataLayer(caffe.Layer):
         project = "ade20k"
         config = utils.get_config(project)
         config["pspnet_prediction"] = PRED_DIR
-        config["canny"] = CANNY
 
         params = eval(self.param_str)
         self.batch_size = params['batch_size']
