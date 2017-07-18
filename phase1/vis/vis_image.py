@@ -3,6 +3,7 @@ import os
 import uuid
 import time
 import cv2
+import h5py
 
 from scipy import misc
 import numpy as np

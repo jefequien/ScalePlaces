@@ -106,7 +106,7 @@ if __name__ == "__main__":
     else:
         SEED = 3
         random.seed(SEED)
-        random.shuffle(im_list)
+        #random.shuffle(im_list)
 
     vis.visualize_images(im_list)
 
