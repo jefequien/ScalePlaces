@@ -149,7 +149,7 @@ class ImageVisualizer:
         return output
 
     def get_better_ap(self, im):
-        path = "/data/vision/oliva/scenedataset/scaleplaces/ScalePlaces/phase2/run/predictions/"
+        path = "/data/vision/oliva/scenedataset/scaleplaces/ScalePlaces/phase2/run/predictions/ade20k/baseline/snapshot_iter_2000/all_prob/"
         file_path = os.path.join(path, im.replace('.jpg','.h5'))
         with h5py.File(file_path, 'r') as f:
             output = f['allprob'][:]
