@@ -30,7 +30,7 @@ class DataLayer(caffe.Layer):
         
         random = True
         data_source = DataSource(config, random=random)
-        self.prefetcher = PreFetcher(data_source, batch_size=5, ahead=6)
+        self.prefetcher = PreFetcher(data_source, batch_size=5, ahead=12)
 
         # two tops: data and label
         if len(top) != 2:

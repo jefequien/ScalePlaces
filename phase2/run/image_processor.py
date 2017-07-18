@@ -41,9 +41,9 @@ class ImageProcessor:
         label = label[:,0,:,:]
         return data,label
     def get_additional_features(self,idx):
-        img = self.datasource.get_image(idx)
+        #img = self.datasource.get_image(idx)
         canny = self.datasource.get_canny(idx)
-        return [img, canny]
+        return [canny]
 
     def build_top(self, a, slices, additional_features=[]):
         '''

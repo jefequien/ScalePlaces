@@ -1,3 +1,10 @@
+#
+input: "data"
+input_dim: 1
+input_dim: 2
+input_dim: 473
+input_dim: 473
+
 layer {
   name: "conv1"
   type: "Convolution"
