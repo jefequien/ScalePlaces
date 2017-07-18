@@ -25,7 +25,7 @@ config["canny"] = "canny"
 batch_size = 5
 
 data_source = DataSource(config, random=False)
-prefetcher = PreFetcher(data_source, batch_size=batch_size, ahead=4)
+prefetcher = PreFetcher(data_source, batch_size=batch_size, ahead=1)
 
 for i in xrange(100):
     #d = (data_source, i, batch_size)

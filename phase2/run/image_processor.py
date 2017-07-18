@@ -5,7 +5,7 @@ from scipy import misc,ndimage
 class ImageProcessor:
     def __init__(self, datasource):
         self.datasource = datasource
-        self.threshold = 0.5
+        self.threshold = 0.5*255 # ap has been scaled by 255
 
     def process(self, idx, n=None):
         ap = self.datasource.get_all_prob(idx)
@@ -19,7 +19,7 @@ class ImageProcessor:
         img = self.datasource.get_image(idx)
         canny = self.datasource.get_canny(idx)
         additional_features = [canny]
-
+        
         data, label = self.build_top(ap, gt, additional_features=additional_features, n=n)
         return data,label
 
@@ -34,7 +34,7 @@ class ImageProcessor:
         if n is not None:
             while len(slices) < n:
                 slices = np.concatenate([slices, slices], axis=0)
-                slices = slices[:n]
+            slices = slices[:n]
 
         datas = []
         labels = []
@@ -54,22 +54,26 @@ class ImageProcessor:
         label hxw
         '''
         # Stack along c dimension
+        data = img
         features = [img]
         features += additional_features
-        if len(features) > 1:
-            img = np.concatenate(features, axis=0)
-
+        features = [a[np.newaxis,:,:] for a in features if np.ndim(a) != 3]
+        if len(features) == 1:
+            data = features[0]
+        else:
+            data = np.concatenate(features)
+        
         # Rescale
         s = 473
-        _,h,w = img.shape
-        data = ndimage.zoom(img, (1.,1.*s/h,1.*s/w), order=1, prefilter=False, mode='constant')
+        _,h,w = data.shape
+        data = ndimage.zoom(data, (1.,1.*s/h,1.*s/w), order=1, prefilter=False, mode='constant')
         
         gt = np.squeeze(gt)
         label = misc.imresize(gt,(s,s), interp='nearest') 
-        label = label[np.newaxis,:,:]
+        label = label == 255
         return data, label
 
     def get_slices(self, ap):
-        max_activation = [np.max(s) for s in ap]
+        max_activation = np.array([np.max(s) for s in ap])
         slices = np.argwhere(max_activation > self.threshold)
-        return slices
+        return slices.flatten()

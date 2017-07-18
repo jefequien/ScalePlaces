@@ -29,10 +29,10 @@ class DataLayer(caffe.Layer):
 
         params = eval(self.param_str)
         self.batch_size = params['batch_size']
-
+        
         random = True
         data_source = DataSource(config, random=random)
-        self.prefetcher = PreFetcher(data_source, batch_size=self.batch_size, ahead=4)
+        self.prefetcher = PreFetcher(data_source, batch_size=5, ahead=6)
 
         # two tops: data and label
         if len(top) != 2:
@@ -42,8 +42,9 @@ class DataLayer(caffe.Layer):
             raise Exception("Do not define a bottom.")
 
     def reshape(self, bottom, top):
+        t = time.time()
         self.data, self.label = self.prefetcher.fetch_batch()
-        print self.data.shape, self.label.shape
+        print time.time() - t, self.data.shape, self.label.shape
         
         top[0].reshape(*self.data.shape)
         top[1].reshape(*self.label.shape)

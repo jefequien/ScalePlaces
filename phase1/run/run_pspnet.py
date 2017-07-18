@@ -28,8 +28,8 @@ im_list = utils.open_im_list(project)
 root_images = CONFIG["images"]
 root_result = CONFIG["pspnet_prediction"]
 if args.local:
-    root_result = snapshot.replace("snapshots", "predictions")
-    root_result = snapshot.replace(".caffemodel", "/")
+    root_result = snapshot.replace("snapshots", "predictions/{}".format(project))
+    root_result = root_result.replace(".caffemodel", "/")
 print "Outputting to ", root_result
 
 root_mask = os.path.join(root_result, 'category_mask')
@@ -37,6 +37,7 @@ root_prob = os.path.join(root_result, 'prob_mask')
 root_maxprob = os.path.join(root_result, 'max_prob')
 root_allprob = os.path.join(root_result, 'all_prob')
 
+random.seed(3)
 random.shuffle(im_list)
 for im in im_list:
     print im

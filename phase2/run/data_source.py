@@ -16,8 +16,11 @@ class DataSource:
 
         im_list_txt = config["im_list"]
         self.im_list = utils.open_im_list(im_list_txt)
+        
         self.idx = 0
         self.random = random
+        if self.random:
+            self.idx = self.next_idx()
 
     def next_idx(self):
         idx = self.idx

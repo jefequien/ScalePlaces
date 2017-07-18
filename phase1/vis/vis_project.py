@@ -102,7 +102,7 @@ if __name__ == "__main__":
         im_list = utils.open_im_list(args.imlist)
 
     if args.i:
-        im_list = [im_list[i]]
+        im_list = [im_list[args.i]]
     else:
         SEED = 3
         random.seed(SEED)
