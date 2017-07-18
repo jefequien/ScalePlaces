@@ -12,9 +12,7 @@ class ImageProcessor:
         slices = self.get_slices(ap)
 
         # Load additional features
-        img = self.datasource.get_image(idx)
-        canny = self.datasource.get_canny(idx)
-        additional_features = [canny]
+        additional_features = self.get_additional_features()
 
         data = self.build_top(ap, slices, additional_features=additional_features)
         return data,label
@@ -36,14 +34,16 @@ class ImageProcessor:
             slices = slices[:batch_size]
 
         # Load additional features
-        img = self.datasource.get_image(idx)
-        canny = self.datasource.get_canny(idx)
-        additional_features = [canny]
+        additional_features = self.get_additional_features(idx)
         
         data = self.build_top(ap, slices, additional_features=additional_features)
         label = self.build_top(gt, slices)
-        label = np.squeeze(label)
+        label = label[:,0,:,:]
         return data,label
+    def get_additional_features(self,idx):
+        img = self.datasource.get_image(idx)
+        canny = self.datasource.get_canny(idx)
+        return [img, canny]
 
     def build_top(self, a, slices, additional_features=[]):
         '''
@@ -59,7 +59,9 @@ class ImageProcessor:
         '''
         # Stack along c dimension
         features = [s] + additional_features
-        features = [a[np.newaxis,:,:] for a in features if np.ndim(a) != 3]
+        for i in xrange(len(features)):
+            if np.ndim(features[i]) !=3:
+                features[i] = features[i][np.newaxis,:,:]
         data = None
         if len(features) == 1:
             data = features[0]
@@ -69,11 +71,12 @@ class ImageProcessor:
         # Rescale
         s = 473
         _,h,w = data.shape
-        data = ndimage.zoom(data, (1.,1.*s/h,1.*s/w), order=1, prefilter=False, mode='constant')
-        
-        # data = ndimage.zoom(data, (1.,1.*s/h,1.*s/w), order=1, prefilter=False, mode='constant')
-        # label = misc.imresize(gt,(s,s), interp='nearest') 
-        # label = label == 255
+        if data.dtype == bool:
+            # Nearest
+            data = ndimage.zoom(data, (1.,1.*s/h,1.*s/w), order=0, prefilter=False)
+        else:
+            # Bilinear
+            data = ndimage.zoom(data, (1.,1.*s/h,1.*s/w), order=1, prefilter=False)
         return data
 
     def get_slices(self, ap):

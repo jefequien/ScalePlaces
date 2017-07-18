@@ -39,7 +39,7 @@ class PreFetcher:
 def build_batch(d):
     datasource, idx, batch_size = d
     image_processor = ImageProcessor(datasource)
-    batch = image_processor.process(idx, n=batch_size)
+    batch = image_processor.build_data_and_label(idx, batch_size=batch_size)
     return batch
 
 
