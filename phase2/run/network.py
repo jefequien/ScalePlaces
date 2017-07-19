@@ -49,5 +49,5 @@ class Network:
         self.test_net.blobs['data'].data[...] = data
         self.test_net.forward()
         out = self.test_net.blobs['prob'].data[0,:,:,:]
-        return out
+        return np.copy(out)
 
