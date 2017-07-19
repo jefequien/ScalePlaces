@@ -81,8 +81,8 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("-p", required=True, help="Project name")
     parser.add_argument("--imlist", help="Image list")
-    parser.add_argument("--pspnet_pred", help="")
-    parser.add_argument("--refine_pred", help="")
+    parser.add_argument("--pspnet_prediction", help="")
+    parser.add_argument("--refine_prediction", help="")
     parser.add_argument("-n", default=10, help="Number of images")
     parser.add_argument('-i',type=int)
     args = parser.parse_args()
@@ -93,8 +93,8 @@ if __name__ == "__main__":
     special_config = None
     if args.pspnet_pred is not None or args.refine_pred is not None:
         special_config = utils.get_config(project)
-        special_config["pspnet_prediction"] = args.pspnet_pred
-        special_config["refine_prediction"] = args.refine_pred
+        special_config["pspnet_prediction"] = args.pspnet_prediction
+        special_config["refine_prediction"] = args.refine_prediction
 
     vis = Visualizer(project, MAX=n, special_config=special_config)
 
