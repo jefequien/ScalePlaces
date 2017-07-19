@@ -1,10 +1,14 @@
-#
-input: "data"
-input_dim: 1
-input_dim: 2
-input_dim: 473
-input_dim: 473
-
+layer {
+  name: "data"
+  type: "Python"
+  top: "data"
+  top: "label"
+  python_param {
+    module: "data_layer"
+    layer: "DataLayer"
+    param_str: "{\'model\': \'image\', \'batch_size\': 5 }"
+  }
+}
 layer {
   name: "conv1"
   type: "Convolution"
@@ -84,8 +88,12 @@ layer {
   }
 }
 layer {
-  name: "sigmoid"
-  type: "Sigmoid"
+  name: "loss"
+  type: "SigmoidCrossEntropyLoss"
   bottom: "output"
-  top: "prob"
+  bottom: "label"
+  top: "loss"
+  loss_param {
+    normalize: false
+  }
 }

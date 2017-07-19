@@ -85,7 +85,6 @@ layer {
     weight_filler {
       type: "msra"
     }
-    bias_term: false
   }
 }
 layer {
