@@ -58,7 +58,7 @@ class ImageProcessor:
         if "canny" in self.af:
             canny = self.datasource.get_canny(im)
             features.append(canny)
-        return []
+        return features
 
     def build_top(self, a, slices, additional_features=[]):
         '''

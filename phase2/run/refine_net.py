@@ -6,6 +6,7 @@ import numpy as np
 from scipy import misc, ndimage
 
 from image_processor import ImageProcessor
+from prefetcher import PreFetcher
 
 CAFFE_ROOT = '/data/vision/torralba/segmentation/places/PSPNet/'
 sys.path.insert(0, os.path.join(CAFFE_ROOT, 'python'))
@@ -22,7 +23,7 @@ class RefineNet:
         
         model = utils.parse_model(MODEL)
         self.image_processor = ImageProcessor(datasource, model)
-        self.prefetcher = PreFetcher(image_processor, mode='test', batch_size=None, ahead=4)
+        self.prefetcher = PreFetcher(self.image_processor, mode='test', batch_size=None, ahead=4)
 
         self.test_net = caffe.Net(MODEL, WEIGHTS, caffe.TEST)
         print "Model: ", MODEL
@@ -58,8 +59,4 @@ class RefineNet:
         out = self.test_net.blobs['prob'].data[0,:,:,:]
         return np.copy(out)
 
-def async_prefetch(d):
-    image_processor, im, batch_size = d
-    data = image_processor.build_data(im, batch_size=batch_size)
-    return data
 

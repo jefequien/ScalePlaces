@@ -49,7 +49,7 @@ class Visualizer:
         new_section = "<br><br>{} {}<br><br>".format(self.project, im)
         paths = self.image_visualizer.visualize(im)
 
-        order = ["image", "prob_mask", "category_mask", "ground_truth", "diff"]
+        order = ["image", "prob_mask", "category_mask", "ground_truth", "diff", "canny"]
         for key in order:
             if key in paths:
                 new_section += self.getImageTag(paths[key])
@@ -108,7 +108,7 @@ if __name__ == "__main__":
     else:
         SEED = 3
         random.seed(SEED)
-        random.shuffle(im_list)
+        #random.shuffle(im_list)
 
     vis.visualize_images(im_list)
 

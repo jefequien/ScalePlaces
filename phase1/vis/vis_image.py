@@ -10,9 +10,10 @@ import numpy as np
 
 import utils_vis as utils
 
-THRESHOLD = True
+THRESHOLD = False
 INDIV_SLICES = True
 REFINE = True
+GT_SLICES = True
 
 class ImageVisualizer:
 
@@ -65,11 +66,18 @@ class ImageVisualizer:
             paths["indiv_slices"] = indiv_slices_path
 
         refine_ap = self.get_refine_ap(im)
-        if REFINE and better_ap is not None:
+        if REFINE and refine_ap is not None:
             refine_slices = self.get_individual_slices(refine_ap, 20)
             refine_slices_path = self.save(refine_slices)
             paths["refine_slices"] = refine_slices_path
-
+        
+        NUM_CLASS = 150
+        gt = (np.arange(NUM_CLASS) == gt[:,:,None] - 1)
+        gt = gt.transpose((2,0,1))
+        if GT_SLICES:
+            gt_slices = self.get_individual_slices(gt, 20)
+            gt_slices_path = self.save(gt_slices)
+            paths["gt_slices"] = gt_slices_path
         return paths
 
     def get_category_mask(self, im):
@@ -101,7 +109,7 @@ class ImageVisualizer:
 
     def get_canny(self, im):
         try:
-            path = os.path.join(config["workspace"], "canny")
+            path = os.path.join(self.config["workspace"], "canny")
             path = os.path.join(path, im.replace('.jpg', '.png'))
             return path
         except:
@@ -145,10 +153,9 @@ class ImageVisualizer:
     def get_individual_slices(self, ap, n):
         threshold = 0.6
         #ap = ap > threshold
-        print ap.shape, ap.dtype, np.min(ap), np.max(ap)
+        #print ap.shape, ap.dtype, np.min(ap), np.max(ap)
         sums = [np.sum(slic) for slic in ap]
         top_slices = np.flip(np.argsort(sums), 0)
-        #top_slices = range(150)
 
         labeled_slices = []
         for i in top_slices[:n]:

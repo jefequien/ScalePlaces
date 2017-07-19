@@ -45,7 +45,7 @@ def build_train(d):
     return batch
 def build_test(d):
     image_processor, im, batch_size = d
-    batch = image_processor.build_data(im, batch_size=batch_size)
+    batch = image_processor.build_data(im)
     return batch
 
 

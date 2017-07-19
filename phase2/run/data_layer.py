@@ -6,6 +6,7 @@ import time
 from scipy import misc
 import random
 from data_source import DataSource
+from image_processor import ImageProcessor
 from prefetcher import PreFetcher
 
 import utils_run as utils
