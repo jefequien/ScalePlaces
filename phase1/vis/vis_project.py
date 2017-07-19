@@ -91,7 +91,7 @@ if __name__ == "__main__":
     n = int(args.n)
     
     special_config = None
-    if args.pspnet_pred is not None or args.refine_pred is not None:
+    if args.pspnet_prediction is not None or args.refine_prediction is not None:
         special_config = utils.get_config(project)
         special_config["pspnet_prediction"] = args.pspnet_prediction
         special_config["refine_prediction"] = args.refine_prediction
