@@ -1,10 +1,10 @@
-net: "models/train_baseline.prototxt"
+net: "models/train_canny.prototxt"
 display: 40
 average_loss: 20 # Display loss averaged over last x iterations
 snapshot: 1000
 snapshot_prefix: "snapshots/canny/snapshot"
 
-base_lr: 1e-9
+base_lr: 1e-10
 lr_policy: "fixed"
 momentum: 0.5
 weight_decay: 0.0005

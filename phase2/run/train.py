@@ -10,7 +10,7 @@ import caffe
 SNAPSHOTS = '/data/vision/oliva/scenedataset/scaleplaces/ScalePlaces/phase2/run/snapshots/'
 
 def get_model(solver_path):
-    models = ["baseline"]
+    models = ["baseline", "canny"]
     for model in models:
         prototxt = os.path.basename(solver_path)
         if model in prototxt:

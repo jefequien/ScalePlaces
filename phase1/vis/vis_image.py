@@ -144,7 +144,7 @@ class ImageVisualizer:
         return np.concatenate(all_imgs, axis=1)
 
     def get_individual_slices(self, ap, n):
-        threshold = 0.5
+        threshold = 0.6
         #ap = ap > threshold
         print ap.shape, ap.dtype, np.min(ap), np.max(ap)
         sums = [np.sum(slic) for slic in ap]
@@ -162,7 +162,9 @@ class ImageVisualizer:
         return output
 
     def get_better_ap(self, im):
-        path = "/data/vision/oliva/scenedataset/scaleplaces/ScalePlaces/phase2/run/predictions/places/canny/snapshot_iter_1000/all_prob/"
+        project = "places"
+        model = "canny"
+        path = "/data/vision/oliva/scenedataset/scaleplaces/ScalePlaces/phase2/run/predictions/{}/{}/snapshot_iter_4000/all_prob/".format(project, model)
         file_path = os.path.join(path, im.replace('.jpg','.h5'))
         with h5py.File(file_path, 'r') as f:
             output = f['allprob'][:]

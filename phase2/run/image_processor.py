@@ -43,8 +43,8 @@ class ImageProcessor:
 
     def get_additional_features(self,idx):
         #img = self.datasource.get_image(idx)
-        #canny = self.datasource.get_canny(idx)
-        return []
+        canny = self.datasource.get_canny(idx)
+        return [canny]
 
     def build_top(self, a, slices, additional_features=[]):
         '''

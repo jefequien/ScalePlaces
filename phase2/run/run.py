@@ -34,7 +34,7 @@ config = utils.get_config(project)
 config["pspnet_prediction"] = pspnet_prediction
 
 # Set up network
-datasource = DataSource(config, random=False)
+datasource = DataSource(config, random=True)
 network = Network(datasource, model, snapshot)
 
 root_result = build_output_dirname(project, snapshot)
