@@ -10,7 +10,7 @@ from prefetcher import PreFetcher
 
 import utils_run as utils
 
-PRED_DIR = "/data/vision/oliva/scenedataset/scaleplaces/ScalePlaces/phase1/run/predictions/sigmoid/snapshot_iter_50000/"
+PRED_DIR = "/data/vision/oliva/scenedataset/scaleplaces/ScalePlaces/phase1/run/predictions/{}/sigmoid/snapshot_iter_{}/"
 
 class DataLayer(caffe.Layer):
     """
@@ -21,16 +21,19 @@ class DataLayer(caffe.Layer):
         """
         Setup data layer according to parameters:
         """
+        # Always train on ade20k
         project = "ade20k"
         config = utils.get_config(project)
-        config["pspnet_prediction"] = PRED_DIR
+        iter_num = 50000
+        config["pspnet_prediction"] = PRED_DIR.format(project, iter_num)
 
         params = eval(self.param_str)
+        self.model = params['model']
         self.batch_size = params['batch_size']
         
-        random = True
-        data_source = DataSource(config, random=random)
-        self.prefetcher = PreFetcher(data_source, batch_size=5, ahead=12)
+        data_source = DataSource(config, random=True)
+        image_processor = ImageProcessor(data_source, self.model)
+        self.prefetcher = PreFetcher(image_processor, batch_size=self.batch_size, ahead=12)
 
         # two tops: data and label
         if len(top) != 2:

@@ -3,24 +3,33 @@ import numpy as np
 from scipy import misc,ndimage
 
 class ImageProcessor:
-    def __init__(self, datasource):
+    def __init__(self, datasource, model):
         self.datasource = datasource
         self.threshold = 0.5*255 # ap has been scaled by 255
 
-    def build_data(self, idx):
-        ap = self.datasource.get_all_prob(idx)
+        if model == "baseline":
+            self.af = []
+        elif model ==  "canny":
+            self.af = ["canny"]
+        elif model == "image":
+            self.af = ["image"]
+        elif model == "image+canny":
+            self.af = ["image", "canny"]
+
+    def build_data(self, im):
+        ap = self.datasource.get_all_prob(im)
         slices = self.get_slices(ap)
 
         # Load additional features
-        additional_features = self.get_additional_features(idx)
+        additional_features = self.get_additional_features(im)
 
         data = self.build_top(ap, slices, additional_features=additional_features)
         return data
 
-    def build_data_and_label(self, idx, batch_size=None):
-        ap = self.datasource.get_all_prob(idx)
+    def build_data_and_label(self, im, batch_size=None):
+        ap = self.datasource.get_all_prob(im)
         # One hot encoded gt
-        gt = self.datasource.get_ground_truth(idx)
+        gt = self.datasource.get_ground_truth(im)
         NUM_CLASS = 150
         gt = (np.arange(NUM_CLASS) == gt[:,:,None] - 1)
         gt = gt.transpose((2,0,1))
@@ -34,16 +43,21 @@ class ImageProcessor:
             slices = slices[:batch_size]
 
         # Load additional features
-        additional_features = self.get_additional_features(idx)
+        additional_features = self.get_additional_features(im)
         
         data = self.build_top(ap, slices, additional_features=additional_features)
         label = self.build_top(gt, slices)
         label = label[:,0,:,:]
         return data,label
 
-    def get_additional_features(self,idx):
-        #img = self.datasource.get_image(idx)
-        #canny = self.datasource.get_canny(idx)
+    def get_additional_features(self,im):
+        features = []
+        if "image" in self.af:
+            img = self.datasource.get_image(im)
+            features.append(img)
+        if "canny" in self.af:
+            canny = self.datasource.get_canny(im)
+            features.append(canny)
         return []
 
     def build_top(self, a, slices, additional_features=[]):

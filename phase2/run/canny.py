@@ -7,6 +7,7 @@ from scipy import misc
 import cv2
 
 def make_canny(img):
+    print "Making canny..."
     # Blur image
     kernel = (5, 5)
     blur = cv2.GaussianBlur(img, kernel, 0)

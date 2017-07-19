@@ -7,15 +7,9 @@ CAFFE_ROOT = '/data/vision/torralba/segmentation/places/PSPNet/'
 sys.path.insert(0, os.path.join(CAFFE_ROOT, 'python'))
 import caffe
 
-SNAPSHOTS = '/data/vision/oliva/scenedataset/scaleplaces/ScalePlaces/phase2/run/snapshots/'
+import utils_run as utils
 
-def get_model(solver_path):
-    models = ["baseline"]
-    for model in models:
-        prototxt = os.path.basename(solver_path)
-        if model in prototxt:
-            return model
-    raise Exception('Model not found')
+SNAPSHOTS = '/data/vision/oliva/scenedataset/scaleplaces/ScalePlaces/phase2/run/snapshots/'
 
 def get_latest_snapshot(snapshot_dir):
     latest_i = 0
@@ -41,7 +35,7 @@ args = parser.parse_args()
 
 DEVICE = args.id
 solver_path = args.solver
-MODEL = get_model(solver_path)
+model = utils.parse_model(solver_path)
 
 caffe.set_mode_gpu()
 caffe.set_device(DEVICE)
@@ -50,7 +44,7 @@ random.seed(SEED)
 
 solver = caffe.get_solver(solver_path)
 if args.resume:
-    snapshot_dir = os.path.join(SNAPSHOTS, MODEL)
+    snapshot_dir = os.path.join(SNAPSHOTS, model)
     latest_snapshot = get_latest_snapshot(snapshot_dir)
     print "Resuming from latest snapshot: ", latest_snapshot
     solver.restore(latest_snapshot)

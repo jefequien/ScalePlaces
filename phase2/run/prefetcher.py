@@ -5,13 +5,14 @@ from image_processor import ImageProcessor
 from data_source import DataSource
 
 class PreFetcher:
-    def __init__(self, datasource, batch_size=1, ahead=4):
+    def __init__(self, image_processor, mode='train', batch_size=1, ahead=4):
 
         cpus = cpu_count()
         self.pool = Pool(processes=min(ahead, cpus))
 
-        self.datasource = datasource
+        self.image_processor = image_processor
         self.batch_size = batch_size
+        self.mode = mode
 
         self.ahead = ahead
         self.batch_queue = []
@@ -27,32 +28,24 @@ class PreFetcher:
             raise
 
     def refill_tasks(self):
-        # It will call the sequencer to ask for a sequence
-        # of batch_size jobs (indexes with categories)
-        # Then it will call pool.map_async
         while len(self.batch_queue) < self.ahead:
-            idx = self.datasource.next_idx()
-            d = (self.datasource, idx, self.batch_size)
-            batch = self.pool.map_async(build_batch, [d])
-            self.batch_queue.append(batch)
+            im = self.image_processor.datasource.next_im()
+            d = (self.image_processor, im, self.batch_size)
 
-def build_batch(d):
-    datasource, idx, batch_size = d
-    image_processor = ImageProcessor(datasource)
-    batch = image_processor.build_data_and_label(idx, batch_size=batch_size)
+            if self.mode == 'train':
+                batch = self.pool.map_async(build_train, [d])
+                self.batch_queue.append(batch)
+            elif self.mode == 'test':
+                batch = self.pool.map_async(build_test, [d])
+                self.batch_queue.append(batch)
+
+def build_train(d):
+    image_processor, im, batch_size = d
+    batch = image_processor.build_data_and_label(im, batch_size=batch_size)
+    return batch
+def build_test(d):
+    image_processor, im, batch_size = d
+    batch = image_processor.build_data(im, batch_size=batch_size)
     return batch
 
-
-if __name__ == "__main__":
-    project = "ade20k"
-    config = utils.get_config(project)
-
-    datasource = DataSource(config, random=True)
-    idx = 0
-    batch_size = 5
-    d = (datasource, idx, batch_size)
-    batch = build_batch(d)
-
-    data, label = batch
-    print data.shape, label.shape
 

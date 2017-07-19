@@ -11,7 +11,7 @@ layer {
   bottom: "data"
   top: "conv1"
   param {
-    lr_mult: 1
+    lr_mult: 10
     decay_mult: 1
   }
   convolution_param {
@@ -31,7 +31,7 @@ layer {
   bottom: "conv1"
   top: "conv2"
   param {
-    lr_mult: 1
+    lr_mult: 10
     decay_mult: 1
   }
   convolution_param {
@@ -51,7 +51,7 @@ layer {
   bottom: "conv2"
   top: "conv3"
   param {
-    lr_mult: 1
+    lr_mult: 10
     decay_mult: 1
   }
   convolution_param {

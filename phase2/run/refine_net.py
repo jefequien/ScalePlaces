@@ -11,31 +11,38 @@ CAFFE_ROOT = '/data/vision/torralba/segmentation/places/PSPNet/'
 sys.path.insert(0, os.path.join(CAFFE_ROOT, 'python'))
 import caffe
 
-class Network:
+import utils_run as utils
+
+class RefineNet:
     def __init__(self, datasource, MODEL, WEIGHTS, DEVICE=0):
         caffe.set_mode_gpu()
         caffe.set_device(DEVICE)
 
         self.datasource = datasource
-        self.image_processor = ImageProcessor(datasource)
+        
+        model = utils.parse_model(MODEL)
+        self.image_processor = ImageProcessor(datasource, model)
+        self.prefetcher = PreFetcher(image_processor, mode='test', batch_size=None, ahead=4)
 
         self.test_net = caffe.Net(MODEL, WEIGHTS, caffe.TEST)
         print "Model: ", MODEL
         print "WEIGHTS: ", WEIGHTS
 
-    def process(self, idx):
-        ap = self.datasource.get_all_prob(idx)
+    def process(self, im):
+        ap = self.datasource.get_all_prob(im)
         NUM_CLASS,h_ori,w_ori = ap.shape
         slices = self.image_processor.get_slices(ap)
 
-        data = self.image_processor.build_data(idx)
+        # data = self.image_processor.build_data(im)
+        data = self.prefetcher.fetch_batch()
         out = []
         for s in data:
             o = self.feed_forward(s)
             out.append(o)
         out = np.concatenate(out,axis=0)
-        
         print out.shape
+
+        # Scale back to original size
         _,h,w = out.shape
         out_scaled = ndimage.zoom(out, (1.,1.*h_ori/h,1.*w_ori/w), order=1, prefilter=False)
 
@@ -50,4 +57,9 @@ class Network:
         self.test_net.forward()
         out = self.test_net.blobs['prob'].data[0,:,:,:]
         return np.copy(out)
+
+def async_prefetch(d):
+    image_processor, im, batch_size = d
+    data = image_processor.build_data(im, batch_size=batch_size)
+    return data
 
