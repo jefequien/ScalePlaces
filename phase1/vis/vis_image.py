@@ -44,6 +44,10 @@ class ImageVisualizer:
             gt_color, gt_color_path = self.add_color(gt)
             paths["ground_truth"] = gt_color_path
 
+        canny_path = self.get_canny(im)
+        if canny_path is not None:
+            paths["canny"] = canny_path
+
         diff = self.get_diff(cm, gt)
         if diff is not None:
             diff_color, diff_color_path = self.add_color(diff)
@@ -95,6 +99,14 @@ class ImageVisualizer:
         except:
             #print "No ground_truth", im
             return None, None
+
+    def get_canny(self, im):
+        try:
+            path = os.path.join(config["workspace"], "canny")
+            path = os.path.join(path, im.replace('.jpg', '.png'))
+            return path
+        except:
+            return None
 
     def get_all_prob(self, im):
         try:
