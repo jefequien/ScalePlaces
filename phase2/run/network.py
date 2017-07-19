@@ -3,6 +3,7 @@ import sys
 import time
 import random
 import numpy as np
+from scipy import misc, ndimage
 
 from image_processor import ImageProcessor
 
@@ -25,15 +26,16 @@ class Network:
     def process(self, idx):
         ap = self.datasource.get_all_prob(idx)
         NUM_CLASS,h_ori,w_ori = ap.shape
-        slices = self.datasource.get_slices(ap)
+        slices = self.image_processor.get_slices(ap)
 
         data = self.image_processor.build_data(idx)
         out = []
         for s in data:
             o = self.feed_forward(s)
             out.append(o)
-        out = np.stack(out)
-
+        out = np.concatenate(out,axis=0)
+        
+        print out.shape
         _,h,w = out.shape
         out_scaled = ndimage.zoom(out, (1.,1.*h_ori/h,1.*w_ori/w), order=1, prefilter=False)
 

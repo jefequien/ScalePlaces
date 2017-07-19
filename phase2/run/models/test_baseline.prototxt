@@ -1,7 +1,7 @@
 #
 input: "data"
 input_dim: 1
-input_dim: 2
+input_dim: 1
 input_dim: 473
 input_dim: 473
 
@@ -81,11 +81,12 @@ layer {
     weight_filler {
       type: "msra"
     }
+    bias_term: false
   }
 }
 layer {
   name: "sigmoid"
   type: "Sigmoid"
-  bottom: "conv3"
+  bottom: "output"
   top: "prob"
 }

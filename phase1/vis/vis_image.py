@@ -134,7 +134,7 @@ class ImageVisualizer:
     def get_individual_slices(self, ap, n):
         threshold = 0.5
         #ap = ap > threshold
-        
+        print ap.shape, ap.dtype, np.min(ap), np.max(ap)
         sums = [np.sum(slic) for slic in ap]
         top_slices = np.flip(np.argsort(sums), 0)
         #top_slices = range(150)
@@ -154,7 +154,7 @@ class ImageVisualizer:
         file_path = os.path.join(path, im.replace('.jpg','.h5'))
         with h5py.File(file_path, 'r') as f:
             output = f['allprob'][:]
-            return output
+            return output.astype('float32')
 
     def label_img(self, img, c):
         if img.dtype == bool:

@@ -15,7 +15,7 @@ class DataSource:
         self.ground_truth_dir = config["ground_truth"]
 
         im_list_txt = config["im_list"]
-        self.im_list = utils.open_im_list(im_list_txt)
+        self.im_list = utils.open_im_list(im_list_txt, r=random)
         
         self.idx = 0
         self.random = random

@@ -19,7 +19,7 @@ def get_model(solver_path):
 
 def get_latest_snapshot(snapshot_dir):
     latest_i = 0
-    for fname in os.path.listdir():
+    for fname in os.listdir(snapshot_dir):
         split = os.path.splitext(fname)
         if split[1] == '.solverstate':
             i = split[0].split('_')[2]
@@ -27,8 +27,8 @@ def get_latest_snapshot(snapshot_dir):
             if i > latest_i:
                 latest_i = i
     fn_template = 'snapshot_iter_{}.solverstate'
-    if i != 0:
-        return os.path.join(snapshot_dir, fn_template.format(i))
+    if latest_i != 0:
+        return os.path.join(snapshot_dir, fn_template.format(latest_i))
     else:
         raise Exception('Snapshot not found')
 

@@ -12,10 +12,10 @@ class ImageProcessor:
         slices = self.get_slices(ap)
 
         # Load additional features
-        additional_features = self.get_additional_features()
+        additional_features = self.get_additional_features(idx)
 
         data = self.build_top(ap, slices, additional_features=additional_features)
-        return data,label
+        return data
 
     def build_data_and_label(self, idx, batch_size=None):
         ap = self.datasource.get_all_prob(idx)
@@ -40,10 +40,11 @@ class ImageProcessor:
         label = self.build_top(gt, slices)
         label = label[:,0,:,:]
         return data,label
+
     def get_additional_features(self,idx):
         #img = self.datasource.get_image(idx)
-        canny = self.datasource.get_canny(idx)
-        return [canny]
+        #canny = self.datasource.get_canny(idx)
+        return []
 
     def build_top(self, a, slices, additional_features=[]):
         '''

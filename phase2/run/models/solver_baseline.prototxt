@@ -1,7 +1,7 @@
 net: "models/train_baseline.prototxt"
 display: 40
 average_loss: 20 # Display loss averaged over last x iterations
-snapshot: 2000
+snapshot: 1000
 snapshot_prefix: "snapshots/baseline/snapshot"
 
 base_lr: 1e-10

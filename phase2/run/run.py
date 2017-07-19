@@ -12,7 +12,7 @@ import utils_run as utils
 
 def build_output_dirname(project, snapshot):
     template = "predictions/{}/{}/"
-    more = snapshot.replace("snapshot/", "")
+    more = snapshot.replace("snapshots/", "")
     more = more.replace(".caffemodel", "")
     return template.format(project, more)
 
@@ -41,9 +41,10 @@ root_result = build_output_dirname(project, snapshot)
 print "Outputting to ", root_result
 root_allprob = os.path.join(root_result, 'all_prob')
 
-im_list = utils.open_im_list(project, seed=3)
+im_list = datasource.im_list
 for i in xrange(len(im_list)):
-    print im_list[i]
+    im = im_list[i]
+    print i, im
 
     fn_allprob = os.path.join(root_allprob, im.replace('.jpg', '.h5'))
 

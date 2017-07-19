@@ -43,7 +43,7 @@ class DataLayer(caffe.Layer):
         t = time.time()
         self.data, self.label = self.prefetcher.fetch_batch()
         print time.time() - t, self.data.shape, self.label.shape
-        
+
         top[0].reshape(*self.data.shape)
         top[1].reshape(*self.label.shape)
 
