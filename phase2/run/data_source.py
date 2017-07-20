@@ -2,7 +2,8 @@ import os
 import time
 import random
 import h5py
-from scipy import misc
+import numpy as np
+from scipy import misc, special
 
 import utils_run as utils
 from canny import *
@@ -24,6 +25,7 @@ class DataSource:
     def next_im(self):
         if self.random:
             idx = random.randint(0,len(self.im_list))
+            print idx
             return self.im_list[idx]
         else:
             self.idx += 1
@@ -48,7 +50,9 @@ class DataSource:
         ap_path = os.path.join(self.all_prob_dir, im.replace('.jpg', '.h5'))
         with h5py.File(ap_path, 'r') as f:
             output = f['allprob'][:]
-            output = (output*255).astype('uint8')
+            #output = (output*255).astype('uint8')
+            output = special.logit(output)
+            output = np.clip(output, -6,6)
             return output
 
     def get_canny(self, im):
@@ -64,6 +68,8 @@ class DataSource:
             misc.imsave(canny_path, edges)
             
         canny = misc.imread(canny_path)
+        canny = canny.astype('float32')
+        canny /= 255.
         canny = canny[np.newaxis,:,:]
         return canny
 

@@ -5,7 +5,7 @@ from scipy import misc,ndimage
 class ImageProcessor:
     def __init__(self, datasource, model):
         self.datasource = datasource
-        self.threshold = 0.5*255 # ap has been scaled by 255
+        self.threshold = 0 # ap after logit function
 
         if model == "baseline":
             self.af = []
