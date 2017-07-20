@@ -36,6 +36,8 @@ config["pspnet_prediction"] = pspnet_prediction
 # Set up network
 datasource = DataSource(config, random=False)
 refine_net = RefineNet(datasource, model, snapshot)
+refine_net.test()
+raise
 
 root_result = build_output_dirname(project, snapshot)
 print "Outputting to ", root_result

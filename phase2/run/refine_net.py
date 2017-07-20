@@ -58,5 +58,12 @@ class RefineNet:
         self.test_net.forward()
         out = self.test_net.blobs['prob'].data[0,:,:,:]
         return np.copy(out)
+        
+    def test(self):
+        data = np.zeros((1,2,473,473))
+        output = self.feed_forward(data)
+        output = output[0,0,:,:]
+        misc.imsave("empty.png", output)
+
 
 
