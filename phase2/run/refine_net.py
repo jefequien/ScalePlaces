@@ -34,8 +34,8 @@ class RefineNet:
         NUM_CLASS,h_ori,w_ori = ap.shape
         slices = self.image_processor.get_slices(ap)
 
-        # data = self.image_processor.build_data(im)
-        data = self.prefetcher.fetch_batch()
+        data = self.image_processor.build_data(im)
+        # data = self.prefetcher.fetch_batch()
         out = []
         for s in data:
             o = self.feed_forward(s)
@@ -56,14 +56,35 @@ class RefineNet:
     def feed_forward(self, data):
         self.test_net.blobs['data'].data[...] = data
         self.test_net.forward()
+        #conv1 = self.test_net.blobs['conv1'].data[0,:,:,:]
+        #print conv1.dtype, conv1.shape, np.mean(conv1)
+        #conv1 = conv1.astype('uint') * 255
+        #misc.imsave("conv1.png", conv1[0,:,:])
+
+        #W = self.test_net.params['conv1'][0].data[...]
+        #print W.shape, np.min(W), np.max(W), np.mean(W)
+        #conv1 = self.test_net.blobs['conv1'].data[0,:,:,:]
+        #misc.imsave("conv1.png", conv1)
+        #conv1 = self.test_net.blobs['conv1'].data[0,:,:,:]
+        #misc.imsave("conv1.png", conv1)
+
         out = self.test_net.blobs['prob'].data[0,:,:,:]
         return np.copy(out)
         
-    def test(self):
-        data = np.zeros((1,2,473,473))
-        output = self.feed_forward(data)
-        output = output[0,0,:,:]
-        misc.imsave("empty.png", output)
-
+    def test(self, im):
+        ap = self.datasource.get_all_prob(im)
+        slices = self.image_processor.get_slices(ap)
+        s = slices[0]
+        print s
+        data = self.image_processor.build_data(im)
+        data = data[0,:,:,:]
+        prob = data[0,:,:]
+        canny = data[1,:,:]
+        o = self.feed_forward(data)
+        o = o[0,:,:]
+        print o.dtype, np.min(o), np.max(o), np.mean(o)
+        misc.imsave("canny.png", canny)
+        misc.imsave("prob.png", prob)
+        misc.imsave("{}.png".format(s), o)
 
 
