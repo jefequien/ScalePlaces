@@ -5,7 +5,7 @@ from utils import *
 
 
 def parse_model(prototxt_path):
-    models = ["baseline","image", "canny", "image_complex"]
+    models = ["baseline", "canny", "image_complex", "image"]
     for model in models:
         prototxt = os.path.basename(prototxt_path)
         if model in prototxt:
