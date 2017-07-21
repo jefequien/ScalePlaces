@@ -20,7 +20,7 @@ layer {
   }
   convolution_param {
     num_output: 128
-    pad: 3
+    pad: 4
     kernel_size: 9
     stride: 1
     weight_filler {
@@ -46,7 +46,7 @@ layer {
   }
   convolution_param {
     num_output: 128
-    pad: 3
+    pad: 4
     kernel_size: 9
     stride: 1
     weight_filler {
@@ -72,7 +72,7 @@ layer {
   }
   convolution_param {
     num_output: 128
-    pad: 3
+    pad: 4
     kernel_size: 9
     stride: 1
     weight_filler {
@@ -98,7 +98,7 @@ layer {
   }
   convolution_param {
     num_output: 128
-    pad: 3
+    pad: 4
     kernel_size: 9
     stride: 1
     weight_filler {
@@ -124,7 +124,7 @@ layer {
   }
   convolution_param {
     num_output: 128
-    pad: 3
+    pad: 4
     kernel_size: 9
     stride: 1
     weight_filler {
