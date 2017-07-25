@@ -6,12 +6,14 @@ class ImageProcessor:
     def __init__(self, datasource, model):
         self.datasource = datasource
         self.threshold = 0 # ap after logit function
-
+        print model
         if model == "baseline":
             self.af = []
         elif model ==  "canny":
             self.af = ["canny"]
         elif model == "image":
+            self.af = ["image"]
+        elif model == "image_complex":
             self.af = ["image"]
         elif model == "image+canny":
             self.af = ["image", "canny"]

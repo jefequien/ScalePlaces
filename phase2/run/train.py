@@ -39,8 +39,8 @@ model = utils.parse_model(solver_path)
 
 caffe.set_mode_gpu()
 caffe.set_device(DEVICE)
-SEED = 3
-random.seed(SEED)
+#SEED = 3
+#random.seed(SEED)
 
 solver = caffe.get_solver(solver_path)
 if args.resume:

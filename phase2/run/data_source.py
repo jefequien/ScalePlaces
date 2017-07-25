@@ -24,8 +24,7 @@ class DataSource:
 
     def next_im(self):
         if self.random:
-            idx = random.randint(0,len(self.im_list))
-            print idx
+            idx = random.randint(0,len(self.im_list)-1)
             return self.im_list[idx]
         else:
             self.idx += 1
@@ -60,6 +59,7 @@ class DataSource:
         if not os.path.exists(canny_path):
             if not os.path.exists(os.path.dirname(canny_path)):
                 os.makedirs(os.path.dirname(canny_path))
+            print im
 
             t = time.time()
             img = self.get_image(im)

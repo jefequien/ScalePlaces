@@ -22,6 +22,7 @@ class RefineNet:
         self.datasource = datasource
         
         model = utils.parse_model(MODEL)
+        print MODEL, model
         self.image_processor = ImageProcessor(datasource, model)
         self.prefetcher = PreFetcher(self.image_processor, mode='test', batch_size=None, ahead=4)
 

@@ -13,7 +13,7 @@ def make_canny(img):
     blur = cv2.GaussianBlur(img, kernel, 0)
 
     median = np.median(img)
-    low_threshold = median * 0.5
+    low_threshold = median * 0.3
     high_threshold = median * 1.5
     edges = cv2.Canny(blur, low_threshold, high_threshold)
     return edges

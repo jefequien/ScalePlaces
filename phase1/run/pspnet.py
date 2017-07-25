@@ -65,7 +65,10 @@ class PSPNet:
         return np.copy(out)
         
     def print_caffe_model(self):
-        print self.test_net.params
+        params = self.test_net.params
+        for name in params:
+            print name, params[name]
+
 
     def print_network_architecture(self):
         for k,v in self.test_net.blobs.items():
