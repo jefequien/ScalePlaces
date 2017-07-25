@@ -1,8 +1,10 @@
 import os
 import sys
+import argparse
 import time
 import random
 import numpy as np
+from scipy import misc
 
 from utils_pspnet import *
 
@@ -74,10 +76,36 @@ class PSPNet:
         for k,v in self.test_net.blobs.items():
             print v.data.shape, k
 
+def add_color(self, img):
+    if img is None:
+        return None, None
+
+    h,w = img.shape
+    img_color = np.zeros((h,w,3))
+    for i in xrange(1,151):
+        img_color[img == i] = utils.to_color(i)
+    path = self.save(img_color)
+    return img_color, path
+    
+
 if __name__ == "__main__":
     WEIGHTS = '/data/vision/torralba/segmentation/places/PSPNet/evaluation/model/pspnet50_ADE20K.caffemodel'
     MODEL = 'models/test_pspnet_softmax.prototxt'
     pspnet = PSPNet(MODEL, WEIGHTS)
     pspnet.print_caffe_model()
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--input_path', type=str, default='', 
+                        required=True, help='Path the input image')
+    parser.add_argument('--output_path', type=str, default='',
+                        required=True, help='Path to output')
+    args = parser.parse_args()
+    img = misc.imread(args.input_path)
+
+    probs = pspnet.sliding_window(img)
+    pred_mask = np.argmax(probs, axis=0) + 1
+
+    color_mask = add_color(pred_mask)
+    misc.imsave(args.output_path, color_mask)
 
 
