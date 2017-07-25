@@ -64,7 +64,17 @@ class PSPNet:
         out = self.test_net.blobs['prob'].data[0,:,:,:]
         return np.copy(out)
         
+    def print_caffe_model(self):
+        print self.test_net.params
 
     def print_network_architecture(self):
         for k,v in self.test_net.blobs.items():
             print v.data.shape, k
+
+if __name__ == "__main__":
+    WEIGHTS = '/data/vision/torralba/segmentation/places/PSPNet/evaluation/model/pspnet50_ADE20K.caffemodel'
+    MODEL = 'models/test_pspnet_softmax.prototxt'
+    pspnet = PSPNet(MODEL, WEIGHTS)
+    pspnet.print_caffe_model()
+
+
