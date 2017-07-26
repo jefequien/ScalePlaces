@@ -73,10 +73,27 @@ class PSPNet:
         return np.copy(out)
         
     def print_caffe_model(self):
-        params = self.test_net.params
-        for name in params:
-            print name, params[name]
+        for k,v in self.test_net.params.items():
+            print "Layer %s, has %d params." % (k, len(v))
+            if len(v) == 1:
+                weights[k] = {"weights": np.transpose(v[0].data[...], (2,3,1,0))}
+                print "weights", self.np_to_str(weights[k]["weights"])
+            elif len(v) == 2:
+                weights[k] = {"weights": np.transpose(v[0].data[...], (2,3,1,0)), "biases": v[1].data[...]}
+                print "weights", self.np_to_str(weights[k]["weights"])
+                print "biases", self.np_to_str(weights[k]["biases"])
+            elif len(v) == 4:
+                weights[k.replace('/', '_')] = {"scale": v[0].data[...], "offset": v[1].data[...], "mean": v[2].data[...], "variance": v[3].data[...]}
+                print "scale", self.np_to_str(weights[k]["scale"])
+                print "offset", self.np_to_str(weights[k]["offset"])
+                print "mean", self.np_to_str(weights[k]["mean"])
+                print "variance", self.np_to_str(weights[k]["variance"])
+            else:
+                print "Undefined layer"
+                exit()
 
+    def np_to_str(self, a):
+        return "{} {} {}".format(np.min(a), np.max(a), np.mean(a))
 
     def print_network_architecture(self):
         for k,v in self.test_net.blobs.items():
@@ -94,7 +111,7 @@ if __name__ == "__main__":
     WEIGHTS = '/data/vision/torralba/segmentation/places/PSPNet/evaluation/model/pspnet50_ADE20K.caffemodel'
     MODEL = 'models/test_pspnet_softmax.prototxt'
     pspnet = PSPNet(MODEL, WEIGHTS)
-    #pspnet.print_caffe_model()
+    pspnet.print_caffe_model()
 
     parser = argparse.ArgumentParser()
     parser.add_argument('--input_path', type=str, default='', 
