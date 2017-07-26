@@ -7,6 +7,7 @@ import numpy as np
 from scipy import misc
 
 from utils_pspnet import *
+import utils_run as utils
 
 CAFFE_ROOT = '/data/vision/torralba/segmentation/places/PSPNet/'
 sys.path.insert(0, os.path.join(CAFFE_ROOT, 'python'))
@@ -63,6 +64,11 @@ class PSPNet:
 
         self.test_net.blobs['data'].data[...] = data
         self.test_net.forward()
+        blobs = self.test_net.blobs
+        for name in blobs:
+            data = blobs[name].data[0,:,:,:]
+            print name, data.shape, np.min(data), np.max(data), np.mean(data)
+        
         out = self.test_net.blobs['prob'].data[0,:,:,:]
         return np.copy(out)
         
@@ -76,23 +82,19 @@ class PSPNet:
         for k,v in self.test_net.blobs.items():
             print v.data.shape, k
 
-def add_color(self, img):
-    if img is None:
-        return None, None
-
+def add_color(img):
     h,w = img.shape
     img_color = np.zeros((h,w,3))
     for i in xrange(1,151):
         img_color[img == i] = utils.to_color(i)
-    path = self.save(img_color)
-    return img_color, path
+    return img_color
     
 
 if __name__ == "__main__":
     WEIGHTS = '/data/vision/torralba/segmentation/places/PSPNet/evaluation/model/pspnet50_ADE20K.caffemodel'
     MODEL = 'models/test_pspnet_softmax.prototxt'
     pspnet = PSPNet(MODEL, WEIGHTS)
-    pspnet.print_caffe_model()
+    #pspnet.print_caffe_model()
 
     parser = argparse.ArgumentParser()
     parser.add_argument('--input_path', type=str, default='', 
@@ -101,8 +103,9 @@ if __name__ == "__main__":
                         required=True, help='Path to output')
     args = parser.parse_args()
     img = misc.imread(args.input_path)
-
-    probs = pspnet.sliding_window(img)
+    img = misc.imresize(img, (473,473))
+    img = preprocess(img)
+    probs = pspnet.feed_forward(img)
     pred_mask = np.argmax(probs, axis=0) + 1
 
     color_mask = add_color(pred_mask)
