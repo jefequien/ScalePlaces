@@ -1,6 +1,7 @@
 import os
 import sys
 import argparse
+import h5py
 import time
 import random
 import numpy as np
@@ -68,6 +69,9 @@ class PSPNet:
         for name in blobs:
             data = blobs[name].data[0,:,:,:]
             print name, data.shape, np.min(data), np.max(data), np.mean(data)
+            if name == "conv5_3_concat":
+                with h5py.File("caffe.h5", 'w') as f:
+                    f.create_dataset('a', data=io)
         
         out = self.test_net.blobs['prob'].data[0,:,:,:]
         return np.copy(out)
