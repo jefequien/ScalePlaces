@@ -73,6 +73,7 @@ class PSPNet:
         return np.copy(out)
         
     def print_caffe_model(self):
+        weights = {}
         for k,v in self.test_net.params.items():
             print "Layer %s, has %d params." % (k, len(v))
             if len(v) == 1:
@@ -83,7 +84,8 @@ class PSPNet:
                 print "weights", self.np_to_str(weights[k]["weights"])
                 print "biases", self.np_to_str(weights[k]["biases"])
             elif len(v) == 4:
-                weights[k.replace('/', '_')] = {"scale": v[0].data[...], "offset": v[1].data[...], "mean": v[2].data[...], "variance": v[3].data[...]}
+                k = k.replace('/', '_')
+                weights[k] = {"scale": v[0].data[...], "offset": v[1].data[...], "mean": v[2].data[...], "variance": v[3].data[...]}
                 print "scale", self.np_to_str(weights[k]["scale"])
                 print "offset", self.np_to_str(weights[k]["offset"])
                 print "mean", self.np_to_str(weights[k]["mean"])
@@ -93,7 +95,7 @@ class PSPNet:
                 exit()
 
     def np_to_str(self, a):
-        return "{} {} {}".format(np.min(a), np.max(a), np.mean(a))
+        return "{} {} {} {}".format(a.shape, np.min(a), np.max(a), np.mean(a))
 
     def print_network_architecture(self):
         for k,v in self.test_net.blobs.items():
@@ -110,7 +112,7 @@ def add_color(img):
 if __name__ == "__main__":
     WEIGHTS = '/data/vision/torralba/segmentation/places/PSPNet/evaluation/model/pspnet50_ADE20K.caffemodel'
     MODEL = 'models/test_pspnet_softmax.prototxt'
-    pspnet = PSPNet(MODEL, WEIGHTS)
+    pspnet = PSPNet(MODEL, WEIGHTS, DEVICE=3)
     pspnet.print_caffe_model()
 
     parser = argparse.ArgumentParser()

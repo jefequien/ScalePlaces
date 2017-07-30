@@ -12,8 +12,8 @@ import utils_vis as utils
 
 THRESHOLD = False
 INDIV_SLICES = True
-REFINE = True
-GT_SLICES = True
+REFINE = False
+GT_SLICES = False
 
 class ImageVisualizer:
 
@@ -65,8 +65,8 @@ class ImageVisualizer:
             indiv_slices_path = self.save(indiv_slices)
             paths["indiv_slices"] = indiv_slices_path
 
-        refine_ap = self.get_refine_ap(im)
-        if REFINE and refine_ap is not None:
+        if REFINE:
+            refine_ap = self.get_refine_ap(im)
             refine_slices = self.get_individual_slices(refine_ap, 20)
             refine_slices_path = self.save(refine_slices)
             paths["refine_slices"] = refine_slices_path

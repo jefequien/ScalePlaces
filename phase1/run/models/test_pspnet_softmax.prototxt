@@ -29,7 +29,7 @@ layer {
   name: "conv1_1_3x3_s2/bn"
   type: "BN"
   bottom: "conv1_1_3x3_s2"
-  top: "conv1_1_3x3_s2"
+  top: "conv1_1_3x3_s2_bn"
   param {
     lr_mult: 1
     decay_mult: 0
@@ -62,13 +62,13 @@ layer {
 layer {
   name: "conv1_1_3x3_s2/relu"
   type: "ReLU"
-  bottom: "conv1_1_3x3_s2"
-  top: "conv1_1_3x3_s2"
+  bottom: "conv1_1_3x3_s2_bn"
+  top: "conv1_1_3x3_s2_relu"
 }
 layer {
   name: "conv1_2_3x3"
   type: "Convolution"
-  bottom: "conv1_1_3x3_s2"
+  bottom: "conv1_1_3x3_s2_relu"
   top: "conv1_2_3x3"
   param {
     lr_mult: 1
@@ -3816,7 +3816,7 @@ layer {
   name: "conv5_4/bn"
   type: "BN"
   bottom: "conv5_4"
-  top: "conv5_4"
+  top: "conv5_4_bn"
   param {
     lr_mult: 10
     decay_mult: 0
@@ -3849,14 +3849,14 @@ layer {
 layer {
   name: "conv5_4/relu"
   type: "ReLU"
-  bottom: "conv5_4"
-  top: "conv5_4"
+  bottom: "conv5_4_bn"
+  top: "conv5_4_relu"
 }
 layer {
   name: "conv5_4/dropout"
   type: "Dropout"
-  bottom: "conv5_4"
-  top: "conv5_4"
+  bottom: "conv5_4_relu"
+  top: "conv5_4_dropout"
   dropout_param {
     dropout_ratio: 0.1
   }
@@ -3864,7 +3864,7 @@ layer {
 layer {
   name: "conv6"
   type: "Convolution"
-  bottom: "conv5_4"
+  bottom: "conv5_4_dropout"
   top: "conv6"
   param {
     lr_mult: 10

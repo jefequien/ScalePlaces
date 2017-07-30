@@ -30,10 +30,10 @@ layer {
   }
 }
 layer {
-  name: "conv1_1_3x3_s2/bn"
+  name: "conv1_1_3x3_s2_bn"
   type: "BN"
   bottom: "conv1_1_3x3_s2"
-  top: "conv1_1_3x3_s2"
+  top: "conv1_1_3x3_s2_bn"
   param {
     lr_mult: 1
     decay_mult: 0
@@ -66,13 +66,13 @@ layer {
 layer {
   name: "conv1_1_3x3_s2/relu"
   type: "ReLU"
-  bottom: "conv1_1_3x3_s2"
-  top: "conv1_1_3x3_s2"
+  bottom: "conv1_1_3x3_s2_bn"
+  top: "conv1_1_3x3_s2_relu"
 }
 layer {
   name: "conv1_2_3x3"
   type: "Convolution"
-  bottom: "conv1_1_3x3_s2"
+  bottom: "conv1_1_3x3_s2_relu"
   top: "conv1_2_3x3"
   param {
     lr_mult: 1
